@@ -17,6 +17,7 @@ var world = {
 					th.setAttribute("class", "space");
 				} else if (maps[i][j] == "M") {
 					th.setAttribute("class", "monster");
+					maps[i][j] = monster.make();
 				} else if (maps[i][j] == "P") {
 					th.setAttribute("class", "player");
 					this.playerLoc = [i, j];
@@ -49,6 +50,22 @@ var player = {
 	level: 1,
 }
 
+var monster = {
+	counter: -1,
+	make() {
+		this.counter++;
+		var level = Math.ceil(Math.random() * 5)
+		monster[this.counter] = {
+			level: level,
+			hp: Math.ceil(Math.random() * level * 3 * player.level * player.level),
+		}
+		return this.counter;
+	},
+	rem(num) {
+		delete this[num];
+
+	},
+};
 
 const controller = {
 	keypress(e) {
