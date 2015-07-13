@@ -10,15 +10,15 @@ var world = {
 
 			for (var j = 0; j < maps[i].length; j++) {
 				var th = document.createElement("th");
-				if (i == 0 || j == 0 || i == maps.length - 1 || j == maps[i].length - 1) {
+				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
 					th.setAttribute("class", "wall");
 					maps[i][j] = "W";
-				} else if (maps[i][j] == " ") {
+				} else if (maps[i][j] === " ") {
 					th.setAttribute("class", "space");
 				} else if (maps[i][j] == "M") {
 					th.setAttribute("class", "monster");
 					maps[i][j] = monster.make();
-				} else if (maps[i][j] == "P") {
+				} else if (maps[i][j] === "P") {
 					th.setAttribute("class", "player");
 					this.playerLoc = [i, j];
 				}
@@ -33,12 +33,12 @@ var world = {
 		loc.setAttribute("class", class1);
 	},
 
-	move(arr, y, x, y1, x1) {
-		if (arr[y1][x1] == " ") {
-			arr[y1][x1] = arr[y][x]; // set new location of player
+	move(y, x, y1, x1) {
+		if (map[y1][x1] === " ") {
+			map[y1][x1] = map[y][x]; // set new location of player
 			this.changeClass("player", y1, x1);
 
-			arr[y][x] = " "; // set area where player was to "space"
+			map[y][x] = " "; // set area where player was to "space"
 			this.changeClass("space", y, x);
 
 			this.playerLoc = [y1, x1]; // change the player coordinates record
@@ -68,16 +68,37 @@ var monster = {
 };
 
 const controller = {
+	keyMap: {65: false},
 	keypress(e) {
 		var mapID = document.getElementById("map");
+		if (e.keyCode == 65) {
+			this.keyMap[65] = true;
+		}
+
 		if (e.keyCode == 37) { // left key
-			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] - 1);
+			if (this.keyMap[65] == true) {
+				display("Attack left");
+			} else {
+				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] - 1);
+			}
 		} else if (e.keyCode == 38) { // down key
-			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] - 1, world.playerLoc[1]);
+			if (this.keyMap[65] == true) {
+				display("Attack up");
+			} else {
+				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] - 1, world.playerLoc[1]);
+			}
 		} else if (e.keyCode == 39) { // right key
-			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] + 1);
+			if (this.keyMap[65] == true) {
+				display("Attack right");
+			} else {
+				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] + 1);
+			}
 		} else if (e.keyCode == 40) { // up key
-			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] + 1, world.playerLoc[1]);
+			if (this.keyMap[65] == true) {
+				display("Attack down");
+			} else {
+				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] + 1, world.playerLoc[1]);
+			}
 		} 		
 	}
 };
@@ -90,5 +111,9 @@ window.onload = function() {
 		controller.keypress(e);
 	};
 
-
+	document.onkeyup = function(e) {
+		if (e.keyCode == 65) {
+			controller.keyMap[65] = false;
+		}
+	}
 };
