@@ -14,9 +14,17 @@
 			width: 15px;
 			height: 15px;
 		}
+		#message {
+			position: relative;
+			margin-left: 30px;
+			margin-top: 20px;
+			width: 500px;
+			height: 100px;
+		}
 		#map {
-			margin-left: 7%;
-			margin-top: 5%;
+			position: absolute;
+			margin-left: 2%;
+			margin-top: 1%;
 		}
 		.wall {
 			background: url("images/wall.png") no-repeat center center;
@@ -36,6 +44,7 @@
 <body>
 	<script src="map.js"></script>
 	<script src="world.js"></script>
+	<textarea id="message"></textarea>
 	<table id="map" cellspacing="0" cellpadding="0">
 
 	</table>

@@ -1,6 +1,7 @@
 var world = {
 	playerLoc: [0,0],
 	translateMap(maps) {
+		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
 		var map = document.getElementById("map");
 		
 		for (var i = 0; i < maps.length; i++) {
@@ -8,20 +9,23 @@ var world = {
 			map.appendChild(tr);
 			for (var j = 0; j < maps[i].length; j++) {
 				var th = document.createElement("th");
-				if (maps[i][j] == " ") {
+				if (i == 0 || j == 0 || i == maps.length - 1 || j == maps[i].length - 1) {
+					th.setAttribute("class", "wall");
+					maps[i][j] = "W";
+				} else if (maps[i][j] == " ") {
 					th.setAttribute("class", "space");
 				} else if (maps[i][j] == "P") {
 					th.setAttribute("class", "player");
 					this.playerLoc = [i, j];
 				}
-				th.setAttribute("id", i + "" + j);
+				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
 		}
 	},
 
 	changeClass(class1, x1, y1) {
-		var loc = document.getElementById(x1 + "" + y1);
+		var loc = document.getElementById(x1 + " " + y1);
 		loc.setAttribute("class", class1);
 	},
 
@@ -56,3 +60,8 @@ window.onload = function() {
 
 
 };
+
+function display(msg) {
+	document.getElementById("message");
+	message.value = msg;
+}
