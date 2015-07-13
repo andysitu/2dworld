@@ -1,22 +1,3 @@
-var map =
-	[	["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "P", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"],
-		["&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp", "&nbsp"] ];
-
 var world = {
 	playerLoc: [0,0],
 	translateMap(maps) {
@@ -52,9 +33,9 @@ var world = {
 
 window.onload = function() {
 	world.displayMap(world.translateMap(map));
-	var mapID = document.getElementById("map");
 
 	document.onkeydown = function(e) {
+		var mapID = document.getElementById("map");
 		if (e.keyCode == 37) {
 			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] - 1);
 			world.displayMap(world.translateMap(map));
@@ -67,11 +48,7 @@ window.onload = function() {
 		} else if (e.keyCode == 40) {
 			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] + 1, world.playerLoc[1]);
 			world.displayMap(world.translateMap(map));
-		} else if (e.keyCode == 13) {
-			var str = mapID.value.replace(/ */g, "&nbsp");
-			//str = str.replace(/\n*/g, "@");
-			console.log(str);
-		}
+		} 
 	};
 
 
