@@ -1,21 +1,17 @@
 var world = {
 	playerLoc: [0,0],
 	translateMap(maps) {
-		var string = "";
-
+		var map = document.getElementById("map");
+		
 		for (var i = 0; i < maps.length; i++) {
+			var tr = document.createElement("tr");
+			map.appendChild(tr);
 			for (var j = 0; j < maps[i].length; j++) {
-				if (maps[i][j] == "P") {
-					this.playerLoc = [i, j];
-					string += maps[i][j];
-				} else {
-					string += maps[i][j];
-				}
+				var th = document.createElement("th");
+				tr.appendChild(th);
 			}
-			string += "\n"
-		}
 
-		return string;
+		}
 	},
 
 	displayMap(str) {
@@ -32,22 +28,18 @@ var world = {
 };
 
 window.onload = function() {
-	world.displayMap(world.translateMap(map));
+	world.translateMap(map);
 
 	document.onkeydown = function(e) {
 		var mapID = document.getElementById("map");
 		if (e.keyCode == 37) {
 			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] - 1);
-			world.displayMap(world.translateMap(map));
 		} else if (e.keyCode == 38) {
 			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] - 1, world.playerLoc[1]);
-			world.displayMap(world.translateMap(map));
 		} else if (e.keyCode == 39) {
 			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] + 1);
-			world.displayMap(world.translateMap(map));
 		} else if (e.keyCode == 40) {
 			world.move(map, world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] + 1, world.playerLoc[1]);
-			world.displayMap(world.translateMap(map));
 		} 
 	};
 

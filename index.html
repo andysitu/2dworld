@@ -6,12 +6,27 @@
 	<title>A 2D World</title>
 
 	<style>
+		table {
+			border: none;
+			border-spacing: 0px;
+		}
+		th {
+			width: 15px;
+			height: 15px;
+			background: url("images/wall.png") no-repeat center center;
+		}
 		#map {
-			width: 950px;
-			height: 300px;
 			margin-left: 7%;
 			margin-top: 5%;
-			font-size: 125%;
+		}
+		.wall {
+			background: url("images/wall.png") no-repeat center center;
+		}
+		.space {
+			background: url("images/empty-space.png") no-repeat center center;
+		}
+		.player {
+			background: url("images/player.png") no-repeat center center;
 		}
 	</style>
 
@@ -22,7 +37,9 @@
 <body>
 	<script src="map.js"></script>
 	<script src="world.js"></script>
-	<textarea id="map"></textarea>
+	<table id="map" cellspacing="0" cellpadding="0">
+
+	</table>
 </body>
 
 </html>
