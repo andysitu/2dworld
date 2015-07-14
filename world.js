@@ -14,6 +14,7 @@ var world = {
 					maps[i][j] = "W";
 				}
 
+				th.setAttribute("class", this.classTranslator(maps[i][j], i, j)) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
@@ -71,6 +72,21 @@ var world = {
 
 		return false;
 	},
+	rem(value, newClass) {
+		for (var i = 0; i < map.length; i++) {
+			for (var j = 0; j < map[i].length; j++) {
+				if (map[i][j] == value) {
+					if (newClass) {
+						map[i][j] = newClass;
+						this.changeClass(this.classTranslator(newClass, i, j), i, j);
+					} else {
+						map[i][j] = " ";
+						this.changeClass("space", i, j); 
+					}
+				}
+			}
+		}
+	} 
 };
 
 var player = {
@@ -103,11 +119,16 @@ var monster = {
 	},
 	rem(num) {
 		delete this[num];
-
+		world.rem(num);
 	},
 	attacked(num, dmg) {
 		this[num]["hp"] -= dmg;
 		display(dmg + " damage was done to the monster.");
+
+		if (this[num]["hp"] <= 0) {
+			display("You killed the monster with " + dmg + " damgage!");
+			this.rem(num);
+		}
 	},
 };
 
