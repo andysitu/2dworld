@@ -119,9 +119,9 @@ const controller = { // for now, controller just handles the key presses and key
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], "left");
 			}
-		} else if (e.keyCode == 38) { // down key
+		} else if (e.keyCode == 38) { // up key
 			if (this.keyMap[65] == true) {
-				player.attack("down");
+				player.attack("up");
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], "up");
 			}
@@ -131,9 +131,9 @@ const controller = { // for now, controller just handles the key presses and key
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], "right");
 			}
-		} else if (e.keyCode == 40) { // up key
+		} else if (e.keyCode == 40) { // down key
 			if (this.keyMap[65] == true) {
-				player.attack("up");
+				player.attack("down");
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], "down");
 			}

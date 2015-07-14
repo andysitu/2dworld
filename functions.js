@@ -14,8 +14,8 @@ function check(dir, range) {
 		return false;
 	} else if (dir == "down") {
 		for (var i = 1; i <= range; i++) {
-			if (typeof map[world.playerLoc[0] - i][world.playerLoc[1]] == "number") {
-				return map[world.playerLoc[0] - i][world.playerLoc[1]];
+			if (typeof map[world.playerLoc[0] + i][world.playerLoc[1]] == "number") {
+				return map[world.playerLoc[0] + i][world.playerLoc[1]];
 			}
 		}
 		return false;
@@ -28,8 +28,8 @@ function check(dir, range) {
 		return false;
 	} else {
 		for (var i = 1; i <= range; i++) {
-			if (typeof map[world.playerLoc[0] + i][world.playerLoc[1]] == "number") {
-				return map[world.playerLoc[0] + i][world.playerLoc[1]];
+			if (typeof map[world.playerLoc[0] - i][world.playerLoc[1]] == "number") {
+				return map[world.playerLoc[0] - i][world.playerLoc[1]];
 			}
 		}
 		return false;
