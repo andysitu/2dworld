@@ -49,10 +49,14 @@ var world = {
 var player = {
 	level: 1,
 	range: 1,
+	damage() {
+		return Math.floor(Math.random() * 5 * player.level + 1 * player.level)
+	},
 
 	attack(dir) {
-		if (typeof check(dir, this.range) == "number") {
-			display("There is a monster there!");
+		var checkit = check(dir, this.range);
+		if (typeof checkit == "number") {
+			monster.attacked(checkit, this.damage());
 		} else {
 			display("There is no monster there!");
 		}
@@ -76,10 +80,10 @@ var monster = {
 	attacked(num, dmg) {
 		this[num]["hp"] -= dmg;
 		display(dmg + " damage was done to the monster.");
-	}
+	},
 };
 
-const controller = {
+const controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {65: false},
 	keypress(e) {
 		var mapID = document.getElementById("map");
