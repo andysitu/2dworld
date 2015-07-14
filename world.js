@@ -78,7 +78,7 @@ var player = {
 	},
 
 	attack(dir) {
-		var checkit = check(dir, this.range);
+		var checkit = check(dir, this.range); // check checks if there is a monster within that range and returns the monster number if so
 		if (typeof checkit == "number") {
 			monster.attacked(checkit, this.damage());
 		} else {
@@ -111,34 +111,32 @@ const controller = { // for now, controller just handles the key presses and key
 	keyMap: {65: false},
 	keypress(e) {
 		var mapID = document.getElementById("map");
+		var dir = "";
 		if (e.keyCode == 65) {
 			this.keyMap[65] = true;
-		} else if (e.keyCode == 37) { // left key
+		} else if (dir = this.dir(e)) {
 			if (this.keyMap[65] == true) {
-				player.attack("left");
+				player.attack(dir);
 			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], "left");
+				world.move(world.playerLoc[0], world.playerLoc[1], dir);
 			}
-		} else if (e.keyCode == 38) { // up key
-			if (this.keyMap[65] == true) {
-				player.attack("up");
-			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], "up");
-			}
-		} else if (e.keyCode == 39) { // right key
-			if (this.keyMap[65] == true) {
-				player.attack("right");
-			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], "right");
-			}
-		} else if (e.keyCode == 40) { // down key
-			if (this.keyMap[65] == true) {
-				player.attack("down");
-			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], "down");
-			}
-		} 		
-	}
+ 		
+		}
+	},
+	dir(e) {
+		if (e.keyCode == 37) {
+			return "left";
+		} else if (e.keyCode == 38) {
+			return "up";
+		} else if (e.keyCode == 39) {
+			return "right";
+		} else if (e.keyCode == 40) {
+			return "down"
+		} else {
+			display("Error with controller.dir");
+			return false;
+		}
+	},
 };
 
 
