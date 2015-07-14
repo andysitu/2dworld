@@ -50,11 +50,11 @@ var player = {
 	level: 1,
 	range: 1,
 
-	attack(y, x) {
-		if (typeof map[y][x] == 'number'){
+	attack(dir) {
+		if (typeof check(dir, this.range) == "number") {
 			display("There is a monster there!");
 		} else {
-			display("There is nothing there!");
+			display("There is no monster there!");
 		}
 	},
 }
@@ -87,25 +87,25 @@ const controller = {
 			this.keyMap[65] = true;
 		} else if (e.keyCode == 37) { // left key
 			if (this.keyMap[65] == true) {
-				player.attack(world.playerLoc[0], world.playerLoc[1] - 1);
+				player.attack("left");
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] - 1);
 			}
 		} else if (e.keyCode == 38) { // down key
 			if (this.keyMap[65] == true) {
-				player.attack(world.playerLoc[0] - 1, world.playerLoc[1]);
+				player.attack("down");
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] - 1, world.playerLoc[1]);
 			}
 		} else if (e.keyCode == 39) { // right key
 			if (this.keyMap[65] == true) {
-				player.attack(world.playerLoc[0], world.playerLoc[1] + 1);
+				player.attack("right");
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] + 1);
 			}
 		} else if (e.keyCode == 40) { // up key
 			if (this.keyMap[65] == true) {
-				player.attack(world.playerLoc[0] + 1, world.playerLoc[1]);
+				player.attack("up");
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] + 1, world.playerLoc[1]);
 			}
