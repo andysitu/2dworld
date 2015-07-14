@@ -20,8 +20,8 @@ var world = {
 					maps[i][j] = monster.make();
 				} else if (maps[i][j] === "P") {
 					th.setAttribute("class", "player");
-					this.playerLoc = [i, j];
-				}
+					this.playerLoc = [i, j]
+;				}
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
@@ -34,15 +34,22 @@ var world = {
 	},
 
 	move(y, x, y1, x1) {
+		var class1 = document.getElementById(y + " " + x).className;
+		var class2 = document.getElementById(y1 + " " + x1).className;
 		if (map[y1][x1] === " ") {
 			map[y1][x1] = map[y][x]; // set new location of player
-			this.changeClass("player", y1, x1);
+			this.changeClass(class1, y1, x1);
 
 			map[y][x] = " "; // set area where player was to "space"
-			this.changeClass("space", y, x);
+			this.changeClass(class2, y, x);
 
-			this.playerLoc = [y1, x1]; // change the player coordinates record
+			if (class1 == "player") {
+				this.playerLoc = [y1, x1]; // change the player coordinates record
+			}
+			return true;
 		}
+
+		return false;
 	},
 };
 
