@@ -11,20 +11,23 @@ var world = {
 			for (var j = 0; j < maps[i].length; j++) {
 				var th = document.createElement("th");
 				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
-					th.setAttribute("class", "wall");
 					maps[i][j] = "W";
-				} else if (maps[i][j] === " ") {
-					th.setAttribute("class", "space");
-				} else if (maps[i][j] == "M") {
-					th.setAttribute("class", "monster");
-					maps[i][j] = monster.make();
-				} else if (maps[i][j] === "P") {
-					th.setAttribute("class", "player");
-					this.playerLoc = [i, j]
-;				}
+				}
+
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
+		}
+	},
+	classTranslator(value, i, j) {
+		switch(value) {
+			case "W": return "wall";
+			case " ": return "space";
+			case "M": map[i][j] = monster.make();
+						return "monster";
+			case "P": this.playerLoc = [i, j];
+						return "player";
+			default: return false;
 		}
 	},
 
@@ -100,6 +103,7 @@ var monster = {
 	},
 	rem(num) {
 		delete this[num];
+
 	},
 	attacked(num, dmg) {
 		this[num]["hp"] -= dmg;
@@ -133,7 +137,6 @@ const controller = { // for now, controller just handles the key presses and key
 		} else if (e.keyCode == 40) {
 			return "down"
 		} else {
-			display("Error with controller.dir");
 			return false;
 		}
 	},
