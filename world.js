@@ -73,20 +73,26 @@ var world = {
 		return false;
 	},
 	rem(value, newClass) {
+		const loc = this.findIt(value);
+		const i = loc[0], j = loc[1];
+		if (newClass) {
+			map[i][j] = newClass;
+			this.changeClass(this.classTranslator(newClass, i, j), i, j);
+		} else {
+			map[i][j] = " ";
+			this.changeClass("space", i, j); 
+		}
+	},
+	findIt(value) {
 		for (var i = 0; i < map.length; i++) {
 			for (var j = 0; j < map[i].length; j++) {
 				if (map[i][j] == value) {
-					if (newClass) {
-						map[i][j] = newClass;
-						this.changeClass(this.classTranslator(newClass, i, j), i, j);
-					} else {
-						map[i][j] = " ";
-						this.changeClass("space", i, j); 
-					}
+					return [i, j];
 				}
 			}
 		}
-	} 
+		return false; // if it can't find it.
+	},
 };
 
 var player = {
