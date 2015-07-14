@@ -33,9 +33,26 @@ var world = {
 		loc.setAttribute("class", class1);
 	},
 
-	move(y, x, y1, x1) {
+	move(y, x, dir) { // 1 for left, 2 for up, 3 for right, 4 for down
+		var y1, x1; // new direction where character will move to
+
+		if (dir == "left" || dir === 1) { // converts y1 and x1 to correct coordinates according to dir
+			y1 = y; x1 = x - 1;
+		} else if (dir == "up" || dir === 2) {
+			y1 = y - 1; x1 = x;
+		} else if (dir == "right" || dir === 3) {
+			y1 = y; x1 = x + 1;
+		} else if (dir == "down" || dir === 4) {
+			y1 = y + 1; x1 = x;
+		} else {
+			display("Error with move function");
+			x1 = x;
+			y1 = y;
+		}
+
 		var class1 = document.getElementById(y + " " + x).className;
 		var class2 = document.getElementById(y1 + " " + x1).className;
+
 		if (map[y1][x1] === " ") {
 			map[y1][x1] = map[y][x]; // set new location of player
 			this.changeClass(class1, y1, x1);
@@ -100,25 +117,25 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.keyMap[65] == true) {
 				player.attack("left");
 			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] - 1);
+				world.move(world.playerLoc[0], world.playerLoc[1], "left");
 			}
 		} else if (e.keyCode == 38) { // down key
 			if (this.keyMap[65] == true) {
 				player.attack("down");
 			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] - 1, world.playerLoc[1]);
+				world.move(world.playerLoc[0], world.playerLoc[1], "up");
 			}
 		} else if (e.keyCode == 39) { // right key
 			if (this.keyMap[65] == true) {
 				player.attack("right");
 			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0], world.playerLoc[1] + 1);
+				world.move(world.playerLoc[0], world.playerLoc[1], "right");
 			}
 		} else if (e.keyCode == 40) { // up key
 			if (this.keyMap[65] == true) {
 				player.attack("up");
 			} else {
-				world.move(world.playerLoc[0], world.playerLoc[1], world.playerLoc[0] + 1, world.playerLoc[1]);
+				world.move(world.playerLoc[0], world.playerLoc[1], "down");
 			}
 		} 		
 	}
