@@ -91,10 +91,37 @@ var world = {
 			for (var j = 0; j < map[i].length; j++) {
 				if (map[i][j] === value) {
 					return [i, j];
-				}
+				}	
 			}
 		}
 		return false; // if it can't find it.
+	},
+	calculateDistance(y1, x1, y2, x2) {
+		var moves = [];
+
+		var move = [9999999, 9999999, 99999999, 9999999];
+		if (map[y1][x1 - 1] === " ") {
+			move[0] = (y2 - y1) + (x2 - (x1 - 1)); // left
+		}
+		if (map[y1 - 1][x1] === " ") {
+			move[1] = (y2 - (y1 - 1)) + (x2 - x1); // up
+		}
+		if (map[y1][x1 + 1] === " ") {
+			move[2] = (y2 - y1) + (x2 - (x1 + 1)); // right
+		}
+		if (map[y1 + 1][x1] === " ") {
+			move[3] = (y2 - (y1 + 1)) + (x2 - x1); // down
+		}
+
+		var min = Math.min(move[0], move[1], move[2], move[3]);
+
+		for (var i = 0; i < move.length; i++) {
+			if (move[i] === min) {
+				moves.push(i);
+			}
+		}
+
+		return moves;
 	},
 };
 
