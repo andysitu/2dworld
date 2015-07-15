@@ -99,7 +99,7 @@ var world = {
 	},
 
 	calculate(y1, x1, y2, x2) {
-		var dir = [];
+		var coord = [];
 
 		var move = [0, 0, 0, 0];
 
@@ -112,17 +112,26 @@ var world = {
 
 		for (var i = 0; i < move.length; i++) {
 			if (move[i] === min) {
-				dir.push(i);
+				coord.push( this["calculateFromI"](i, y1, x1) );
 			}
 		}
 
-		return dir;
+		return coord;
 	},
 	calculateDistance(y1, x1, y2, x2) { // distance from two points
-		if (map[y1][x1 - 1] === " ") {
+		if (map[y1][x1] === " ") {
 			return Math.abs(y2 - y1) + Math.abs(x2 - x1);
 		} else {
-			return 9999999;
+			return 99999;
+		}
+	},
+	calculateFromI(i, y1, x1) {
+		switch(i) {
+			case 0: return [y1, x1 - 1]; // left
+			case 1: return [y1 - 1, x1]; // up
+			case 2: return [y1, x1 + 1]; // right
+			case 3: return [y1 + 1, x1]; // down
+			default: throw "calculateFromI only takes i from 0-3";
 		}
 	},
 };
