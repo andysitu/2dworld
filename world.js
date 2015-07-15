@@ -86,6 +86,7 @@ var world = {
 			this.changeClass("space", i, j); 
 		}
 	},
+
 	findIt(value) {
 		for (var i = 0; i < map.length; i++) {
 			for (var j = 0; j < map[i].length; j++) {
@@ -96,32 +97,33 @@ var world = {
 		}
 		return false; // if it can't find it.
 	},
-	calculateDistance(y1, x1, y2, x2) {
-		var moves = [];
 
-		var move = [9999999, 9999999, 99999999, 9999999];
-		if (map[y1][x1 - 1] === " ") {
-			move[0] = (y2 - y1) + (x2 - (x1 - 1)); // left
-		}
-		if (map[y1 - 1][x1] === " ") {
-			move[1] = (y2 - (y1 - 1)) + (x2 - x1); // up
-		}
-		if (map[y1][x1 + 1] === " ") {
-			move[2] = (y2 - y1) + (x2 - (x1 + 1)); // right
-		}
-		if (map[y1 + 1][x1] === " ") {
-			move[3] = (y2 - (y1 + 1)) + (x2 - x1); // down
-		}
+	calculate(y1, x1, y2, x2) {
+		var dir = [];
+
+		var move = [0, 0, 0, 0];
+
+		move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
+		move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
+		move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
+		move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
 
 		var min = Math.min(move[0], move[1], move[2], move[3]);
 
 		for (var i = 0; i < move.length; i++) {
 			if (move[i] === min) {
-				moves.push(i);
+				dir.push(i);
 			}
 		}
 
-		return moves;
+		return dir;
+	},
+	calculateDistance(y1, x1, y2, x2) { // distance from two points
+		if (map[y1][x1 - 1] === " ") {
+			return Math.abs(y2 - y1) + Math.abs(x2 - x1);
+		} else {
+			return 9999999;
+		}
 	},
 };
 
