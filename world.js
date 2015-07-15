@@ -98,7 +98,19 @@ var world = {
 		return false; // if it can't find it.
 	},
 
-	calculate(y1, x1, y2, x2) {
+	distanceToWalkThere(y1, x1, y2, x2) {
+		var dist = 0;
+
+		var coord = this.calculateFirst(y1, x1, y2, x2);
+		dist++;
+		while (coord[0] !==  y2 && coord[1] !== x2) {
+			coord = this.calculateFirst(coord[0][0], coord[0][1], y2, x2);
+			dist++;
+		}
+
+		return dist;
+	},
+	calculateFirst(y1, x1, y2, x2) {
 		var coord = [];
 
 		var move = [0, 0, 0, 0];
@@ -115,7 +127,6 @@ var world = {
 				coord.push( this["calculateFromI"](i, y1, x1) );
 			}
 		}
-
 		return coord;
 	},
 	calculateDistance(y1, x1, y2, x2) { // distance from two points
@@ -132,6 +143,17 @@ var world = {
 			case 2: return [y1, x1 + 1]; // right
 			case 3: return [y1 + 1, x1]; // down
 			default: throw "calculateFromI only takes i from 0-3";
+		}
+	},
+	calculateI(y1, x1, y2, x2) {
+		if (y1 === y2 && x1 - 1 === x2) {
+			return 0;
+		} else if (y1 - 1 === y2 && x1 === x2) {
+			return 1;
+		} else if (y1 === y2 && x1 + 1 === x2) {
+			return 2;
+		} else if (y1 + 1 === y2 && x1 === x2) {
+			return 3;
 		}
 	},
 };
