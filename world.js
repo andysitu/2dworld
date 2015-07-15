@@ -54,10 +54,10 @@ var world = {
 			y1 = y;
 		}
 
-		var class1 = document.getElementById(y + " " + x).className;
-		var class2 = document.getElementById(y1 + " " + x1).className;
-
 		if (map[y1][x1] === " ") {
+			var class1 = document.getElementById(y + " " + x).className;
+			var class2 = document.getElementById(y1 + " " + x1).className;
+
 			map[y1][x1] = map[y][x]; // set new location of player
 			this.changeClass(class1, y1, x1);
 
@@ -135,6 +135,13 @@ var monster = {
 		if (this["list"][num]["hp"] <= 0) {
 			display("You killed the monster with " + dmg + " damgage!");
 			this.rem(num);
+		}
+	},
+	move() {
+		for (var key in this.list) {
+			var dir = Math.ceil(Math.random() * 4);
+			var loc = world.findIt(Number(key));
+			world.move(loc[0], loc[1], dir);
 		}
 	},
 };
