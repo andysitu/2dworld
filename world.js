@@ -146,7 +146,10 @@ var monster = {
 			var dirCount = {1: 0, 2: 0, 3: 0, 4: 0}; 
 
 			for ( ; ; ) {
-				var dir = Math.ceil(Math.random() * 4);
+				var dir = Math.ceil(Math.random() * 6);
+				if (dir > 4 || dir === 0) {
+					break;	// monster doesn't move
+				}
 				dirCount[dir]++;
 				if (world.move(loc[0], loc[1], dir)) {
 					break;
@@ -169,8 +172,10 @@ const controller = { // for now, controller just handles the key presses and key
 		} else if (dir = this.dir(e)) {
 			if (this.keyMap[65] === true) {
 				player.attack(dir);
+				monster.move();
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], dir);
+				monster.move();
 			}
  		
 		}
