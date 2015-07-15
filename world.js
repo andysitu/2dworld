@@ -139,26 +139,29 @@ var monster = {
 			this.rem(num);
 		}
 	},
-	move() {
+	move(monsID) {
+		if (Math.random() * 10 >= 6) {
+			return false;;
+		}
+
+		var loc = world.findIt(Number(monsID));
+
+		// if all 4 directions have been tried, then the monster is stuck
+		// and for loop will end 
+		var dirCount = {1: 0, 2: 0, 3: 0, 4: 0}; 
+
+		while (dirCount[1] <= 0 || dirCount[2] <= 0 || dirCount[3] <= 0 || dirCount[4] <= 0) {
+			var dir = Math.ceil(Math.random() * 4);
+			dirCount[dir]++;
+			if (world.move(loc[0], loc[1], dir)) {
+				return false;
+			} // math.random gives 1-4 for the direction of moving)
+		}	
+	},
+	controller() { // controls whether monster should move, attack, etc.
 		for (var key in this.list) {
-			if (Math.random() * 10 >= 6) {
-				continue;
-			}
-
-			var loc = world.findIt(Number(key));
-
-			// if all 4 directions have been tried, then the monster is stuck
-			// and for loop will end 
-			var dirCount = {1: 0, 2: 0, 3: 0, 4: 0}; 
-
-			while (dirCount[1] <= 0 || dirCount[2] <= 0 || dirCount[3] <= 0 || dirCount[4] <= 0) {
-				var dir = Math.ceil(Math.random() * 4);
-				dirCount[dir]++;
-				if (world.move(loc[0], loc[1], dir)) {
-					break;
-				} // math.random gives 1-4 for the direction of moving)
-				}
-			}
+			this.move(key);
+		}
 	},
 };
 
@@ -172,10 +175,10 @@ const controller = { // for now, controller just handles the key presses and key
 		} else if (dir = this.dir(e)) {
 			if (this.keyMap[65] === true) {
 				player.attack(dir);
-				monster.move();
+				monster.controller();
 			} else {
 				world.move(world.playerLoc[0], world.playerLoc[1], dir);
-				monster.move();
+				monster.controller();
 			}
  		
 		}
