@@ -97,31 +97,36 @@ var world = {
 		}
 		return false; // if it can't find it.
 	},
+
 	stepsToGetThere(y1, x1, y2, x2) {
 
-		var coord = this.calculate(y1, x1, y2, x2);
+		var counter = [0, 0, 0, 0];
 
-		if (coord[0] == y2 && coord[1] === x2) {
-			return 1;
-		} else {
-			return 1 + this.stepsToGetThere(coord[0], coord[1], y2, x2);
-		}
-	},
-	calculate(y1, x1, y2, x2) {
-		var move = [0, 0, 0, 0];
+		function calculate(y1, x1, y2, x2, countArray) {
+			var move = [0, 0, 0, 0];
+			var dir = [];
 
-		move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
-		move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
-		move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
-		move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
+			move[0] = world.calculateDistance(y1, x1 - 1, y2, x2); // left
+			move[1] = world.calculateDistance(y1 - 1, x1, y2, x2); // up
+			move[2] = world.calculateDistance(y1, x1 + 1, y2, x2);; // right
+			move[3] = world.calculateDistance(y1 + 1, x1, y2, x2); // down
 
-		var min = Math.min(move[0], move[1], move[2], move[3]);	
+			var min = Math.min(move[0], move[1], move[2], move[3]);	
 
-		for (var i = 0; i < move.length; i++) {
-			if (move[i] === min) {
-				return this["calculateFromI"](i, y1, x1);
+			for (var i = 0; i < move.length; i++) {
+				if (move[i] === min && min !== 999999) {
+					dir.push(world["calculateFromI"](i, y1, x1));
+				}
 			}
+			
+			return dir;
 		}
+
+		var coord = calculate(y1, x1, y2, x2);
+		if (coord.length === 1) {
+			return this.calculateI(y1, x1, coord[0][0], coord[0][1]);
+		}
+
 	},
 	calculateDistance(y1, x1, y2, x2) { // distance from two points
 		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
@@ -130,7 +135,7 @@ var world = {
 			} else if (map[y1][x1] === "P") {
 				return 0;
 			} else {
-				return 99999;
+				return 999999;
 			}
 		} else {
 			return 999999;
