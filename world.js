@@ -24,7 +24,7 @@ var world = {
 		switch(value) {
 			case "W": return "wall";
 			case " ": return "space";
-			case "M": map[i][j] = monster.make();
+			case "M": map[i][j] = monster.make(i, j);
 						return "monster";
 			case "P": this.playerLoc = [i, j];
 						return "player";
@@ -66,6 +66,9 @@ var world = {
 
 			if (class1 === "player") {
 				this.playerLoc = [y1, x1]; // change the player coordinates record
+			} else if (class1 === "monster") {
+				monster["list"][map[y1][x1]]["yCoord"] = y1;
+				monster["list"][map[y1][x1]]["xCoord"] = x1;
 			}
 			return true;
 		}
@@ -73,8 +76,8 @@ var world = {
 		return false;
 	},
 	rem(value, newClass) { // removes monster with value and replaes it with either a newClass (ex: "W", " ") if defiend, if not, then space
-		const loc = this.findIt(value);
-		const i = loc[0], j = loc[1];
+		var loc = [monster["list"][value]["yCoord"], monster["list"][value]["xCoord"]];
+		var i = loc[0], j = loc[1];
 		if (newClass) {
 			map[i][j] = newClass;
 			this.changeClass(this.classTranslator(newClass, i, j), i, j);
@@ -116,19 +119,22 @@ var monster = {
 	counter: -1,
 	list: {}, // list of all the monsters created
 	statuses: ["aggressive", "passive", "coward", "superaggressive", "passive"],
-	make() { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
+	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
 		var level = Math.ceil(Math.random() * 5)
 		monster["list"][this.counter] = {
 			level: level,
 			hp: Math.ceil(Math.random() * level * 3 * player.level * player.level),
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
+			yCoord: i,
+			xCoord: j,
 		}
 		return this.counter;
 	},
 	rem(num) { // deletese monster from this.list & removes it from map
-		delete this["list"][num];
 		world.rem(num);
+		delete this["list"][num];
+	},
 	},
 	attacked(num, dmg) {
 		this["list"][num]["hp"] -= dmg;
@@ -144,7 +150,7 @@ var monster = {
 			return false;;
 		}
 
-		var loc = world.findIt(Number(monsID));
+		var loc = [this["list"][monsID]["yCoord"], this["list"][monsID]["xCoord"]];
 
 		// if all 4 directions have been tried, then the monster is stuck
 		// and for loop will end 
