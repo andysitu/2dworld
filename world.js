@@ -139,9 +139,22 @@ var monster = {
 	},
 	move() {
 		for (var key in this.list) {
-			var dir = Math.ceil(Math.random() * 4);
 			var loc = world.findIt(Number(key));
-			world.move(loc[0], loc[1], dir);
+
+			// if all 4 directions have been tried, then the monster is stuck
+			// and for loop will end 
+			var dirCount = {1: 0, 2: 0, 3: 0, 4: 0}; 
+
+			for ( ; ; ) {
+				var dir = Math.ceil(Math.random() * 4);
+				dirCount[dir]++;
+				if (world.move(loc[0], loc[1], dir)) {
+					break;
+				} // math.random gives 1-4 for the direction of moving)
+				if (dirCount[1] > 0 && dirCount[2] > 0 && dirCount[3] > 0 && dirCount[4] > 4) {
+					break;
+				}
+			}
 		}
 	},
 };
