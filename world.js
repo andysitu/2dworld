@@ -115,12 +115,14 @@ var player = {
 var monster = {
 	counter: -1,
 	list: {}, // list of all the monsters created
+	statuses: ["aggressive", "passive", "coward", "superaggressive", "passive"],
 	make() {
 		this.counter++;
 		var level = Math.ceil(Math.random() * 5)
 		monster["list"][this.counter] = {
 			level: level,
 			hp: Math.ceil(Math.random() * level * 3 * player.level * player.level),
+			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 		}
 		return this.counter;
 	},
@@ -146,7 +148,7 @@ var monster = {
 			var dirCount = {1: 0, 2: 0, 3: 0, 4: 0}; 
 
 			for ( ; ; ) {
-				var dir = Math.ceil(Math.random() * 6);
+				var dir = Math.ceil(Math.random() * 9);
 				if (dir > 4 || dir === 0) {
 					break;	// monster doesn't move
 				}
