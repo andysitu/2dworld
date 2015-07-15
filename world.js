@@ -38,7 +38,7 @@ var world = {
 	},
 
 	move(y, x, dir) { // 1 for left, 2 for up, 3 for right, 4 for down
-		var y1, x1; // new direction where character will move to
+		var y1, x1; // new coordinate where character will move to
 
 		if (dir === "left" || dir === 1) { // converts y1 and x1 to correct coordinates according to dir
 			y1 = y; x1 = x - 1;
@@ -72,7 +72,7 @@ var world = {
 
 		return false;
 	},
-	rem(value, newClass) {
+	rem(value, newClass) { // removes monster with value and replaes it with either a newClass (ex: "W", " ") if defiend, if not, then space
 		const loc = this.findIt(value);
 		const i = loc[0], j = loc[1];
 		if (newClass) {
@@ -116,7 +116,7 @@ var monster = {
 	counter: -1,
 	list: {}, // list of all the monsters created
 	statuses: ["aggressive", "passive", "coward", "superaggressive", "passive"],
-	make() {
+	make() { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
 		var level = Math.ceil(Math.random() * 5)
 		monster["list"][this.counter] = {
@@ -126,7 +126,7 @@ var monster = {
 		}
 		return this.counter;
 	},
-	rem(num) {
+	rem(num) { // deletese monster from this.list & removes it from map
 		delete this["list"][num];
 		world.rem(num);
 	},
@@ -174,16 +174,18 @@ const controller = { // for now, controller just handles the key presses and key
 			this.keyMap[65] = true;
 		} else if (dir = this.dir(e)) {
 			if (this.keyMap[65] === true) {
+				display(false);
 				player.attack(dir);
 				monster.controller();
 			} else {
+				display(false);
 				world.move(world.playerLoc[0], world.playerLoc[1], dir);
 				monster.controller();
 			}
  		
 		}
 	},
-	dir(e) {
+	dir(e) { // translates e.keyCode to return a string of the direction
 		if (e.keyCode == 37) {
 			return "left";
 		} else if (e.keyCode == 38) {

@@ -1,10 +1,14 @@
 
 function display(msg) {
 	document.getElementById("message");
-	message.value = msg;
+	if (msg !== false) {
+		message.value += msg + "\n";
+	} else {
+		message.value = "";
+	}	
 }
 
-function check(dir, range) {
+function check(dir, range) { // checks if there is a monster within a certain range if it is, then it'll return the monster #
 	if (dir == "left") {
 		for (var i = 1; i <= range; i++) {
 			if (typeof map[world.playerLoc[0]][world.playerLoc[1] - i] == "number") {
