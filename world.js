@@ -200,6 +200,18 @@ var world = {
 			return 3;
 		}
 	},
+	nextTo(y1, x1, y2, x2) { // returns true if character is next to that coordinate
+		var coordinates = [];
+		for (var i = 0; i < 4; i++) {
+			coordinates = this.calculateFromI(i, y1, x1);
+
+			if (coordinates[0] === y2 && coordinates[1] === x2) {
+				return true;
+			}
+		}
+
+		return false;
+	},
 };
 
 var player = {
@@ -255,9 +267,7 @@ var monster = {
 		if (this["list"][num]["hp"] <= 0) {
 			display("You killed the monster with " + dmg + " damgage!");
 			this.rem(num);
-		}
-
-		if (this["list"][num]["status"] === "passive") {
+		} else if (this["list"][num]["status"] === "passive") {
 			this["list"][num]["status"] = "aggressive";
 		}
 	},
@@ -300,7 +310,7 @@ var monster = {
 		var pLoc = world.playerLoc;
 
 		var dir = world.bestStep(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
-		if (dir === false) {
+		if (world.nextTo(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1])) { // if monster is next to player
 			display("Attack!");
 		} else {
 			world.move(loc["yCoord"], loc["xCoord"], dir);
