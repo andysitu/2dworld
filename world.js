@@ -282,7 +282,7 @@ var monster = {
 			return false;
 		}
 	},
-	move(monsID) {
+	moveNormally(monsID) {
 		if (Math.random() * 10 >= 6) {
 			return false;;
 		}
@@ -301,9 +301,21 @@ var monster = {
 			} // math.random gives 1-4 for the direction of moving)
 		}	
 	},
+	moveTowards(monstID) {
+		var loc = this["list"][monstID];
+		var pLoc = world.playerLoc;
+
+		var dir = world.bestStep(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
+		world.move(loc[yCoord], loc[xCoord], dir);
+	},
 	controller() { // controls whether monster should move, attack, etc.
 		for (var key in this.list) {
-			this.move(key);
+			if (this.inRange(key)) {
+				this.moveTowards(key);
+			} else {
+				this.moveNormally(key);
+			}
+			
 		}
 	},
 };
