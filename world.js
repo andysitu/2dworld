@@ -262,6 +262,25 @@ var monster = {
 			display("You killed the monster with " + dmg + " damgage!");
 			this.rem(num);
 		}
+
+		if (this["list"][num]["status"] === "passive") {
+			this["list"][num]["status"] = "aggressive";
+		}
+	},
+	inRange(monstID) { 
+		var loc = this["list"][monstID];
+		var pLoc = world.playerLoc;
+		var range = 0;
+		if (loc["status"] === "aggressive") {
+			range = 5;
+		} else if (loc["status"] === "superaggressive") {
+			range = 10;
+		}
+		if ( Math.abs((loc["yCoord"] * loc["yCoord"] - pLoc[0] * pLoc[0] ) + ( loc["xCoord"] * loc["xCoord"] - pLoc[1] * pLoc[1] )) <= 5) {
+			return true;
+		} else {
+			return false;
+		}
 	},
 	move(monsID) {
 		if (Math.random() * 10 >= 6) {
