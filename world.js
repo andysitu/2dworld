@@ -121,7 +121,7 @@ var world = {
 				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true);
 				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2);
 				if (coords[i] === false) {
-					coords[i] === 999999
+					return false;
 				}
 			}
 
@@ -133,7 +133,9 @@ var world = {
 
 			var arr = [];
 			for (var i = 0; i < coord.length; i++ ) {
-				if (coords[i] === min) {
+				if (coords[i] === false) {
+					return false;
+				} else if (coords[i] === min) {
 					arr.push(i);
 				}
 			}
@@ -141,7 +143,7 @@ var world = {
 		}
 
 	},
-	calculate(y1, x1, y2, x2, status) { 
+	calculate(y1, x1, y2, x2, status) { //  calculates the direction to move for closest distance to player
 		var move = [0, 0, 0, 0];
 		var dir = [];
 		
@@ -154,7 +156,10 @@ var world = {
 
 			if (status === undefined) {
 				for (var i = 0; i < move.length; i++) {
-					if (move[i] === min && min !== 999999) {
+					if (move[i] === 0) {
+						return false; // false means monster should stay in place
+					}
+					else if (move[i] === min && min !== 999999) {
 						dir.push(i);
 					}
 				}
@@ -165,7 +170,9 @@ var world = {
 				return dir;
 			} else {
 				for (var i = 0; i < move.length; i++) {
-					if (move[i] === min && min !== 999999) {
+					if (move[i] === 0) {
+						return false;
+					} else if (move[i] === min && min !== 999999) {
 						return this.calculateFromI(i, y1, x2);
 					}
 				}
@@ -173,9 +180,11 @@ var world = {
 				return false;
 			}
 	},
-	calculateDistance(y1, x1, y2, x2) { // distance from two points
+	calculateDistance(y1, x1, y2, x2) { // calculate distance from two points
 		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
-			if (map[y1][x1] === " ") {
+			if (map[y1][x1] === 'P') {
+				return 0;
+			} else if (map[y1][x1] === " ") {
 				return Math.abs(y2 - y1) + Math.abs(x2 - x1);
 			} else if (map[y1][x1] === "P") {
 				return 0;
@@ -306,7 +315,11 @@ var monster = {
 		var pLoc = world.playerLoc;
 
 		var dir = world.bestStep(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
-		world.move(loc[yCoord], loc[xCoord], dir);
+		if (dir === false) {
+			display("Attack!");
+		} else {
+			world.move(loc["yCoord"], loc["xCoord"], dir);
+		}
 	},
 	controller() { // controls whether monster should move, attack, etc.
 		for (var key in this.list) {
