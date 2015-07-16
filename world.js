@@ -106,9 +106,6 @@ var world = {
 		// if it returns false, then the character can't move and shouldn't.
 
 		var coord = this.calculate(y1, x1, y2, x2);
-		if (coord === false) { // when for example character is covered by walls
-			return coord;
-		}
 
 		if (coord.length === 1) { // if there's only one direction
 			return coord[0];
@@ -121,9 +118,6 @@ var world = {
 			for (var i = 0; i < coord.length; i++) {
 				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true);
 				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2);
-				if (coords[i] === false) {
-					return false;
-				}
 			}
 
 			var min = Math.min.apply(null, coords);
@@ -134,9 +128,7 @@ var world = {
 
 			var arr = [];
 			for (var i = 0; i < coord.length; i++ ) {
-				if (coords[i] === false) {
-					return false;
-				} else if (coords[i] === min) {
+				if (coords[i] === min) {
 					arr.push(i);
 				}
 			}
@@ -157,23 +149,15 @@ var world = {
 
 			if (status === undefined) {
 				for (var i = 0; i < move.length; i++) {
-					if (move[i] === 0) {
-						return false; // false means monster should stay in place
-					}
-					else if (move[i] === min && min !== 999999) {
+					if (move[i] === min && min !== 999999) {
 						dir.push(i);
 					}
 				}
 
-				if (dir.length === 0) {
-					return false;
-				}
 				return dir;
 			} else {
 				for (var i = 0; i < move.length; i++) {
-					if (move[i] === 0) {
-						return false;
-					} else if (move[i] === min && min !== 999999) {
+					if (move[i] === min && min !== 999999) {
 						return this.calculateFromI(i, y1, x2);
 					}
 				}
