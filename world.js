@@ -102,8 +102,12 @@ var world = {
 		// if there are two or more equal points of distance, then method will do calculate again on those steps and then 
 		// and then out of the directions that equal with the min distance, it'll give the first one.
 
+		// if it returns false, then the character can't move and shouldn't.
+
 		var coord = this.calculate(y1, x1, y2, x2);
-		console.log(coord);
+		if (coord === false) { // when for example character is covered by walls
+			return coord;
+		}
 		if (coord.length === 1) {
 			return coord[0];
 		} else {
@@ -116,9 +120,16 @@ var world = {
 				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true);
 				console.log(coords[i]);
 				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2);
+				if (coords[i] === false) {
+					coords[i] === 999999
+				}
 			}
 
 			var min = Math.min.apply(null, coords);
+
+			if (min === 999999) {
+				return false; // when for example character is covered by walls
+			}
 
 			for (var i = 0; i < coord.length; i++ ) {
 				if (coords[i] === min) {
@@ -148,6 +159,9 @@ var world = {
 					}
 				}
 
+				if (dir.length === 0) {
+					return false;
+				}
 				return dir;
 			} else {
 				for (var i = 0; i < move.length; i++) {
@@ -156,7 +170,7 @@ var world = {
 					}
 				}
 
-				// if no case?
+				return false;
 			}
 	},
 	calculateDistance(y1, x1, y2, x2) { // distance from two points
