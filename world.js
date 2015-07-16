@@ -116,8 +116,9 @@ var world = {
 			}
 
 			for (var i = 0; i < coord.length; i++) {
-				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true);
-				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2);
+				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true); // returns coordinates from the hypothetical positions
+				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2); // calculates distances from the hypothetical positions
+				console.log(coords[i]);
 			}
 
 			var min = Math.min.apply(null, coords);
@@ -147,7 +148,7 @@ var world = {
 
 			var min = Math.min.apply(null, move);
 
-			if (status === undefined) {
+			if (status === undefined || status === false) { // performs calculation normally
 				for (var i = 0; i < move.length; i++) {
 					if (move[i] === min && min !== 999999) {
 						dir.push(i);
@@ -155,7 +156,7 @@ var world = {
 				}
 
 				return dir;
-			} else {
+			} else { // returns coordinates from the hypothetical positions
 				for (var i = 0; i < move.length; i++) {
 					if (move[i] === min && min !== 999999) {
 						return this.calculateFromI(i, y1, x2);
@@ -280,7 +281,7 @@ var monster = {
 		} else if (loc["status"] === "superaggressive") {
 			range = 10;
 		}
-		if ( Math.abs((loc["yCoord"] * loc["yCoord"] - pLoc[0] * pLoc[0] ) + ( loc["xCoord"] * loc["xCoord"] - pLoc[1] * pLoc[1] )) <= 5) {
+		if ( (loc["yCoord"] - pLoc[0] ) * (loc["yCoord"] - pLoc[0]  + ( loc["xCoord"] - pLoc[1] ) * ( loc["xCoord"] - pLoc[1] )) <= range) {
 			return true;
 		} else {
 			return false;
