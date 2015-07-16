@@ -98,35 +98,66 @@ var world = {
 		return false; // if it can't find it.
 	},
 
-	stepsToGetThere(y1, x1, y2, x2) {
+	bestStep(y1, x1, y2, x2) {
+		// if there are two or more equal points of distance, then method will do calculate again on those steps and then 
+		// and then out of the directions that equal with the min distance, it'll give the first one.
 
-		var counter = [0, 0, 0, 0];
+		var coord = this.calculate(y1, x1, y2, x2);
+		console.log(coord);
+		if (coord.length === 1) {
+			return coord[0];
+		} else {
+			var coords = [];
+			for (var i = 0; i < coord.length; i++) {
+				coords[i] = this.calculateFromI(coord[i], y1, x1);
+			}
 
-		function calculate(y1, x1, y2, x2, countArray) {
-			var move = [0, 0, 0, 0];
-			var dir = [];
+			for (var i = 0; i < coord.length; i++) {
+				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true);
+				console.log(coords[i]);
+				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2);
+			}
 
-			move[0] = world.calculateDistance(y1, x1 - 1, y2, x2); // left
-			move[1] = world.calculateDistance(y1 - 1, x1, y2, x2); // up
-			move[2] = world.calculateDistance(y1, x1 + 1, y2, x2);; // right
-			move[3] = world.calculateDistance(y1 + 1, x1, y2, x2); // down
+			var min = Math.min.apply(null, coords);
 
-			var min = Math.min(move[0], move[1], move[2], move[3]);	
-
-			for (var i = 0; i < move.length; i++) {
-				if (move[i] === min && min !== 999999) {
-					dir.push(world["calculateFromI"](i, y1, x1));
+			for (var i = 0; i < coord.length; i++ ) {
+				if (coords[i] === min) {
+					return coord[i];
 				}
 			}
-			
-			return dir;
+
+			return coord[0];
 		}
 
-		var coord = calculate(y1, x1, y2, x2);
-		if (coord.length === 1) {
-			return this.calculateI(y1, x1, coord[0][0], coord[0][1]);
-		}
+	},
+	calculate(y1, x1, y2, x2, status) { 
+		var move = [0, 0, 0, 0];
+		var dir = [];
+		
+			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
+			move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
+			move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
+			move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
 
+			var min = Math.min.apply(null, move);
+
+			if (status === undefined) {
+				for (var i = 0; i < move.length; i++) {
+					if (move[i] === min && min !== 999999) {
+						dir.push(i);
+					}
+				}
+
+				return dir;
+			} else {
+				for (var i = 0; i < move.length; i++) {
+					if (move[i] === min && min !== 999999) {
+						return this.calculateFromI(i, y1, x2);
+					}
+				}
+
+				// if no case?
+			}
 	},
 	calculateDistance(y1, x1, y2, x2) { // distance from two points
 		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
