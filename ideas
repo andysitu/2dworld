@@ -1,0 +1,8 @@
+* if mmonster is in range, monster will run after player (if aggressive)
+* if attacked, will attack back (unless coward status)
+* items
+* weapons
+* menu display (hp, mp, etc)
+* skills
+* menu selection, input from player
+* player can click on the map in area around player and then check on the status

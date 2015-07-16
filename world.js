@@ -108,6 +108,7 @@ var world = {
 		if (coord === false) { // when for example character is covered by walls
 			return coord;
 		}
+
 		if (coord.length === 1) {
 			return coord[0];
 		} else {
@@ -118,7 +119,6 @@ var world = {
 
 			for (var i = 0; i < coord.length; i++) {
 				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true);
-				console.log(coords[i]);
 				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2);
 				if (coords[i] === false) {
 					coords[i] === 999999
@@ -131,13 +131,13 @@ var world = {
 				return false; // when for example character is covered by walls
 			}
 
+			var arr = [];
 			for (var i = 0; i < coord.length; i++ ) {
 				if (coords[i] === min) {
-					return coord[i];
+					arr.push(i);
 				}
 			}
-
-			return coord[0];
+			return coord[ arr[Math.floor(Math.random() * arr.length)] ];
 		}
 
 	},
