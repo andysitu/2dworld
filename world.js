@@ -272,7 +272,7 @@ var monster = {
 		var pLoc = world.playerLoc;
 		var range = (loc["status"] === "aggressive") ? 10 : 15;
 
-		if ( ((loc["yCoord"] - pLoc[0] ) * (loc["yCoord"] - pLoc[0]  + ( loc["xCoord"] - pLoc[1] ) * ( loc["xCoord"] - pLoc[1] ))) <= range) {
+		if ( ( (loc["yCoord"] - pLoc[0] ) * (loc["yCoord"] - pLoc[0]) )  + ( ( loc["xCoord"] - pLoc[1] ) * ( loc["xCoord"] - pLoc[1] )) <= range) {
 			return true;
 		} else {
 			return false;

@@ -1,5 +1,9 @@
-* if mmonster is in range, monster will run after player (if aggressive)
+* player levels up
+* monster gives experience
+* monster gives gold, rewards
+* possiblity of dropping items
 * if attacked, will attack back (unless coward status)
+* coward will run away
 * items
 * weapons
 * menu display (hp, mp, etc)
