@@ -226,9 +226,9 @@ var player = {
 			display("There is no monster there!");
 		}
 	},
-	attacked(dmg) {
-		this.hp -= dmg;
-		display("You were hit and took " + dmg + " hp.");
+
+	statusChange(status, value) {
+		this[status] += value;
 	}
 }
 
@@ -241,7 +241,7 @@ var monster = {
 		var level = Math.ceil(Math.random() * 5)
 		monster["list"][this.counter] = {
 			level: level * player.level,
-			hp: Math.ceil(Math.random() * level * 3 * player.level * player.level),
+			hp: Math.ceil(Math.random() * level * 3 * level),
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 			yCoord: i,
 			xCoord: j,
@@ -254,7 +254,8 @@ var monster = {
 	},
 	attack(num) {
 		var dmg = Math.ceil(this["list"][num]["level"] * 3 * Math.random());
-		player.attacked(dmg);
+		player.statusChange("hp", -dmg);
+		display("You were hit and lost " + dmg + " hp.");
 	},
 	attacked(num, dmg) {
 		this["list"][num]["hp"] -= dmg;
