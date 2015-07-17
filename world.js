@@ -397,7 +397,21 @@ window.onload = function() {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
 			table.rows[i].cells[j].onclick = function(e) {
-				display(this.id + " " + this.className);
+				if (this.className === "monster") {
+					var str = /(\d*) (\d*)/.exec(this.id);
+					var monstID = map[str[1]][str[2]];
+					var monst = monster.list[monstID];
+
+					if (world.inRange(monst["yCoord"], monst["xCoord"], world.playerLoc[0], world.playerLoc[1], 30)) {
+						display(false);
+						display("That's a monster!");
+						display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
+					} else {
+						display("That's a monster!");
+					}
+				} else {
+					display(this.id + " " + this.className);
+				}
 			}
 		}
 	}
