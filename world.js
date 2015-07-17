@@ -387,4 +387,15 @@ window.onload = function() {
 			controller.keyMap[65] = false;
 		}
 	}
+
+	var table = document.getElementById("map");
+	for (var i = 0; i < table.rows.length; i++) {
+		for (var j = 0; j < table.rows[i].cells.length; j++) {
+
+			table.rows[i].cells[j].onclick = function(e) {
+				display(this.id + " " + this.className);
+			}
+		}
+	}
+
 };
