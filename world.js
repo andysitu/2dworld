@@ -220,6 +220,13 @@ var player = {
 	},
 	set exp (value) {
 		this.expValue += value;
+		if (this.expValue >= this.level * this.level * 5) {
+			this.expValue -= this.level * this.level * 5;
+			this.statusChange("level", 1);
+			display("You leveled to level " + this.level + ".");
+		} else {
+			display("You gained " + value + " exp.");
+		}
 	},
 	damage() {
 		return Math.floor(Math.random() * 5 * player.level + 1 * player.level)
@@ -262,7 +269,7 @@ var monster = {
 	attack(num) {
 		var dmg = Math.ceil(this["list"][num]["level"] * 3 * Math.random());
 		player.statusChange("hp", -dmg);
-		display("You were hit and lost " + dmg + " hp.");
+		display("You were hit with " + dmg + " damage.");
 	},
 	attacked(num, dmg) {
 		this["list"][num]["hp"] -= dmg;
@@ -270,7 +277,6 @@ var monster = {
 
 		if (this["list"][num]["hp"] <= 0) { // monster dead
 			player.statusChange("exp", this["list"][num]["level"])
-			display("You killed the monster with " + dmg + " damgage and gained " + this["list"][num]["level"] + " exp!");
 			this.rem(num);
 		} else if (this["list"][num]["status"] === "passive") {
 			this["list"][num]["status"] = "aggressive";
