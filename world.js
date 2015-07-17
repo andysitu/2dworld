@@ -51,6 +51,7 @@ var world = {
 		} else {
 			display("Error with move function");
 			console.log("Error Here:" + x, y, dir);
+			throw "Error";
 			x1 = x;
 			y1 = y;
 		}
@@ -118,14 +119,9 @@ var world = {
 			for (var i = 0; i < coord.length; i++) {
 				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true); // returns coordinates from the hypothetical positions
 				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2); // calculates distances from the hypothetical positions
-				console.log(coords[i]);
 			}
 
 			var min = Math.min.apply(null, coords);
-
-			if (min === 999999) {
-				return false; // when for example character is covered by walls
-			}
 
 			var arr = [];
 			for (var i = 0; i < coord.length; i++ ) {
@@ -137,8 +133,8 @@ var world = {
 		}
 
 	},
-	calculate(y1, x1, y2, x2, status) { //  calculates the direction to move for closest distance to player
-		var move = [0, 0, 0, 0];
+	calculate(y1, x1, y2, x2, status) { // calculates the direction to move for closest distance to player,
+		var move = [0, 0, 0, 0];		// returns array(s) of best coordinate dependng on status
 		var dir = [];
 		
 			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
@@ -163,7 +159,7 @@ var world = {
 					}
 				}
 
-				return false;
+				return [y1, x1];
 			}
 	},
 	calculateDistance(y1, x1, y2, x2) { // calculate distance from two points
@@ -172,8 +168,6 @@ var world = {
 				return 0;
 			} else if (map[y1][x1] === " ") {
 				return Math.abs(y2 - y1) + Math.abs(x2 - x1);
-			} else if (map[y1][x1] === "P") {
-				return 0;
 			} else {
 				return 999999;
 			}
@@ -259,7 +253,8 @@ var monster = {
 		delete this["list"][num];
 	},
 	attack(num) {
-		return Math.ceil(this["list"][num]["level"] * 3 * Math.random());
+		var dmg = Math.ceil(this["list"][num]["level"] * 3 * Math.random());
+		player.attacked(dmg);
 	},
 	attacked(num, dmg) {
 		this["list"][num]["hp"] -= dmg;
@@ -275,13 +270,9 @@ var monster = {
 	inRange(monstID) { 
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
-		var range = 0;
-		if (loc["status"] === "aggressive") {
-			range = 5;
-		} else if (loc["status"] === "superaggressive") {
-			range = 10;
-		}
-		if ( (loc["yCoord"] - pLoc[0] ) * (loc["yCoord"] - pLoc[0]  + ( loc["xCoord"] - pLoc[1] ) * ( loc["xCoord"] - pLoc[1] )) <= range) {
+		var range = (loc["status"] === "aggressive") ? 10 : 15;
+
+		if ( ((loc["yCoord"] - pLoc[0] ) * (loc["yCoord"] - pLoc[0]  + ( loc["xCoord"] - pLoc[1] ) * ( loc["xCoord"] - pLoc[1] ))) <= range) {
 			return true;
 		} else {
 			return false;
@@ -303,7 +294,7 @@ var monster = {
 			dirCount[dir]++;
 			if (world.move(loc[0], loc[1], dir)) {
 				return false;
-			} // math.random gives 1-4 for the direction of moving)
+			} // math.random gives 0-3 for the direction of moving)
 		}	
 	},
 	moveTowards(monstID) {
@@ -312,15 +303,19 @@ var monster = {
 
 		var dir = world.bestStep(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
 		if (world.nextTo(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1])) { // if monster is next to player
-			display("Attack!");
+			this.attack(monstID);
 		} else {
 			world.move(loc["yCoord"], loc["xCoord"], dir);
 		}
 	},
 	controller() { // controls whether monster should move, attack, etc.
 		for (var key in this.list) {
-			if (this.inRange(key)) {
-				this.moveTowards(key);
+			if ( this["list"][key]["status"] === "aggressive" || this["list"][key]["status"] === "superaggressive") {
+				if (this.inRange(key)) {
+					this.moveTowards(key);
+				} else {
+					this.moveNormally(key);
+				}
 			} else {
 				this.moveNormally(key);
 			}
