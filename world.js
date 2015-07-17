@@ -106,7 +106,7 @@ var world = {
 
 		// if it returns false, then the character can't move and shouldn't.
 
-		var coord = this.calculate(y1, x1, y2, x2);
+		var coord = this.calculate(y1, x1, y2, x2); // returns arrays to travel for closest distance to player
 
 		if (coord.length === 1) { // if there's only one direction
 			return coord[0];
@@ -206,7 +206,7 @@ var world = {
 		}
 
 		return false;
-	},
+	}
 };
 
 var player = {
@@ -214,6 +214,7 @@ var player = {
 	"max hp": 50,
 	level: 1,
 	range: 1,
+	exp:0,
 	damage() {
 		return Math.floor(Math.random() * 5 * player.level + 1 * player.level)
 	},
@@ -261,7 +262,7 @@ var monster = {
 		this["list"][num]["hp"] -= dmg;
 		display(dmg + " damage was done to the monster.");
 
-		if (this["list"][num]["hp"] <= 0) {
+		if (this["list"][num]["hp"] <= 0) { // monster dead
 			display("You killed the monster with " + dmg + " damgage!");
 			this.rem(num);
 		} else if (this["list"][num]["status"] === "passive") {
@@ -322,7 +323,7 @@ var monster = {
 			}
 			
 		}
-	},
+	}
 };
 
 const controller = { // for now, controller just handles the key presses and key combinations
@@ -357,7 +358,7 @@ const controller = { // for now, controller just handles the key presses and key
 		} else {
 			return false;
 		}
-	},
+	}
 };
 
 
