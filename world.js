@@ -206,6 +206,14 @@ var world = {
 		}
 
 		return false;
+	},
+
+	inRange(y1, x1, y2, x2, range) {
+		if ( ( (y1 - y2 ) * (y1 - y2 )  + ( x1 - x2 ) * ( x1 - x2 ) ) <= range) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 };
 
@@ -243,13 +251,13 @@ var player = {
 
 	statusChange(status, value) {
 		this[status] += value;
-	}
+	} 
 }
 
 var monster = {
 	counter: -1,
 	list: {}, // list of all the monsters created
-	statuses: ["aggressive", "passive", "coward", "superaggressive", "passive"],
+	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
 		var level = Math.ceil(Math.random() * 5)
@@ -287,11 +295,7 @@ var monster = {
 		var pLoc = world.playerLoc;
 		var range = (loc["status"] === "aggressive") ? 10 : 15;
 
-		if ( ( (loc["yCoord"] - pLoc[0] ) * (loc["yCoord"] - pLoc[0]) )  + ( ( loc["xCoord"] - pLoc[1] ) * ( loc["xCoord"] - pLoc[1] )) <= range) {
-			return true;
-		} else {
-			return false;
-		}
+		return world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], range);
 	},
 	moveNormally(monsID) {
 		if (Math.random() * 10 >= 6) {
