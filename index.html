@@ -6,6 +6,7 @@
 	<title>A 2D World</title>
 
 	<style>
+
 		table {
 			border: none;
 			border-spacing: 0px;
@@ -14,23 +15,38 @@
 			width: 14px;
 			height: 14px;
 		}
-		#message {
-			position: relative;
-			margin-left: 30px;
+		#map {
+			margin-left: 3%;
+			margin-top: 15px;
+		}
+		#status {
+			margin-left: 20px;
 			margin-top: 20px;
-			width: 500px;
+			width: 300px;
 			height: 100px;
 		}
-		#map {
-			position: relative;
-			margin-left: 2%;
-			margin-top: 1%;
+		#message {
+			margin-left: 20px;
+			margin-top: 10px;
+			width: 300px;
+			height: 200px;
 		}
 		#help {
-			position: fixed;
-			margin-bottom: 2%;
-			margin-left: 2%;
+			position: absolute;
+			left: 2%;
+			bottom: 2%;
 		}
+
+		#container {
+		}
+		.map {
+			float: left;
+		}
+		.side {
+			width: 300px;
+			float: left;
+		}
+
 		.wall {
 			background: url("images/wall.png") no-repeat center center;
 		}
@@ -43,6 +59,7 @@
 		.monster {
 			background: url("images/monst1.png") no-repeat center center;
 		}
+
 	</style>
 
 	<script>
@@ -53,11 +70,18 @@
 	<script src="functions.js"></script>
 	<script src="map.js"></script>
 	<script src="world.js"></script>
-	<textarea id="message"></textarea>
-	<table id="map" cellspacing="0" cellpadding="0">
-	</table>
 
-	<br><br>
+	<div id="container">
+		<div class="map">
+			<table id="map" cellspacing="0" cellpadding="0"></table>
+		</div>
+
+		<div class="side">
+			<textarea id="status"></textarea>
+			<textarea id="message"></textarea>
+		</div>
+	</div>
+
 	<a href="help.html" id="help">Help Page</a>
 </body>
 
