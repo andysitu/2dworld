@@ -229,7 +229,7 @@ var player = {
 		}
 	},
 	damage() {
-		return Math.floor(Math.random() * 5 * player.level + 1 * player.level)
+		return Math.floor(Math.random() * 3 * player.level + 1 * player.level)
 	},
 
 	attack(dir) {
@@ -255,7 +255,7 @@ var monster = {
 		var level = Math.ceil(Math.random() * 5)
 		monster["list"][this.counter] = {
 			level: level * player.level,
-			hp: Math.ceil(Math.random() * level * 3 * level),
+			hp: Math.ceil(Math.random() * level * level * 0.3 + 0.7 * level * level),
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 			yCoord: i,
 			xCoord: j,
