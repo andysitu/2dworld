@@ -11,7 +11,7 @@ var world = {
 			for (var j = 0; j < maps[i].length; j++) {
 				var th = document.createElement("th");
 				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
-					maps[i][j] = "W";
+					maps[i][j] = "W"; // sets edges of the map into maps
 				}
 
 				th.setAttribute("class", this.classTranslator(maps[i][j], i, j)) // classTranslator runs any necessary functions and returns the correct class name
@@ -32,8 +32,8 @@ var world = {
 		}
 	},
 
-	changeClass(class1, x1, y1) {
-		var loc = document.getElementById(x1 + " " + y1);
+	changeClass(class1, y1, x1) {
+		var loc = document.getElementById(y1 + " " + x1);
 		loc.setAttribute("class", class1);
 	},
 
@@ -328,7 +328,7 @@ var monster = {
 		}
 	},
 
-	spawner() { 
+	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
 		var chance = Math.ceil(Math.random() * 100); 
 		if (chance === 1) { // 1% chance of spawning mmonster
 			for ( ; ; ) {
@@ -343,8 +343,11 @@ var monster = {
 	},
 	spawn(y, x) {
 		if (map[y][x] === " ") {
-			this.make(y, x);
-			display("Monster was spawned");
+			var monstID = this.make(y, x);
+			map.changeValue(y, x, monstID);
+			world.changeClass("monster", y, x);
+
+			display("Monster spawned");
 			return true;
 		} else {
 			return false;
