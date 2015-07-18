@@ -1,11 +1,17 @@
 
 function display(msg) {
-	document.getElementById("message");
+	var message = document.getElementById("message");
 	if (msg !== false) {
 		message.value += msg + "\n";
 	} else {
 		message.value = "";
 	}	
+}
+
+function displayStatus() {
+	var status = document.getElementById("status");
+
+	status.value = "hp: " + player.hp + "\nlevel: " + player.level + "\nexp: " + player.exp + "\ngold: " + player.gold;
 }
 
 function check(dir, range) { // checks if there is a monster within a certain range if it is, then it'll return the monster #
