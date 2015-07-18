@@ -40,13 +40,13 @@ var world = {
 	move(y, x, dir) { // 1 for left, 2 for up, 3 for right, 4 for down
 		var y1, x1; // new coordinate where character will move to
 
-		if (dir === "left" || dir === 0) { // converts y1 and x1 to correct coordinates according to dir
+		if (dir === 0) { // converts y1 and x1 to correct coordinates according to dir
 			y1 = y; x1 = x - 1;
-		} else if (dir === "up" || dir === 1) {
+		} else if (dir === 1) {
 			y1 = y - 1; x1 = x;
-		} else if (dir === "right" || dir === 2) {
+		} else if (dir === 2) {
 			y1 = y; x1 = x + 1;
-		} else if (dir === "down" || dir === 3) {
+		} else if (dir === 3) {
 			y1 = y + 1; x1 = x;
 		} else {
 			display("Error with move function");
@@ -263,7 +263,7 @@ var monster = {
 		while (dirCount[1] <= 0 || dirCount[2] <= 0 || dirCount[3] <= 0 || dirCount[4] <= 0) {
 			var dir = Math.floor(Math.random() * 4);
 			dirCount[dir]++;
-			if (world.move(loc[0], loc[1], dir)) {
+			if (world.move(loc[0], loc[1], dir)) { // this will return true if move was successful (into space)
 				return false;
 			} // math.random gives 0-3 for the direction of moving)
 		}	
@@ -347,13 +347,13 @@ const controller = { // for now, controller just handles the key presses and key
 	},
 	dir(e) { // translates e.keyCode to return a string of the direction
 		if (e.keyCode == 37) {
-			return "left";
+			return 0;
 		} else if (e.keyCode == 38) {
-			return "up";
+			return 1;
 		} else if (e.keyCode == 39) {
-			return "right";
+			return 2;
 		} else if (e.keyCode == 40) {
-			return "down"
+			return 3;
 		} else {
 			return false;
 		}

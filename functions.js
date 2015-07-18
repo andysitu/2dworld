@@ -15,19 +15,19 @@ function displayStatus() {
 }
 
 function check(dir, range) { // checks if there is a monster within a certain range if it is, then it'll return the monster #
-	if (dir == "left") {
+	if (dir === 0) {
 		for (var i = 1; i <= range; i++) {
 			if (typeof map[world.playerLoc[0]][world.playerLoc[1] - i] == "number") {
 				return map[world.playerLoc[0]][world.playerLoc[1] - i];
 			}
 		}
-	} else if (dir == "down") {
+	} else if (dir === 1) {
 		for (var i = 1; i <= range; i++) {
 			if (typeof map[world.playerLoc[0] + i][world.playerLoc[1]] == "number") {
 				return map[world.playerLoc[0] + i][world.playerLoc[1]];
 			}
 		}
-	} else if (dir == "right") {
+	} else if (dir === 2) {
 		for (var i = 1; i <= range; i++) {
 			if (typeof map[world.playerLoc[0]][world.playerLoc[1] + i] == "number") {
 				return map[world.playerLoc[0]][world.playerLoc[1] + i];
