@@ -151,18 +151,6 @@ var world = {
 			return 3;
 		}
 	},
-	nextTo(y1, x1, y2, x2) { // returns true if character is next to that coordinate
-		var coordinates = [];
-		for (var i = 0; i < 4; i++) {
-			coordinates = this.calculateFromI(i, y1, x1);
-
-			if (coordinates[0] === y2 && coordinates[1] === x2) {
-				return true;
-			}
-		}
-
-		return false;
-	},
 
 	inRange(y1, x1, y2, x2, range) {
 		if ( ( (y1 - y2 ) * (y1 - y2 )  + ( x1 - x2 ) * ( x1 - x2 ) ) <= range) {
@@ -285,7 +273,7 @@ var monster = {
 		var pLoc = world.playerLoc;
 
 		var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
-		if (world.nextTo(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1])) { // if monster is next to player
+		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 1)) { // if monster is next to player
 			this.attack(monstID);
 		} else {
 			world.move(loc["yCoord"], loc["xCoord"], dir);
