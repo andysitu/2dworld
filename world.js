@@ -342,7 +342,7 @@ var monster = {
 		}
 	},
 	spawn(y, x) {
-		if (map[y][x] === " ") {
+		if (map[y][x] === " " && !world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 32)) {
 			var monstID = this.make(y, x);
 			map.changeValue(y, x, monstID);
 			world.changeClass("monster", y, x);
