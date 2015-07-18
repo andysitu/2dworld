@@ -99,68 +99,24 @@ var world = {
 		}
 		return false; // if it can't find it.
 	},
-
-	bestStep(y1, x1, y2, x2) {
-		// if there are two or more equal points of distance, then method will do calculate again on those steps and then 
-		// and then out of the directions that equal with the min distance, it'll give the first one.
-
-		// if it returns false, then the character can't move and shouldn't.
-
-		var coord = this.calculate(y1, x1, y2, x2); // returns arrays to travel for closest distance to player
-
-		if (coord.length === 1) { // if there's only one direction
-			return coord[0];
-		} else { // multiple directions 
-			var coords = [];
-			for (var i = 0; i < coord.length; i++) {
-				coords[i] = this.calculateFromI(coord[i], y1, x1);
-			}
-
-			for (var i = 0; i < coord.length; i++) {
-				coords[i] = this.calculate(coords[i][0], coords[i][1], y2, x2, true); // returns coordinates from the hypothetical positions
-				coords[i] = this.calculateDistance(coords[i][0], coords[i][1], y2, x2); // calculates distances from the hypothetical positions
-			}
-
-			var min = Math.min.apply(null, coords);
-
-			var arr = [];
-			for (var i = 0; i < coord.length; i++ ) {
-				if (coords[i] === min) {
-					arr.push(i);
-				}
-			}
-			return coord[ arr[Math.floor(Math.random() * arr.length)] ];
-		}
-
-	},
 	calculate(y1, x1, y2, x2, status) { // calculates the direction to move for closest distance to player,
 		var move = [0, 0, 0, 0];		// returns array(s) of best coordinate dependng on status
 		var dir = [];
 		
-			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
-			move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
-			move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
-			move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
+		move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
+		move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
+		move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
+		move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
 
-			var min = Math.min.apply(null, move);
+		var min = Math.min.apply(null, move);
 
-			if (status === undefined || status === false) { // performs calculation normally
-				for (var i = 0; i < move.length; i++) {
-					if (move[i] === min && min !== 999999) {
-						dir.push(i);
-					}
-				}
-
-				return dir;
-			} else { // returns coordinates from the hypothetical positions
-				for (var i = 0; i < move.length; i++) {
-					if (move[i] === min && min !== 999999) {
-						return this.calculateFromI(i, y1, x2);
-					}
-				}
-
-				return [y1, x1];
+		for (var i = 0; i < move.length; i++) {
+			if (move[i] === min && min !== 999999) {
+				dir.push(i);
 			}
+		}
+
+		return dir[Math.floor( Math.random() * dir.length)];
 	},
 	calculateDistance(y1, x1, y2, x2) { // calculate distance from two points
 		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
@@ -328,7 +284,7 @@ var monster = {
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
 
-		var dir = world.bestStep(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
+		var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
 		if (world.nextTo(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1])) { // if monster is next to player
 			this.attack(monstID);
 		} else {
