@@ -1,5 +1,3 @@
-* player levels up
-* monster gives experience
 * monster gives gold, rewards
 * possiblity of dropping items
 * if attacked, will attack back (unless coward status)
@@ -9,4 +7,9 @@
 * menu display (hp, mp, etc)
 * skills
 * menu selection, input from player
-* player can click on the map in area around player and then check on the status
+* player can die
+
+* created restricted area where only player cna travel there
+	Note: now when player moves into an area, it exchanges class so this won't work with restricted area.
+
+* imiprove clicking map for status
