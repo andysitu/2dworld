@@ -221,6 +221,11 @@ var player = {
 	hp: 50,
 	"max hp": 50,
 	level: 1,
+	levelUp() {
+		this.level++;
+		this["max hp"] += 30;
+		this.hp =this["max hp"];
+	},
 	range: 1,
 	gold: 0,
 	expValue: 0,
@@ -229,12 +234,12 @@ var player = {
 	},
 	set exp (value) {
 		this.expValue += value;
-		var goldAmount = Math.ceil(Math.random() * value);
+		var goldAmount = Math.ceil(Math.random() * value / 2);
 		this.statusChange("gold", goldAmount)
 		if (this.expValue >= this.level * this.level * 5) {
 			this.expValue -= this.level * this.level * 5;
-			this.statusChange("level", 1);
-			display("You gained " + goldAmount + "gold and leveled to level " + this.level + ".");
+			this.levelUp();
+			display("You gained " + goldAmount + " gold and leveled to level " + this.level + ".");
 		} else {
 			display("You gained " + goldAmount + " gold and " + value + " exp.");
 		}
@@ -263,9 +268,9 @@ var monster = {
 	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
-		var level = Math.ceil(Math.random() * 5)
+		var level = Math.floor(Math.random() * 6 + player.level)
 		monster["list"][this.counter] = {
-			level: level * player.level,
+			level: level,
 			hp: Math.ceil(Math.random() * level * level * 0.3 + 0.7 * level * level),
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 			yCoord: i,
@@ -278,7 +283,7 @@ var monster = {
 		delete this["list"][num];
 	},
 	attack(num) {
-		var dmg = Math.ceil(this["list"][num]["level"] * 3 * Math.random());
+		var dmg = Math.ceil(this["list"][num]["level"] * .5 * Math.random() + this["list"][num]["level"]);
 		player.statusChange("hp", -dmg);
 		display("You were hit with " + dmg + " damage.");
 	},
@@ -371,6 +376,7 @@ var monster = {
 			
 		}
 
+		displayStatus();
 		this.spawner(); // runs a chance of generating a monster after all the monsters had moved
 	}
 };
@@ -413,6 +419,7 @@ const controller = { // for now, controller just handles the key presses and key
 
 window.onload = function() {
 	world.translateMap(map);
+	displayStatus();
 
 	document.onkeydown = function(e) {
 		controller.keypress(e);
