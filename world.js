@@ -327,6 +327,30 @@ var monster = {
 			world.move(loc["yCoord"], loc["xCoord"], dir);
 		}
 	},
+
+	spawner() { 
+		var chance = Math.ceil(Math.random() * 100); 
+		if (chance === 1) { // 1% chance of spawning mmonster
+			for ( ; ; ) {
+				var yValue = Math.floor(Math.random() * map.length);
+				var xValue = Math.floor(Math.random() * map[yValue].length);
+
+				if (this.spawn(yValue, xValue)) {
+					break;
+				}
+			}
+		}
+	},
+	spawn(y, x) {
+		if (map[y][x] === " ") {
+			this.make(y, x);
+			display("Monster was spawned");
+			return true;
+		} else {
+			return false;
+		}
+	},
+
 	controller() { // controls whether monster should move, attack, etc.
 		for (var key in this.list) {
 			if ( this["list"][key]["status"] === "aggressive" || this["list"][key]["status"] === "superaggressive") {
@@ -340,6 +364,8 @@ var monster = {
 			}
 			
 		}
+
+		this.spawner(); // runs a chance of generating a monster after all the monsters had moved
 	}
 };
 
