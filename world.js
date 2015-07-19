@@ -206,6 +206,20 @@ var player = {
 	} 
 }
 
+function Items(desc, cost, slot, damage) {
+	this.desc = desc;
+	this.cost = cost;
+	this.slot = slot;
+	this.damage = damage;
+}
+
+
+
+var items = {
+	sword: new Items("A sword", 140, 0, 10),
+	"super sword": new Items("A super strong sword", 1500, 0, 40)
+};
+
 var monster = {
 	counter: -1,
 	list: {}, // list of all the monsters created
