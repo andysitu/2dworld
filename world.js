@@ -26,6 +26,7 @@ var world = {
 			case " ": return "space";
 			case "M": map[i][j] = monster.make(i, j);
 						return "monster";
+			case "S": return "seller";
 			case "P": this.playerLoc = [i, j];
 						return "player";
 			default: return false;
@@ -208,7 +209,7 @@ var player = {
 
 var item = {
 	describe() {
-		display(this.desc);
+		display(this + " " + this.desc);
 	}
 }
 
@@ -229,6 +230,12 @@ function makeWeapon(desc, weight, slot, damage) {
 		'damage': {
 			value: damage,
 			enumerable: true
+		},
+		'describe': {
+			value: function() {
+				display(desc + "\n" + "weight : " + this.weight + ", damage: " + this.damage);
+			},
+			enumerable: false
 		}
 	})
 }
@@ -364,7 +371,6 @@ const controller = { // for now, controller just handles the key presses and key
 		if (e.keyCode === 65) {
 			this.keyMap[65] = true;
 		} else if (e.keyCode >= 37 && e.keyCode <= 40) {
-			console.log(e.keyCode);
 			var dir = this.dir(e);
 			if (this.keyMap[65] === true) {
 				display(false);
