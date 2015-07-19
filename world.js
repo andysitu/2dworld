@@ -273,7 +273,12 @@ var npc = {
 	},
 	seller: {
 		menu() {
-			display("Welcome to my shop!\nHere's what's for sale:");
+			display("Wecome to my shop!");
+			display("Press \'B\' to buy items.");
+		},
+
+		sell() {
+			display("Here's what's for sale:");
 			for (var key in items) {
 				if (items[key]["forSale"] === true) {
 					display(key);
