@@ -159,6 +159,16 @@ var world = {
 		} else {
 			return false;
 		}
+	},
+	finder(y1, x1, value, range) {
+		var arr = [];
+		for (var i = 0; i < 4; i++) {
+			arr = this.calculateFromI(i, y1, x1);
+			if (map[arr[0]][arr[1]] === value) {
+				return true;
+			}
+		}
+		return false;
 	}
 };
 
@@ -244,6 +254,15 @@ var items = {
 	sword: makeWeapon("A sword", 140, 0, 10),
 	"super sword": makeWeapon("A super strong sword", 1500, 0, 40)
 };
+
+var npc = {
+	controller() {
+
+	},
+	seller: {
+
+	}
+}
 
 var monster = {
 	counter: -1,
@@ -381,7 +400,8 @@ const controller = { // for now, controller just handles the key presses and key
 				world.move(world.playerLoc[0], world.playerLoc[1], dir);
 				monster.controller();
 			}
- 		
+		} else if (e.keyCode === 13) {
+			this.interact();
 		}
 	},
 	dir(e) { // translates e.keyCode to return a string of the direction
@@ -395,6 +415,12 @@ const controller = { // for now, controller just handles the key presses and key
 			return 3;
 		} else {
 			return false;
+		}
+	},
+	interact() {
+		var pLoc = world.playerLoc;
+		if (world.finder(pLoc[0], pLoc[1], "S", 0)) {
+			display("Seller is next to you");
 		}
 	}
 };
