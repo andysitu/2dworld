@@ -410,29 +410,31 @@ var monster = {
 
 const controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {65: false},
-	status: {seller: false},
+	status: {seller: false, freeze: false},
 	keypress(e) {
 		var mapID = document.getElementById("map");
-		if (e.keyCode === 65) {
-			this.keyMap[65] = true;
-		} else if (e.keyCode >= 37 && e.keyCode <= 40) {
-			var dir = this.dir(e);
-			if (this.keyMap[65] === true) {
-				display(false);
-				player.attack(dir);
-				this.response(e);
+		if (this["status"]["freeze"] === true) {
+			
+		} else {
+			if (e.keyCode === 65) {
+				this.keyMap[65] = true;
+			} else if (e.keyCode >= 37 && e.keyCode <= 40) {
+				var dir = this.dir(e);
+				if (this.keyMap[65] === true) {
+					display(false);
+					player.attack(dir);
+					this.response(e);
+				} else {
+					display(false);
+					world.move(world.playerLoc[0], world.playerLoc[1], dir);
+					this.response(e);
+				}
 			} else {
-				display(false);
-				world.move(world.playerLoc[0], world.playerLoc[1], dir);
 				this.response(e);
-			}
-		} else if (e.keyCode === 13) {
-			this.interact();
-		}
-
-		if (this["status"]["seller"] === true) {
+			} 
 
 		}
+
 	},
 	response(e) { // handles the response of the characters after the character makes a move.Note: depends on the move
 		if (e.keyCode >= 37 && e.keyCode <= 40) {
@@ -440,6 +442,10 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.status["seller"] === true) {
 				this.status["seller"] === false;
 			}
+		} else if (e.keyCode === 13) {
+				this.interact();
+		} else if (e.keyCode === 66 && this["status"]["seller"] === true) {
+			npc.seller.sell();
 		}
 	},
 	dir(e) { // translates e.keyCode to return a string of the direction
