@@ -206,18 +206,36 @@ var player = {
 	} 
 }
 
-function Items(desc, cost, slot, damage) {
-	this.desc = desc;
-	this.cost = cost;
-	this.slot = slot;
-	this.damage = damage;
+var item = {
+	describe() {
+		display(this.desc);
+	}
 }
 
-
+function makeWeapon(desc, weight, slot, damage) {
+	return Object.create(item, {
+		'desc': {
+			value: desc,
+			enumerable: true
+		},
+		'weight': {
+			value: weight,
+			enumerable: true
+		},
+		'slot': {
+			value: slot,
+			enumerable: true
+		},
+		'damage': {
+			value: damage,
+			enumerable: true
+		}
+	})
+}
 
 var items = {
-	sword: new Items("A sword", 140, 0, 10),
-	"super sword": new Items("A super strong sword", 1500, 0, 40)
+	sword: makeWeapon("A sword", 140, 0, 10),
+	"super sword": makeWeapon("A super strong sword", 1500, 0, 40)
 };
 
 var monster = {
