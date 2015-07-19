@@ -385,6 +385,7 @@ var monster = {
 
 const controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {65: false},
+	status: {seller: false},
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (e.keyCode === 65) {
@@ -394,14 +395,26 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.keyMap[65] === true) {
 				display(false);
 				player.attack(dir);
-				monster.controller();
+				this.response(e);
 			} else {
 				display(false);
 				world.move(world.playerLoc[0], world.playerLoc[1], dir);
-				monster.controller();
+				this.response(e);
 			}
 		} else if (e.keyCode === 13) {
 			this.interact();
+		}
+
+		if (this["status"]["seller"] === true) {
+
+		}
+	},
+	response(e) { // handles the response of the characters after the character makes a move.Note: depends on the move
+		if (e.keyCode >= 37 && e.keyCode <= 40) {
+			monster.controller();
+			if (this.status["seller"] === true) {
+				this.status["seller"] === false;
+			}
 		}
 	},
 	dir(e) { // translates e.keyCode to return a string of the direction
@@ -420,6 +433,7 @@ const controller = { // for now, controller just handles the key presses and key
 	interact() {
 		var pLoc = world.playerLoc;
 		if (world.finder(pLoc[0], pLoc[1], "S", 0)) {
+			this["status"]["seller"] = true;
 			display("Seller is next to you");
 		}
 	}
@@ -437,7 +451,7 @@ window.onload = function() {
 	document.onkeyup = function(e) {
 		if (e.keyCode === 65) {
 			controller.keyMap[65] = false;
-		}
+		} 
 	}
 
 	var table = document.getElementById("map");
