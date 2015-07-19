@@ -361,10 +361,11 @@ const controller = { // for now, controller just handles the key presses and key
 	keyMap: {65: false},
 	keypress(e) {
 		var mapID = document.getElementById("map");
-		var dir = "";
 		if (e.keyCode === 65) {
 			this.keyMap[65] = true;
-		} else if (dir = this.dir(e)) {
+		} else if (e.keyCode >= 37 && e.keyCode <= 40) {
+			console.log(e.keyCode);
+			var dir = this.dir(e);
 			if (this.keyMap[65] === true) {
 				display(false);
 				player.attack(dir);
