@@ -223,7 +223,7 @@ var item = {
 	}
 }
 
-function makeWeapon(desc, weight, slot, damage) {
+function makeWeapon(desc, weight, slot, damage, forSale) {
 	return Object.create(item, {
 		'desc': {
 			value: desc,
@@ -243,16 +243,20 @@ function makeWeapon(desc, weight, slot, damage) {
 		},
 		'describe': {
 			value: function() {
-				display(desc + "\n" + "weight : " + this.weight + ", damage: " + this.damage);
+				display(desc + "\n" + "weight : " + this.weight + ", damage: " + this.damage + "\n");
 			},
 			enumerable: false
+		},
+		'forSale': {
+			value: forSale,
+			enumberable: false
 		}
 	})
 }
 
 var items = {
-	sword: makeWeapon("A sword", 140, 0, 10),
-	"super sword": makeWeapon("A super strong sword", 1500, 0, 40)
+	sword: makeWeapon("A sword", 140, 0, 10, true),
+	"super sword": makeWeapon("A super strong sword", 1500, 0, 40, true)
 };
 
 var npc = {
@@ -260,7 +264,15 @@ var npc = {
 
 	},
 	seller: {
-
+		menu() {
+			display("Welcome to my shop!\nHere's what's for sale:");
+			for (var key in items) {
+				if (items[key]["forSale"] === true) {
+					display(key);
+					items[key]["describe"]();
+				}
+			}
+		}
 	}
 }
 
@@ -434,7 +446,7 @@ const controller = { // for now, controller just handles the key presses and key
 		var pLoc = world.playerLoc;
 		if (world.finder(pLoc[0], pLoc[1], "S", 0)) {
 			this["status"]["seller"] = true;
-			display("Seller is next to you");
+			npc.seller["menu"]();
 		}
 	}
 };
