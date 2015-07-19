@@ -223,14 +223,18 @@ var item = {
 	}
 }
 
-function makeWeapon(desc, weight, slot, damage, forSale) {
+function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 	return Object.create(item, {
 		'desc': {
 			value: desc,
 			enumerable: true
 		},
-		'weight': {
-			value: weight,
+		'price': {
+			value: price,
+			enumerable: true
+		},
+		'range': {
+			value: range,
 			enumerable: true
 		},
 		'slot': {
@@ -241,22 +245,26 @@ function makeWeapon(desc, weight, slot, damage, forSale) {
 			value: damage,
 			enumerable: true
 		},
-		'describe': {
+		'describe': {	
 			value: function() {
-				display(desc + "\n" + "weight : " + this.weight + ", damage: " + this.damage + "\n");
+				display(desc + "\n" + "weight : " + this.weight + ", damage: " + this.damage + ", range: " + this.range + "\n");
 			},
 			enumerable: false
 		},
 		'forSale': {
 			value: forSale,
 			enumberable: false
+		},
+		'weight': {
+			value: weight,
+			enumerable: true
 		}
 	})
 }
 
-var items = {
-	sword: makeWeapon("A sword", 140, 0, 10, true),
-	"super sword": makeWeapon("A super strong sword", 1500, 0, 40, true)
+var items = { // desc, price, range, slot, damage, forSale
+	sword: makeWeapon("A sword", 140, 1, 0, 10, true, 50),
+	"super sword": makeWeapon("A super strong sword", 1500, 2, 0, 40, true, 65)
 };
 
 var npc = {
