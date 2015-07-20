@@ -484,6 +484,11 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.selectionI > this.selectionList.length - 1){
 				this.selectionI = 0;
 			}
+		} else if (e.keyCode === 27) { // escape key
+			this.status.seller = false;
+			this.status.freeze = false;
+			display(false);
+			display("Please come again!");
 		}
 
 		this.displayMenuList("HI", this.selectionList[this.selectionI]);
