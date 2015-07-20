@@ -181,7 +181,7 @@ var player = {
 		this["max hp"] += 30;
 		this.hp =this["max hp"];
 	},
-	items; [],
+	items: [],
 	range: 1,
 	gold: 0,
 	expValue: 0,
@@ -273,16 +273,22 @@ var npc = {
 
 	},
 	seller: {
+		list: "items",
+		options: {
+			'b': "sell"
+		},
 		menu() {
 			display("Wecome to my shop!");
 			display("Press \'B\' to buy items.");
 		},
 
 		sell(key) {
-			if (player.gold >= items.key.price) {
-				player.items.push(items.key);
-				player.gold -= items.key.price;
+			if (player.gold >= items[key]["price"]) {
+				player.items.push(items[key]);
+				player.gold -= items[key]["price"];
 				display("\nYou bought a " + key);
+			} else {
+				display("You don't have enough money!");
 			}
 		}
 	}
@@ -446,7 +452,6 @@ const controller = { // for now, controller just handles the key presses and key
 		} else if (e.keyCode === 13) { // enter
 				this.interact();
 		} else if (e.keyCode === 66 && this["status"]["seller"] === true) { // 'b'
-			npc.seller.sell();
 			this.menuListing("Here's what's for sale: ", items);
 			this["status"]["freeze"] = true;
 		}
@@ -483,6 +488,8 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.selectionI > this.selectionList.length - 1){
 				this.selectionI = 0;
 			}
+		} else if (e.keyCode === 13) { // enters
+			npc.seller.sell(this.selectionList[this.selectionI])
 		} else if (e.keyCode === 27) { // escape key
 			this.status.seller = false;
 			this.status.freeze = false;
