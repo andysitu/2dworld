@@ -181,6 +181,7 @@ var player = {
 		this["max hp"] += 30;
 		this.hp =this["max hp"];
 	},
+	items; [],
 	range: 1,
 	gold: 0,
 	expValue: 0,
@@ -277,13 +278,11 @@ var npc = {
 			display("Press \'B\' to buy items.");
 		},
 
-		sell() {
-			display("Here's what's for sale:");
-			for (var key in items) {
-				if (items[key]["forSale"] === true) {
-					display(key);
-					items[key]["describe"]();
-				}
+		sell(key) {
+			if (player.gold >= items.key.price) {
+				player.items.push(items.key);
+				player.gold -= items.key.price;
+				display("\nYou bought a " + key);
 			}
 		}
 	}
@@ -493,13 +492,11 @@ const controller = { // for now, controller just handles the key presses and key
 
 		this.displayMenuList("HI", this.selectionList[this.selectionI]);
 	},
-
 	displayMenuList(msg, stuff) {
 		display(false);
 		display(msg);
 		display(stuff);
 	},
-
 	menuListing(msg, list, e) {
 		var keys = [];
 		var currentI = 0;
