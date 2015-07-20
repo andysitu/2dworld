@@ -277,6 +277,7 @@ var npc = {
 		options: {
 			'b': "sell"
 		},
+		exitMsg: "Please come again!",
 		menu() {
 			display("Wecome to my shop!");
 			display("Press \'B\' to buy items.");
@@ -418,43 +419,38 @@ const controller = { // for now, controller just handles the key presses and key
 	status: {seller: false, freeze: false},
 	selectionI: 0,
 	selectionList: [],
+	npc: "",
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
 			this.menuSelector(e, items);
 		} else {
-			if (e.keyCode === 65) {
+			if (e.keyCode === 65) { // 'a' key
 				this.keyMap[65] = true;
-			} else if (e.keyCode >= 37 && e.keyCode <= 40) {
+			} else if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
 				var dir = this.dir(e);
-				if (this.keyMap[65] === true) {
+
+				if (this.keyMap[65] === true) { // if 'a' key is being held while pressing arrow keys
 					display(false);
 					player.attack(dir);
-					this.response(e);
-				} else {
+				} else { 						// just arrows keys
 					display(false);
 					world.move(world.playerLoc[0], world.playerLoc[1], dir);
-					this.response(e);
 				}
-			} else {
-				this.response(e);
-			} 
 
-		}
-
-	},
-	response(e) { // handles the response of the characters after the character makes a move.Note: depends on the move
-		if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
-			monster.controller();
-			if (this.status["seller"] === true) {
-				this.status["seller"] === false;
-			}
-		} else if (e.keyCode === 13) { // enter
+				monster.controller(); // monsters move in response
+				if (this.status["seller"] === true) {
+					this.status["seller"] === false;
+				}
+			} else if (e.keyCode === 13) { // enter
 				this.interact();
-		} else if (e.keyCode === 66 && this["status"]["seller"] === true) { // 'b'
-			this.menuListing("Here's what's for sale: ", items);
-			this["status"]["freeze"] = true;
+			} else if (e.keyCode === 66 && this["status"]["seller"] === true) { // 'b'
+				this.menuListing("Here's what's for sale: ", items);
+				this["status"]["freeze"] = true;
+			}
+
 		}
+
 	},
 	dir(e) { // translates e.keyCode to return a string of the direction
 		if (e.keyCode == 37) {
