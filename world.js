@@ -483,11 +483,13 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.selectionI < 0) {
 				this.selectionI = this.selectionList.length - 1;
 			}
+			this.displayMenuList("HI", this.selectionList[this.selectionI]);
 		} else if (e.keyCode === 39) { // right key
 			this.selectionI++;
 			if (this.selectionI > this.selectionList.length - 1){
 				this.selectionI = 0;
 			}
+			this.displayMenuList("HI", this.selectionList[this.selectionI]);
 		} else if (e.keyCode === 13) { // enters
 			npc.seller.sell(this.selectionList[this.selectionI])
 		} else if (e.keyCode === 27) { // escape key
@@ -497,7 +499,6 @@ const controller = { // for now, controller just handles the key presses and key
 			display("Please come again!");
 		}
 
-		this.displayMenuList("HI", this.selectionList[this.selectionI]);
 	},
 	displayMenuList(msg, stuff) {
 		display(false);
