@@ -411,6 +411,8 @@ var monster = {
 const controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {65: false},
 	status: {seller: false, freeze: false},
+	selectionI: 0,
+	selectionList: [],
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
@@ -437,15 +439,17 @@ const controller = { // for now, controller just handles the key presses and key
 
 	},
 	response(e) { // handles the response of the characters after the character makes a move.Note: depends on the move
-		if (e.keyCode >= 37 && e.keyCode <= 40) {
+		if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
 			monster.controller();
 			if (this.status["seller"] === true) {
 				this.status["seller"] === false;
 			}
-		} else if (e.keyCode === 13) {
+		} else if (e.keyCode === 13) { // enter
 				this.interact();
-		} else if (e.keyCode === 66 && this["status"]["seller"] === true) {
+		} else if (e.keyCode === 66 && this["status"]["seller"] === true) { // 'b'
 			npc.seller.sell();
+			this.menuListing("Here's what's for sale: ", items);
+			this["status"]["freeze"] = true;
 		}
 	},
 	dir(e) { // translates e.keyCode to return a string of the direction
@@ -469,7 +473,7 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 	},
 
-	menuSelection(msg, list, e) {
+	menuListing(msg, list, e) {
 		var keys = [];
 		var currentI = 0;
 
@@ -488,6 +492,9 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 
 		displayMsg(msg, keys[currentI]);
+
+		this.selectionI = currentI;
+		this.selectionList = keys;
 	}
 };
 
