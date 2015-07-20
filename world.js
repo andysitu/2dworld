@@ -100,7 +100,7 @@ var world = {
 		}
 		return false; // if it can't find it.
 	},
-	calculate(y1, x1, y2, x2, status) { // calculates the direction to move for closest distance to player,
+	calculate(y1, x1, y2, x2) { // calculates the direction to move for closest distance to player,
 		var move = [0, 0, 0, 0];		// returns array(s) of best coordinate dependng on status
 		var dir = [];
 		
@@ -121,7 +121,7 @@ var world = {
 	},
 	calculateDistance(y1, x1, y2, x2) { // calculate distance from two points
 		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
-			if (map[y1][x1] === 'P') {
+			if (map[y1][x1] === 'P') { // this is when player is right next to character
 				return 0;
 			} else if (map[y1][x1] === " ") {
 				return Math.abs(y2 - y1) + Math.abs(x2 - x1);
