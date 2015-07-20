@@ -467,6 +467,27 @@ const controller = { // for now, controller just handles the key presses and key
 			this["status"]["seller"] = true;
 			npc.seller["menu"]();
 		}
+	},
+
+	menuSelection(msg, list, e) {
+		var keys = [];
+		var currentI = 0;
+
+		if (Array.isArray(list) === true) {
+			for (var i = 0; i < list.length; i++) {
+				keys[i] = list[i];
+			}
+		} else {
+			keys = Object.keys(list);
+		}
+
+		function displayMsg(msg, stuff) {
+			display(false);
+			display(msg);
+			display(stuff);
+		}
+
+		displayMsg(msg, keys[currentI]);
 	}
 };
 
