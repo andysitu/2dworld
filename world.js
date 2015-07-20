@@ -416,7 +416,7 @@ const controller = { // for now, controller just handles the key presses and key
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
-			
+			this.menuSelector(e, items);
 		} else {
 			if (e.keyCode === 65) {
 				this.keyMap[65] = true;
@@ -473,6 +473,28 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 	},
 
+	menuSelector(e, list) {
+		if (e.keyCode ===37) { //left key
+			this.selectionI--;
+			if (this.selectionI < 0) {
+				this.selectionI = this.selectionList.length - 1;
+			}
+		} else if (e.keyCode === 39) { // right key
+			this.selectionI++;
+			if (this.selectionI > this.selectionList.length - 1){
+				this.selectionI = 0;
+			}
+		}
+
+		this.displayMenuList("HI", this.selectionList[this.selectionI]);
+	},
+
+	displayMenuList(msg, stuff) {
+		display(false);
+		display(msg);
+		display(stuff);
+	},
+
 	menuListing(msg, list, e) {
 		var keys = [];
 		var currentI = 0;
@@ -485,13 +507,7 @@ const controller = { // for now, controller just handles the key presses and key
 			keys = Object.keys(list);
 		}
 
-		function displayMsg(msg, stuff) {
-			display(false);
-			display(msg);
-			display(stuff);
-		}
-
-		displayMsg(msg, keys[currentI]);
+		this.displayMenuList(msg, keys[currentI]);
 
 		this.selectionI = currentI;
 		this.selectionList = keys;
