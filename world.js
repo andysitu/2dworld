@@ -429,7 +429,7 @@ var monster = {
 };
 
 const controller = { // for now, controller just handles the key presses and key combinations
-	keyMap: {65: false},
+	keyMap: {'a': false},
 	status: {seller: false, freeze: false},
 	selectionI: 0,
 	selectionList: [],
@@ -441,13 +441,13 @@ const controller = { // for now, controller just handles the key presses and key
 		} else {
 			if (e.keyCode === 65) { // 'a' key
 
-				this.keyMap[65] = true;
+				this.keyMap['a'] = true;
 
 			} else if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
 
 				var dir = this.dir(e);
 
-				if (this.keyMap[65] === true) { // if 'a' key is being held while pressing arrow keys
+				if (this.keyMap['a'] === true) { // if 'a' key is being held while pressing arrow keys
 					display(false);
 					player.attack(dir);
 				} else { 						// just arrows keys
@@ -555,7 +555,7 @@ window.onload = function() {
 
 	document.onkeyup = function(e) {
 		if (e.keyCode === 65) {
-			controller.keyMap[65] = false;
+			controller.keyMap['a'] = false;
 		} 
 	}
 
