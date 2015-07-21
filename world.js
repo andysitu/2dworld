@@ -282,9 +282,13 @@ var npc = {
 		this._status = value;
 	},
 
-	controller(character, e) { 
+	controller(character, e, key) { 
 		if (character === "seller" && this.status === "sell") {
-			controller.menuSelector(e, items, this.seller.sellMsg, this.seller.exitMsg, this.seller.sell);
+			if (e.keyCode === 66) {
+				e = "menu";
+			}
+			var itemDisp = key + "\n" + items.desc; 
+			controller.menuSelector(e, items, this.seller.sellMsg, this.seller.exitMsg, this.seller.sell, itemDisp);
 		}
 	},
 	findNPC(y, x) {
@@ -450,7 +454,7 @@ const controller = { // for now, controller just handles the key presses and key
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true && this.npc !== false) {
-			npc.controller(this.npc, e);
+			npc.controller(this.npc, e, this.selectionList[this.selectionI]);
 			
 		} else {
 			if (e.keyCode === 65) { // 'a' key
@@ -484,7 +488,7 @@ const controller = { // for now, controller just handles the key presses and key
 				this.menuListing(npc.seller.sellMsg, items);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
-
+				npc.controller(this.npc, e, this.selectionList[this.selectionI]);
 			}
 
 		}
@@ -501,19 +505,19 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 	},
 
-	menuSelector(e, list, msg, exitMsg, ifEnter) {
+	menuSelector(e, list, msg, exitMsg, ifEnter, stuffDisplayed) {
 		if (e.keyCode ===37) { //left key
 			this.selectionI--;
 			if (this.selectionI < 0) {
 				this.selectionI = this.selectionList.length - 1;
 			}
-			this.displayMenuList(msg, this.selectionList[this.selectionI]);
+			this.displayMenuList(msg, stuffDisplayed);
 		} else if (e.keyCode === 39) { // right key
 			this.selectionI++;
 			if (this.selectionI > this.selectionList.length - 1){
 				this.selectionI = 0;
 			}
-			this.displayMenuList(msg, this.selectionList[this.selectionI]);
+			this.displayMenuList(msg, stuffDisplayed);
 		} else if (e.keyCode === 13) { // enters
 			ifEnter(this.selectionList[this.selectionI])
 		} else if (e.keyCode === 27) { // escape key
@@ -522,13 +526,15 @@ const controller = { // for now, controller just handles the key presses and key
 			npc.status = false;
 			display(false);
 			display(exitMsg);
+		} else if (e === "menu") { // for the case when menuSelector is first initiated as a menu to player
+			this.displayMenuList(msg, stuffDisplayed);
 		}
 
 	},
-	displayMenuList(msg, stuff) {
+	displayMenuList(msg, stuffDisplayed) {
 		display(false);
 		display(msg);
-		display(stuff);
+		display(stuffDisplayed);
 	},
 	menuListing(msg, list, e) {
 		var keys = [];
@@ -541,8 +547,6 @@ const controller = { // for now, controller just handles the key presses and key
 		} else {
 			keys = Object.keys(list);
 		}
-
-		this.displayMenuList(msg, keys[currentI]);
 
 		this.selectionI = currentI;
 		this.selectionList = keys;
