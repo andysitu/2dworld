@@ -291,20 +291,20 @@ var npc = {
 
 		if (character === "seller" && this.status === "sell") {
 
+			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
+				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
 
-			if (e.keyCode ===37 || e.keyCode === 39) { //left key
-				dispMsg("Here's what")
+				if (items[key]["slot"] === 0) { // when item is a weapons
+					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
+				}
+				dispMsg(this.seller.sellMsg, msg)
 			} else if (e.keyCode === 13) { // enters
 				this.seller.sell(key);
-			} else if (e.keyCode === 27) { // escape key
-				
-				npc.status = false;
-				display(false);
-				display(this.seller.exitMsg);
-			} else if (e === "menu") { // for the case when menuSelector is first initiated as a menu to player
-				dispMsg("Here's what's for sale:", "");
 			}
 
+		} else if (e.keyCode === 27) {
+				npc.status = false;
+				dispMsg("Thanks for shopping here!\nPlease come again!", "");
 		}
 	},
 	findNPC(y, x) {
@@ -324,7 +324,6 @@ var npc = {
 		options: {
 			'b': "sell"
 		},
-		exitMsg: "Please come again!",
 		menu() {
 			display("Welcome!");
 			display("Press \'B\' to buy items.");
@@ -334,9 +333,10 @@ var npc = {
 			if (player.gold >= items[key]["price"]) {
 				player.items.push(items[key]);
 				player.gold -= items[key]["price"];
+
 				display("\nYou bought a " + key);
 			} else {
-				display("You don't have enough money!");
+				display("\nYou don't have enough money!");
 			}
 		},
 		sellMsg: "Here's what's for sale:"
