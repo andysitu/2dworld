@@ -293,7 +293,7 @@ var npc = {
 		},
 		exitMsg: "Please come again!",
 		menu() {
-			display("Wecome!");
+			display("Welcome!");
 			display("Press \'B\' to buy items.");
 		},
 
@@ -475,25 +475,14 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 
 	},
-	dir(e) { // translates e.keyCode to return a string of the direction
-		if (e.keyCode == 37) {
-			return 0;
-		} else if (e.keyCode == 38) {
-			return 1;
-		} else if (e.keyCode == 39) {
-			return 2;
-		} else if (e.keyCode == 40) {
-			return 3;
-		} else {
-			return false;
-		}
-	},
+
 	interact() {
 		var pLoc = world.playerLoc;
-		console.log(npc.findNPC(pLoc[0], pLoc[1]));
-		if (world.finder(pLoc[0], pLoc[1], "S", 0)) {
-			this["status"]["seller"] = true;
-			npc.seller["menu"]();
+		var findNPC = npc.findNPC(pLoc[0], pLoc[1]);
+		if (findNPC) {
+			this.npc = findNPC;
+			this["status"][findNPC] = true;
+			npc[findNPC]["menu"]();
 		}
 	},
 
@@ -541,6 +530,20 @@ const controller = { // for now, controller just handles the key presses and key
 
 		this.selectionI = currentI;
 		this.selectionList = keys;
+	},
+	
+	dir(e) { // translates e.keyCode to return a string of the direction
+		if (e.keyCode == 37) {
+			return 0;
+		} else if (e.keyCode == 38) {
+			return 1;
+		} else if (e.keyCode == 39) {
+			return 2;
+		} else if (e.keyCode == 40) {
+			return 3;
+		} else {
+			return false;
+		}
 	}
 };
 
