@@ -1,10 +1,15 @@
-* monster gives gold, rewards
+sell (add a sell option) also needs to set the freeze status
+
+npc: seller needs to buy able to sell and buy items during this freeze status.
+
+npc: have different kinds of sellers
+
+
+* monster gives  rewards
 * possiblity of dropping items
-* if attacked, will attack back (unless coward status)
 * coward will run away
 * items
 * weapons
-* menu display (hp, mp, etc)
 * skills
 * menu selection, input from player
 * player can die
@@ -13,3 +18,5 @@
 	Note: now when player moves into an area, it exchanges class so this won't work with restricted area.
 
 * imiprove clicking map for status
+
+* change monsters spawn into monster constructors so that you can give them special abilities by setting prototypes, etc.
