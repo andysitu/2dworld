@@ -274,6 +274,19 @@ var items = { // desc, price, range, slot, damage, forSale
 };
 
 var npc = {
+	_status: false,
+	get status() {
+		return this._status;
+	},
+	set status(value) {
+		this._status = value;
+	},
+
+	controller(character, e) { 
+		if (character === "seller" && this.status === "sell") {
+			controller.menuSelector(e, items, this.seller.sellMsg, this.seller.exitMsg, this.seller.sell);
+		}
+	},
 	findNPC(y, x) {
 		var coord = [];
 		for (var i = 0; i < 4; i++) {
@@ -305,7 +318,8 @@ var npc = {
 			} else {
 				display("You don't have enough money!");
 			}
-		}
+		},
+		sellMsg: "Here's what's for sale:"
 	}
 }
 
@@ -420,7 +434,6 @@ var monster = {
 			} else {
 				this.moveNormally(key);
 			}
-			
 		}
 
 		displayStatus();
