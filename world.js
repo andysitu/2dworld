@@ -430,10 +430,10 @@ var monster = {
 
 const controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {'a': false},
-	status: {seller: false, freeze: false},
+	status: {freeze: false},
 	selectionI: 0,
 	selectionList: [],
-	npc: "",
+	npc: false,
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
@@ -457,15 +457,15 @@ const controller = { // for now, controller just handles the key presses and key
 
 				monster.controller(); // monsters move in response
 
-				if (this.status["seller"] === true) { // moving turns off seller status
-					this.status["seller"] === false;
+				if (this.npc) { // moving turns off seller status
+					this.npc = false;
 				}
 
 			} else if (e.keyCode === 13) { // enter
 
 				this.interact();
 
-			} else if (e.keyCode === 66 && this["status"]["seller"] === true) { // 'b'
+			} else if (e.keyCode === 66 && this.npc === "seller") { // 'b'
 
 				this.menuListing("Here's what's for sale: ", items);
 				this["status"]["freeze"] = true;
@@ -502,7 +502,7 @@ const controller = { // for now, controller just handles the key presses and key
 		} else if (e.keyCode === 13) { // enters
 			npc.seller.sell(this.selectionList[this.selectionI])
 		} else if (e.keyCode === 27) { // escape key
-			this.status.seller = false;
+			this.npc = false;
 			this.status.freeze = false;
 			display(false);
 			display("Please come again!");
@@ -531,7 +531,7 @@ const controller = { // for now, controller just handles the key presses and key
 		this.selectionI = currentI;
 		this.selectionList = keys;
 	},
-	
+
 	dir(e) { // translates e.keyCode to return a string of the direction
 		if (e.keyCode == 37) {
 			return 0;
