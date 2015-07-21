@@ -14,20 +14,22 @@ var world = {
 					maps[i][j] = "W"; // sets edges of the map into maps
 				}
 
-				th.setAttribute("class", this.classTranslator(maps[i][j], i, j)) // classTranslator runs any necessary functions and returns the correct class name
+				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, true)) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
 		}
 	},
-	classTranslator(value, i, j) {
+	classTranslator(value, i, j, status) { // set status to true only for translateMap, to create monsters,etc, to populate world
 		switch(value) {
 			case "W": return "wall";
 			case " ": return "space";
-			case "M": map[i][j] = monster.make(i, j);
+			case "M": if (status === true) {
+						map[i][j] = monster.make(i, j);
+						}
 						return "monster";
 			case "S": return "seller";
-			case "P": this.playerLoc = [i, j];
+			case "P": if (status === true) {this.playerLoc = [i, j];}
 						return "player";
 			default: return false;
 		}
@@ -182,18 +184,21 @@ var player = {
 		this.hp =this["max hp"];
 	},
 	items: [],
+	equipped: {
+		0: false // 0 for weapon
+	},
 	range: 1,
 	gold: 0,
-	expValue: 0,
+	_exp: 0,
 	get exp () {
-		return this.expValue;
+		return this._exp;
 	},
 	set exp (value) {
-		this.expValue += value;
+		this._exp += value;
 		var goldAmount = Math.ceil(Math.random() * value / 2);
 		this.statusChange("gold", goldAmount)
-		if (this.expValue >= this.level * this.level * 5) {
-			this.expValue -= this.level * this.level * 5;
+		if (this._exp >= this.level * this.level * 5) {
+			this._exp -= this.level * this.level * 5;
 			this.levelUp();
 			display("You gained " + goldAmount + " gold and leveled to level " + this.level + ".");
 		} else {
@@ -269,8 +274,17 @@ var items = { // desc, price, range, slot, damage, forSale
 };
 
 var npc = {
-	controller() {
+	findNPC(y, x) {
+		var coord = [];
+		for (var i = 0; i < 4; i++) {
+			coord = world.calculateFromI(i, y, x);
+			var value = world.classTranslator(map[coord[0]][coord[1]]);
+			if (npc[value]) {
+				return value;
+			}
+		}
 
+		return false;
 	},
 	seller: {
 		list: "items",
@@ -279,11 +293,11 @@ var npc = {
 		},
 		exitMsg: "Please come again!",
 		menu() {
-			display("Wecome to my shop!");
+			display("Wecome!");
 			display("Press \'B\' to buy items.");
 		},
 
-		sell(key) {
+		sell(key) 	{
 			if (player.gold >= items[key]["price"]) {
 				player.items.push(items[key]);
 				player.gold -= items[key]["price"];
@@ -426,8 +440,11 @@ const controller = { // for now, controller just handles the key presses and key
 			this.menuSelector(e, items);
 		} else {
 			if (e.keyCode === 65) { // 'a' key
+
 				this.keyMap[65] = true;
+
 			} else if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
+
 				var dir = this.dir(e);
 
 				if (this.keyMap[65] === true) { // if 'a' key is being held while pressing arrow keys
@@ -439,14 +456,20 @@ const controller = { // for now, controller just handles the key presses and key
 				}
 
 				monster.controller(); // monsters move in response
-				if (this.status["seller"] === true) {
+
+				if (this.status["seller"] === true) { // moving turns off seller status
 					this.status["seller"] === false;
 				}
+
 			} else if (e.keyCode === 13) { // enter
+
 				this.interact();
+
 			} else if (e.keyCode === 66 && this["status"]["seller"] === true) { // 'b'
+
 				this.menuListing("Here's what's for sale: ", items);
 				this["status"]["freeze"] = true;
+
 			}
 
 		}
@@ -467,6 +490,7 @@ const controller = { // for now, controller just handles the key presses and key
 	},
 	interact() {
 		var pLoc = world.playerLoc;
+		console.log(npc.findNPC(pLoc[0], pLoc[1]));
 		if (world.finder(pLoc[0], pLoc[1], "S", 0)) {
 			this["status"]["seller"] = true;
 			npc.seller["menu"]();
