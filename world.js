@@ -436,8 +436,9 @@ const controller = { // for now, controller just handles the key presses and key
 	npc: false,
 	keypress(e) {
 		var mapID = document.getElementById("map");
-		if (this["status"]["freeze"] === true) {
-			this.menuSelector(e, items);
+		if (this["status"]["freeze"] === true && this.npc !== false) {
+			npc.controller(this.npc, e);
+			
 		} else {
 			if (e.keyCode === 65) { // 'a' key
 
@@ -467,7 +468,8 @@ const controller = { // for now, controller just handles the key presses and key
 
 			} else if (e.keyCode === 66 && this.npc === "seller") { // 'b'
 
-				this.menuListing("Here's what's for sale: ", items);
+				this.menuListing(npc.seller.sellMsg, items);
+				npc.status = "sell";
 				this["status"]["freeze"] = true;
 
 			}
@@ -486,26 +488,27 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 	},
 
-	menuSelector(e, list) {
+	menuSelector(e, list, msg, exitMsg, ifEnter) {
 		if (e.keyCode ===37) { //left key
 			this.selectionI--;
 			if (this.selectionI < 0) {
 				this.selectionI = this.selectionList.length - 1;
 			}
-			this.displayMenuList("HI", this.selectionList[this.selectionI]);
+			this.displayMenuList(msg, this.selectionList[this.selectionI]);
 		} else if (e.keyCode === 39) { // right key
 			this.selectionI++;
 			if (this.selectionI > this.selectionList.length - 1){
 				this.selectionI = 0;
 			}
-			this.displayMenuList("HI", this.selectionList[this.selectionI]);
+			this.displayMenuList(msg, this.selectionList[this.selectionI]);
 		} else if (e.keyCode === 13) { // enters
-			npc.seller.sell(this.selectionList[this.selectionI])
+			ifEnter(this.selectionList[this.selectionI])
 		} else if (e.keyCode === 27) { // escape key
 			this.npc = false;
 			this.status.freeze = false;
+			npc.status = false;
 			display(false);
-			display("Please come again!");
+			display(exitMsg);
 		}
 
 	},
