@@ -283,12 +283,28 @@ var npc = {
 	},
 
 	controller(character, e, key) { 
+		function dispMsg(msg, itemMsg) {
+			display(false);
+			display(msg);
+			display(itemMsg);
+		}
+
 		if (character === "seller" && this.status === "sell") {
-			if (e.keyCode === 66) {
-				e = "menu";
+
+
+			if (e.keyCode ===37 || e.keyCode === 39) { //left key
+				dispMsg("Here's what")
+			} else if (e.keyCode === 13) { // enters
+				this.seller.sell(key);
+			} else if (e.keyCode === 27) { // escape key
+				
+				npc.status = false;
+				display(false);
+				display(this.seller.exitMsg);
+			} else if (e === "menu") { // for the case when menuSelector is first initiated as a menu to player
+				dispMsg("Here's what's for sale:", "");
 			}
-			var itemDisp = key + "\n" + items.desc; 
-			controller.menuSelector(e, items, this.seller.sellMsg, this.seller.exitMsg, this.seller.sell, itemDisp);
+
 		}
 	},
 	findNPC(y, x) {
@@ -454,7 +470,7 @@ const controller = { // for now, controller just handles the key presses and key
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true && this.npc !== false) {
-			npc.controller(this.npc, e, this.selectionList[this.selectionI]);
+			this.menuSelector(e)
 			
 		} else {
 			if (e.keyCode === 65) { // 'a' key
@@ -488,7 +504,7 @@ const controller = { // for now, controller just handles the key presses and key
 				this.menuListing(npc.seller.sellMsg, items);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
-				npc.controller(this.npc, e, this.selectionList[this.selectionI]);
+				npc.controller(this.npc, "menu", this.selectionList[this.selectionI]);
 			}
 
 		}
@@ -505,36 +521,26 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 	},
 
-	menuSelector(e, list, msg, exitMsg, ifEnter, stuffDisplayed) {
+	menuSelector(e) {
 		if (e.keyCode ===37) { //left key
 			this.selectionI--;
 			if (this.selectionI < 0) {
 				this.selectionI = this.selectionList.length - 1;
 			}
-			this.displayMenuList(msg, stuffDisplayed);
 		} else if (e.keyCode === 39) { // right key
 			this.selectionI++;
 			if (this.selectionI > this.selectionList.length - 1){
 				this.selectionI = 0;
 			}
-			this.displayMenuList(msg, stuffDisplayed);
 		} else if (e.keyCode === 13) { // enters
-			ifEnter(this.selectionList[this.selectionI])
+			
 		} else if (e.keyCode === 27) { // escape key
 			this.npc = false;
 			this.status.freeze = false;
-			npc.status = false;
-			display(false);
-			display(exitMsg);
-		} else if (e === "menu") { // for the case when menuSelector is first initiated as a menu to player
-			this.displayMenuList(msg, stuffDisplayed);
 		}
 
-	},
-	displayMenuList(msg, stuffDisplayed) {
-		display(false);
-		display(msg);
-		display(stuffDisplayed);
+		npc.controller(this.npc, e, this.selectionList[this.selectionI]);
+
 	},
 	menuListing(msg, list, e) {
 		var keys = [];
