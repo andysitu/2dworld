@@ -296,7 +296,7 @@ var npc = {
 		}
 
 		if (character === "seller" && this.status === "sell") {
-
+			
 			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
 				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
 
@@ -311,7 +311,7 @@ var npc = {
 		} else if (character === "seller" && this.status === "buy") {
 
 			if (Object.keys(player.items).length <= 0) {
-				dispMsg("You don't have anything! Please leave.", "");
+				dispMsg("You don't have anything! Please leave!", "");
 			} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
 				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
 
@@ -341,10 +341,6 @@ var npc = {
 		return false;
 	},
 	seller: {
-		list: "items",
-		options: {
-			'b': "sell"
-		},
 		menu() {
 			display(false);
 			display("Welcome!");
@@ -491,7 +487,8 @@ const controller = { // for now, controller just handles the key presses and key
 	keyMap: {'a': false},
 	status: {freeze: false},
 	selectionI: 0,
-	selectionList: [],
+	selectionList: {},
+	selectionKeys: [],
 	npc: false,
 	keypress(e) {
 		var mapID = document.getElementById("map");
@@ -530,12 +527,12 @@ const controller = { // for now, controller just handles the key presses and key
 				this.menuListing(npc.seller.sellMsg, items);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
-				npc.controller(this.npc, "menu", this.selectionList[this.selectionI]);
+				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			} else if (e.keyCode === 83 && this.npc === "seller") { // 's'
-				this.menuListing(npc.seller.sellMsg, items);
+				this.menuListing(npc.seller.buyMsg, player.items);
 				npc.status = "buy";
 				this["status"]["freeze"] = true;
-				npc.controller(this.npc, "menu", this.selectionList[this.selectionI]);
+				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			}
 
 		}
@@ -553,24 +550,24 @@ const controller = { // for now, controller just handles the key presses and key
 	},
 
 	menuSelector(e) {
+		this.selectionKeys = Object.keys(this.selectionList)
+
 		if (e.keyCode ===37) { //left key
 			this.selectionI--;
 			if (this.selectionI < 0) {
-				this.selectionI = this.selectionList.length - 1;
+				this.selectionI = this.selectionKeys.length - 1;
 			}
 		} else if (e.keyCode === 39) { // right key
 			this.selectionI++;
-			if (this.selectionI > this.selectionList.length - 1){
+			if (this.selectionI > this.selectionKeys.length - 1){
 				this.selectionI = 0;
 			}
-		} else if (e.keyCode === 13) { // enters
-			
 		} else if (e.keyCode === 27) { // escape key
 			this.npc = false;
 			this.status.freeze = false;
 		}
 
-		npc.controller(this.npc, e, this.selectionList[this.selectionI]);
+		npc.controller(this.npc, e, this.selectionKeys[this.selectionI]);
 
 	},
 	menuListing(msg, list, e) {
@@ -586,7 +583,8 @@ const controller = { // for now, controller just handles the key presses and key
 		}
 
 		this.selectionI = currentI;
-		this.selectionList = keys;
+		this.selectionList = list;
+		this.selectionKeys = Object.keys(list);
 	},
 
 	dir(e) { // translates e.keyCode to return a string of the direction
