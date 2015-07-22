@@ -183,7 +183,13 @@ var player = {
 		this["max hp"] += 30;
 		this.hp =this["max hp"];
 	},
-	items: [],
+	items: {},
+	addItem(value) {
+		this.items[value] = (this.items[value] || 0) + 1;
+	},
+	removeItem(value) {
+		this.items[value] = (this.items[value] || 0) - 1;
+	},
 	equipped: {
 		0: false // 0 for weapon
 	},
@@ -268,7 +274,7 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 	})
 }
 
-var items = { // desc, price, range, slot, damage, forSale
+var items = { // desc, price, range, slot, damage, forSale, weight
 	sword: makeWeapon("A sword", 140, 1, 0, 10, true, 50),
 	"super sword": makeWeapon("A super strong sword", 1500, 2, 0, 40, true, 65)
 };
@@ -349,10 +355,10 @@ var monster = {
 	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
-		var level = Math.floor(Math.random() * 6 + player.level)
+		var level = Math.ceil(Math.random() * (player.level + 10));
 		monster["list"][this.counter] = {
 			level: level,
-			hp: Math.ceil(Math.random() * level * level * 0.3 + 0.7 * level * level),
+			hp: Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level),
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 			yCoord: i,
 			xCoord: j,
@@ -418,8 +424,7 @@ var monster = {
 	},
 
 	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
-		var chance = Math.ceil(Math.random() * 100); 
-		if (chance === 1) { // 1% chance of spawning mmonster
+		if ( Math.random() * 100 <= 5) { // 5% chance of spawning mmonster
 			for ( ; ; ) {
 				var yValue = Math.floor(Math.random() * map.length);
 				var xValue = Math.floor(Math.random() * map[yValue].length);
