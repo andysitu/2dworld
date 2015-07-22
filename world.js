@@ -308,7 +308,22 @@ var npc = {
 				this.seller.sell(key);
 			}
 
-		} else if (e.keyCode === 27) {
+		} else if (character === "seller" && this.status === "buy") {
+
+			if (Object.keys(player.items).length <= 0) {
+				dispMsg("You don't have anything! Please leave.", "");
+			} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
+				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
+
+				if (items[key]["slot"] === 0) { // when item is a weapons
+					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
+				}
+				dispMsg(this.seller.buyMsg, msg)
+			} else if (e.keyCode === 13) { // enters
+				this.seller.buy(key);
+			}
+
+		} 	else if (e.keyCode === 27) {
 				npc.status = false;
 				dispMsg("Thanks for shopping here!\nPlease come again!", "");
 		}
@@ -331,13 +346,14 @@ var npc = {
 			'b': "sell"
 		},
 		menu() {
+			display(false);
 			display("Welcome!");
-			display("Press \'B\' to buy items.");
+			display("Press \'B\' to buy items and \'S\' to sell items.");
 		},
 
 		sell(key) 	{
 			if (player.gold >= items[key]["price"]) {
-				player.items.push(items[key]);
+				player.addItem(key);
 				player.gold -= items[key]["price"];
 
 				display("\nYou bought a " + key);
@@ -345,7 +361,12 @@ var npc = {
 				display("\nYou don't have enough money!");
 			}
 		},
-		sellMsg: "Here's what's for sale:"
+		sellMsg: "Here's what's for sale:",
+
+		buy(key) {
+
+		},
+		buyMsg: "Which item do you want to sell?"
 	}
 }
 
@@ -508,6 +529,11 @@ const controller = { // for now, controller just handles the key presses and key
 
 				this.menuListing(npc.seller.sellMsg, items);
 				npc.status = "sell";
+				this["status"]["freeze"] = true;
+				npc.controller(this.npc, "menu", this.selectionList[this.selectionI]);
+			} else if (e.keyCode === 83 && this.npc === "seller") { // 's'
+				this.menuListing(npc.seller.sellMsg, items);
+				npc.status = "buy";
 				this["status"]["freeze"] = true;
 				npc.controller(this.npc, "menu", this.selectionList[this.selectionI]);
 			}
