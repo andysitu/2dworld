@@ -236,7 +236,7 @@ var player = {
 		this.equipped[slot] = false;
 		this.addItem(item);
 	},
-	equipMenu(e, slot) {
+	equipMenu(e, slot) { // actually for unequipping items
 		if (e.keyCode === 27) {
 			display(false);
 			display("You have exited the equip screen.");
@@ -296,8 +296,19 @@ var player = {
 			display("You gained " + goldAmount + " gold and " + value + " exp.");
 		}
 	},
-	damage() {
-		return Math.floor(Math.random() * 3 * player.level + 1 * player.level)
+	damage() { // calculates damage by player (adaptable for later when there are more factors besides weapon)
+		var damage = 0;
+
+		if (this.equipped["weapon"] === false) {
+			damage = Math.ceil(Math.random() * (3 + player.level));
+		} else {
+			var item = this.equipped["weapon"];
+			var dam = items[item]["damage"];
+
+			damage = Math.floor(.8 * dam + .1 * player.level + Math.random() * (.40 * dam + .1 * player.level));
+		}
+		
+		return damage;
 	},
 
 	attack(dir) {
