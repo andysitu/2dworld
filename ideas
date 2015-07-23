@@ -1,22 +1,17 @@
-sell (add a sell option) also needs to set the freeze status
-
-npc: seller needs to buy able to sell and buy items during this freeze status.
-
 npc: have different kinds of sellers
 
 
+* player can equip
+* player can use weapons
+* player can unequip
+* player can delete item
+* player can use skills
+* player has ability points
 * monster gives  rewards
 * possiblity of dropping items
 * coward will run away
-* items
-* weapons
-* skills
-* menu selection, input from player
-* player can die
 
 * created restricted area where only player cna travel there
 	Note: now when player moves into an area, it exchanges class so this won't work with restricted area.
-
-* imiprove clicking map for status
 
 * change monsters spawn into monster constructors so that you can give them special abilities by setting prototypes, etc.

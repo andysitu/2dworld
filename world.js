@@ -196,6 +196,23 @@ var player = {
 	equipped: {
 		0: false // 0 for weapon
 	},
+	equip(item){
+		var slot = items[item]["slot"];
+		if (this.equipped[slot]) {
+			this.unequip(this.equipped[slot]);
+			this.equipped[slot] = item;
+			this.removeItem(item);
+		} else {
+			this.equipped[slot] = item;
+			this.removeItem(item);
+		}
+	},
+	unequip(item) {
+		var slot = items[item]["slot"];
+		this.equipped[slot] = false;
+		this.addItem(item);
+	},
+
 	range: 1,
 	_gold: 0,
 	get gold() {
