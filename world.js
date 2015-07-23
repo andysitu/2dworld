@@ -195,7 +195,7 @@ var player = {
 		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
 			var msg = item + "\nDescription: " + items[item]["desc"] + "\nQuantity: " + this.items[item] + "\nprice: " + items[item]["price"];
 
-				if (items[item]["slot"] === 0) { // when item is a weapons
+				if (items[item]["slot"] === "weapon") { // when item is a weapons
 					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
 				}
 
@@ -218,7 +218,7 @@ var player = {
 		}
 	},
 	equipped: {
-		0: false // 0 for weapon
+		"weapon": false // 0 for weapon
 	},
 	equip(item){
 		var slot = items[item]["slot"];
@@ -235,6 +235,24 @@ var player = {
 		var slot = items[item]["slot"];
 		this.equipped[slot] = false;
 		this.addItem(item);
+	},
+	equipMenu(e, slot) {
+		if (e.keyCode === 27) {
+			display(false);
+			display("You have exited the equip screen.");
+		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
+	//		var msg = item + "\nDescription: " + items[item]["desc"] + "\nQuantity: " + this.items[item] + "\nprice: " + items[item]["price"];
+
+	//			if (items[item]["slot"] === 0) { // when item is a weapons
+	//				msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
+	//			}
+
+			display(false);
+			display(slot);
+		} else if (e.keyCode === 13) { // enter key
+			display(false);
+			display("You have unequipped a " + slot);
+		}
 	},
 
 	range: 1,
@@ -336,8 +354,8 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 }
 
 var items = { // desc, price, range, slot, damage, forSale, weight
-	sword: makeWeapon("A sword", 140, 1, 0, 10, true, 50),
-	"super sword": makeWeapon("A super strong sword", 1500, 2, 0, 40, true, 65)
+	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 50),
+	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 65)
 };
 
 var npc = {
@@ -365,10 +383,10 @@ var npc = {
 			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
 				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
 
-				if (items[key]["slot"] === 0) { // when item is a weapons
+				if (items[key]["slot"] === "weapon") { // when item is a weapons
 					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
 				}
-				dispMsg(this.seller.sellMsg, msg)
+				dispMsg("Here's what's for sale:", msg)
 			} else if (e.keyCode === 13) { // enter key
 				this.seller.sell(key);
 			}
@@ -380,10 +398,10 @@ var npc = {
 			} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
 				var msg = key + "\nDescription: " + items[key]["desc"] + "\nQuantity: " + player.items[key] + "\nprice: " + items[key]["price"];
 
-				if (items[key]["slot"] === 0) { // when item is a weapons
+				if (items[key]["slot"] === "weapon") { // when item is a weapons
 					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
 				}
-				dispMsg(this.seller.buyMsg, msg)
+				dispMsg("Which item do you want to sell?", msg)
 			} else if (e.keyCode === 13) { // enters
 				this.seller.buy(key);
 			}
@@ -419,7 +437,6 @@ var npc = {
 				display("\nYou don't have enough money!");
 			}
 		},
-		sellMsg: "Here's what's for sale:",
 
 		buy(key) {
 			if (player.items[key]) {
@@ -431,8 +448,7 @@ var npc = {
 			} else {
 				display("You don't have that item");
 			}
-		},
-		buyMsg: "Which item do you want to sell?"
+		}
 	}
 }
 
@@ -562,12 +578,7 @@ const controller = { // for now, controller just handles the key presses and key
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
-			if (this.npc !== false) {
-				this.menuSelector(e);
-			} else if (this.status.status === "item") {
-				this.menuSelector(e);
-			}
-			
+			this.menuSelector(e);
 		} else {
 			if (e.keyCode === 65) { // 'a' key
 
@@ -610,6 +621,11 @@ const controller = { // for now, controller just handles the key presses and key
 				this.status.status = "item";
 				this.menuListing(player.items);
 				player.itemMenu("menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 69) { // 'e' for equip menu
+				this.status.freeze = true;
+				this.status.status = "equip";
+				this.menuListing(player.equipped);
+				player.equipMenu("menu", this.selectionKeys[this.selectionI]);
 			}
 
 		}
@@ -643,10 +659,10 @@ const controller = { // for now, controller just handles the key presses and key
 
 		if (this.npc) {
 			npc.controller(this.npc, e, this.selectionKeys[this.selectionI]);
-
 		} else if (this.status.status === "item") {
 			player.itemMenu(e, this.selectionKeys[this.selectionI]);
-
+		} else if (this.status.status === 'equip') {
+			player.equipMenu(e, this.selectionKeys[this.selectionI]);
 		}
 
 		if (e.keyCode === 27) {

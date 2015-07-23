@@ -9,6 +9,8 @@ npc: have different kinds of sellers
 * possiblity of dropping items
 * coward will run away
 * items add weight
+* add items
+* add item types + slots
 
 * created restricted area where only player cna travel there
 	Note: now when player moves into an area, it exchanges class so this won't work with restricted area.
