@@ -305,8 +305,8 @@ var npc = {
 			display(itemMsg);
 		}
 
-		if (character === "seller" && this.status === "sell") {
-			
+		if (character === "seller" && this.status === "sell") { // player is buying item
+
 			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
 				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
 
@@ -318,12 +318,12 @@ var npc = {
 				this.seller.sell(key);
 			}
 
-		} else if (character === "seller" && this.status === "buy") {
+		} else if (character === "seller" && this.status === "buy") { // player is selling his/her own item
 
 			if (Object.keys(player.items).length <= 0) {
 				dispMsg("You don't have anything! Please leave!", "");
 			} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
-				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
+				var msg = key + "\nDescription: " + items[key]["desc"] + "\nQuantity: " + player.items[key] + "\nprice: " + items[key]["price"];
 
 				if (items[key]["slot"] === 0) { // when item is a weapons
 					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
@@ -333,7 +333,7 @@ var npc = {
 				this.seller.buy(key);
 			}
 
-		} 	else if (e.keyCode === 27) {
+		} 	else if (e.keyCode === 27) { // when player presses esc key
 				npc.status = false;
 				dispMsg("Thanks for shopping here!\nPlease come again!", "");
 		}
@@ -370,7 +370,14 @@ var npc = {
 		sellMsg: "Here's what's for sale:",
 
 		buy(key) {
-
+			if (player.items[key]) {
+				display(false);
+				display("You sold " + key + " for " + items[key]["price"]);
+				player.gold = items[key]["price"];
+				player.removeItem(key);
+			} else {
+				display("You don't have that item");
+			}
 		},
 		buyMsg: "Which item do you want to sell?"
 	}
@@ -533,7 +540,6 @@ const controller = { // for now, controller just handles the key presses and key
 				this.interact();
 
 			} else if (e.keyCode === 66 && this.npc === "seller") { // 'b'
-
 				this.menuListing(npc.seller.sellMsg, items);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
