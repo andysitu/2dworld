@@ -232,10 +232,25 @@ var player = {
 			display("There is no monster there!");
 		}
 	},
+	attacked(value) {
+		this.hp += value;
+		if (this.hp <= 0) {
+			this.dead();
+		} else {
+			display("You were hit with " + value + " damage.");
+		}
+	},
 
 	statusChange(status, value) {
 		this[status] += value;
-	} 
+	},
+
+	dead() {
+		document.onkeydown = null;
+		document.onkeyup = null;
+		display(false);
+		display("You have died.");
+	}
 }
 
 var item = {
@@ -406,8 +421,7 @@ var monster = {
 	},
 	attack(num) {
 		var dmg = Math.ceil(this["list"][num]["level"] * .5 * Math.random() + this["list"][num]["level"]);
-		player.statusChange("hp", -dmg);
-		display("You were hit with " + dmg + " damage.");
+		player.attacked(-dmg);
 	},
 	attacked(num, dmg) {
 		this["list"][num]["hp"] -= dmg;
