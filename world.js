@@ -185,7 +185,11 @@ var player = {
 		this.hp =this["max hp"];
 	},
 	items: {},
-	itemMenu(character, e, key) {
+	itemMenu(e, item) {
+		if (Object.keys(player.items).length <= 0) {
+			display(false);
+			display("Your inventory is empty. You don't have any items.");
+		}
 
 	},
 	addItem(value) {
@@ -543,7 +547,9 @@ const controller = { // for now, controller just handles the key presses and key
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
 			if (this.npc !== false) {
-				this.menuSelector(e)
+				this.menuSelector(e);
+			} else if (this.status.status === "item") {
+				this.menuSelector(e);
 			}
 			
 		} else {
@@ -574,19 +580,20 @@ const controller = { // for now, controller just handles the key presses and key
 				this.interact();
 
 			} else if (e.keyCode === 66 && this.npc === "seller") { // 'b'
-				this.menuListing(npc.seller.sellMsg, items);
+				this.menuListing(items);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
 				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			} else if (e.keyCode === 83 && this.npc === "seller") { // 's'
-				this.menuListing(npc.seller.buyMsg, player.items);
+				this.menuListing(player.items);
 				npc.status = "buy";
 				this["status"]["freeze"] = true;
 				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			} else if (e.keyCode === 73) { // 'i' for item screen/ menu
 				this.status.freeze = true;
 				this.status.status = "item";
-				this.menuListing(npc.seller.buyMsg, player.items);
+				this.menuListing(player.items);
+				player.itemMenu("menu", this.selectionKeys[this.selectionI]);
 			}
 
 		}
@@ -624,10 +631,15 @@ const controller = { // for now, controller just handles the key presses and key
 
 		if (this.npc) {
 			npc.controller(this.npc, e, this.selectionKeys[this.selectionI]);
+			if (e.keyCode === 27) {
+				this.npc = false;
+			}
+		} else if (this.status.status === "item") {
+			player.itemMenu(e, this.selectionKeys[this.selectionI])
 		}
 
 	},
-	menuListing(msg, list, e) {
+	menuListing(list, e) {
 		var keys = [];
 		var currentI = 0;
 
