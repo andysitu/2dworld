@@ -176,6 +176,7 @@ var world = {
 
 var player = {
 	hp: 50,
+	weight: 0,
 	"max hp": 50,
 	level: 1,
 	levelUp() {
@@ -184,6 +185,9 @@ var player = {
 		this.hp =this["max hp"];
 	},
 	items: {},
+	itemMenu(character, e, key) {
+
+	},
 	addItem(value) {
 		this.items[value] = (this.items[value] || 0) + 1;
 	},
@@ -579,6 +583,10 @@ const controller = { // for now, controller just handles the key presses and key
 				npc.status = "buy";
 				this["status"]["freeze"] = true;
 				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 73) { // 'i' for item screen/ menu
+				this.status.freeze = true;
+				this.status.status = "item";
+				this.menuListing(npc.seller.buyMsg, player.items);
 			}
 
 		}
