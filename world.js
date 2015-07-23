@@ -197,7 +197,14 @@ var player = {
 		0: false // 0 for weapon
 	},
 	range: 1,
-	gold: 0,
+	_gold: 0,
+	get gold() {
+		return this._gold;
+	},
+	set gold(value) {
+		this._gold += value;
+		return this._gold;
+	},
 	_exp: 0,
 	get exp () {
 		return this._exp;
