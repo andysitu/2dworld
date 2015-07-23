@@ -188,7 +188,10 @@ var player = {
 		this.items[value] = (this.items[value] || 0) + 1;
 	},
 	removeItem(value) {
-		this.items[value] = (this.items[value] || 0) - 1;
+		this.items[value] = (this.items[value] || 1) - 1;
+		if (this.items[value] <= 0) {
+			delete this.items[value];
+		}
 	},
 	equipped: {
 		0: false // 0 for weapon
