@@ -186,15 +186,25 @@ var player = {
 	},
 	items: {},
 	itemMenu(e, item) {
-		if (Object.keys(player.items).length <= 0) {
+		if (e.keyCode === 27) {
+			display(false);
+			display("You have exited the item screen.");
+		} else if (Object.keys(player.items).length <= 0) {
 			display(false);
 			display("Your inventory is empty. You don't have any items.");
 		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
+			var msg = item + "\nDescription: " + items[item]["desc"] + "\nQuantity: " + this.items[item] + "\nprice: " + items[item]["price"];
+
+				if (items[item]["slot"] === 0) { // when item is a weapons
+					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
+				}
+
 			display(false);
-			display(item);
-		} else if (e.keyCode === 27) {
+			display(msg);
+		} else if (e.keyCode === 13) { // enter key
+			this.equip(item);
 			display(false);
-			display("You have exited the item screen.");
+			display("You have equipped a " + item);
 		}
 
 	},
