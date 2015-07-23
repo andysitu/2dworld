@@ -189,6 +189,12 @@ var player = {
 		if (Object.keys(player.items).length <= 0) {
 			display(false);
 			display("Your inventory is empty. You don't have any items.");
+		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
+			display(false);
+			display(item);
+		} else if (e.keyCode === 27) {
+			display(false);
+			display("You have exited the item screen.");
 		}
 
 	},
@@ -340,7 +346,11 @@ var npc = {
 			display(itemMsg);
 		}
 
-		if (character === "seller" && this.status === "sell") { // player is buying item
+		if (e.keyCode === 27) { // when player presses esc key
+			this.status = false;
+			dispMsg("Thanks for shopping here!\nPlease come again!", "");
+		}
+		else if (character === "seller" && this.status === "sell") { // player is buying item
 
 			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
 				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
@@ -367,11 +377,7 @@ var npc = {
 			} else if (e.keyCode === 13) { // enters
 				this.seller.buy(key);
 			}
-
-		} else if (e.keyCode === 27) { // when player presses esc key
-			this.status = false;
-			dispMsg("Thanks for shopping here!\nPlease come again!", "");
-		}
+		} 
 	},
 	findNPC(y, x) {
 		var coord = [];
@@ -623,19 +629,21 @@ const controller = { // for now, controller just handles the key presses and key
 			if (this.selectionI > this.selectionKeys.length - 1){
 				this.selectionI = 0;
 			}
-		} else if (e.keyCode === 27) { // escape key
-			npc.status = false;
-			this.status.freeze = false;
-			this.status.status = false;
 		}
 
 		if (this.npc) {
 			npc.controller(this.npc, e, this.selectionKeys[this.selectionI]);
-			if (e.keyCode === 27) {
-				this.npc = false;
-			}
+
 		} else if (this.status.status === "item") {
-			player.itemMenu(e, this.selectionKeys[this.selectionI])
+			player.itemMenu(e, this.selectionKeys[this.selectionI]);
+
+		}
+
+		if (e.keyCode === 27) {
+			npc.status = false;
+			this.status.freeze = false;
+			this.status.status = false;
+			this.npc = false;
 		}
 
 	},
