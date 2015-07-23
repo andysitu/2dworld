@@ -218,7 +218,7 @@ var player = {
 		}
 	},
 	equipped: {
-		"weapon": false // 0 for weapon
+		"weapon": false
 	},
 	equip(item){
 		var slot = items[item]["slot"];
@@ -241,17 +241,34 @@ var player = {
 			display(false);
 			display("You have exited the equip screen.");
 		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
-	//		var msg = item + "\nDescription: " + items[item]["desc"] + "\nQuantity: " + this.items[item] + "\nprice: " + items[item]["price"];
+			var item = this.equipped[slot];
 
-	//			if (items[item]["slot"] === 0) { // when item is a weapons
-	//				msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
-	//			}
+			if (item === false) {
+				display(false);
+				display("You don't have any item equipped in your " + slot + " slot.");
+			} else {
+				var msg = item + "\nDescription: " + items[item]["desc"] + "\nslot: " + slot + "\nprice: " + items[item]["price"];
 
-			display(false);
-			display(slot);
+				if (slot === "weapon") { // when item is a weapons
+					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
+				}
+
+				display(false);
+				display(msg);
+			}
+
+
 		} else if (e.keyCode === 13) { // enter key
-			display(false);
-			display("You have unequipped a " + slot);
+			var item = this.equipped[slot];
+
+			if (item === false) {
+				display(false);
+				display("You don't have any item equipped in your " + slot + " slot.");
+			} else {
+				this.unequip(item);
+				display(false);
+				display("You have unequipped a " + item);
+			}
 		}
 	},
 
