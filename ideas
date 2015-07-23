@@ -1,15 +1,14 @@
 npc: have different kinds of sellers
 
 
-* player can equip
 * player can use weapons
-* player can unequip
 * player can delete item
 * player can use skills
 * player has ability points
 * monster gives  rewards
 * possiblity of dropping items
 * coward will run away
+* items add weight
 
 * created restricted area where only player cna travel there
 	Note: now when player moves into an area, it exchanges class so this won't work with restricted area.

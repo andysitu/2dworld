@@ -360,9 +360,9 @@ var npc = {
 				this.seller.buy(key);
 			}
 
-		} 	else if (e.keyCode === 27) { // when player presses esc key
-				npc.status = false;
-				dispMsg("Thanks for shopping here!\nPlease come again!", "");
+		} else if (e.keyCode === 27) { // when player presses esc key
+			this.status = false;
+			dispMsg("Thanks for shopping here!\nPlease come again!", "");
 		}
 	},
 	findNPC(y, x) {
@@ -530,15 +530,17 @@ var monster = {
 
 const controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {'a': false},
-	status: {freeze: false},
+	status: {freeze: false, status: false},
 	selectionI: 0,
 	selectionList: {},
 	selectionKeys: [],
 	npc: false,
 	keypress(e) {
 		var mapID = document.getElementById("map");
-		if (this["status"]["freeze"] === true && this.npc !== false) {
-			this.menuSelector(e)
+		if (this["status"]["freeze"] === true) {
+			if (this.npc !== false) {
+				this.menuSelector(e)
+			}
 			
 		} else {
 			if (e.keyCode === 65) { // 'a' key
@@ -607,11 +609,14 @@ const controller = { // for now, controller just handles the key presses and key
 				this.selectionI = 0;
 			}
 		} else if (e.keyCode === 27) { // escape key
-			this.npc = false;
+			npc.status = false;
 			this.status.freeze = false;
+			this.status.status = false;
 		}
 
-		npc.controller(this.npc, e, this.selectionKeys[this.selectionI]);
+		if (this.npc) {
+			npc.controller(this.npc, e, this.selectionKeys[this.selectionI]);
+		}
 
 	},
 	menuListing(msg, list, e) {
