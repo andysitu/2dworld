@@ -203,7 +203,6 @@ var player = {
 	},
 	set gold(value) {
 		this._gold += value;
-		return this._gold;
 	},
 	_exp: 0,
 	get exp () {
@@ -314,7 +313,7 @@ var npc = {
 					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
 				}
 				dispMsg(this.seller.sellMsg, msg)
-			} else if (e.keyCode === 13) { // enters
+			} else if (e.keyCode === 13) { // enter key
 				this.seller.sell(key);
 			}
 
@@ -360,7 +359,8 @@ var npc = {
 		sell(key) 	{
 			if (player.gold >= items[key]["price"]) {
 				player.addItem(key);
-				player.gold -= items[key]["price"];
+				player.gold = -items[key]["price"];
+				displayStatus();
 
 				display("\nYou bought a " + key);
 			} else {
@@ -374,6 +374,7 @@ var npc = {
 				display(false);
 				display("You sold " + key + " for " + items[key]["price"]);
 				player.gold = items[key]["price"];
+				displayStatus();
 				player.removeItem(key);
 			} else {
 				display("You don't have that item");
