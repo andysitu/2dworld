@@ -2,6 +2,20 @@ var world = {
 	playerLoc: [0,0],
 	translateMap(maps) {
 		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
+		for (var i = 0; i < maps.length; i++) {
+
+			for (var j = 0; j < maps[i].length; j++) {
+				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
+					maps[i][j] = "W"; // sets edges of the map into maps
+				}
+
+				this.classTranslator(maps[i][j], i, j, true); // classTranslator runs any necessary functions and returns the correct class name
+			}
+		}
+
+		this.displayMap(map);
+	},
+	displayMap(maps) {
 		var map = document.getElementById("map");
 		
 		for (var i = 0; i < maps.length; i++) {
@@ -10,16 +24,14 @@ var world = {
 
 			for (var j = 0; j < maps[i].length; j++) {
 				var th = document.createElement("th");
-				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
-					maps[i][j] = "W"; // sets edges of the map into maps
-				}
 
-				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, true)) // classTranslator runs any necessary functions and returns the correct class name
+				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, false)) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
 		}
 	},
+
 	classTranslator(value, i, j, status) { // set status to true only for translateMap, to create monsters,etc, to populate world
 		switch(value) {
 			case "W": return "wall";
@@ -31,7 +43,9 @@ var world = {
 			case "S": return "seller";
 			case "P": if (status === true) {this.playerLoc = [i, j];}
 						return "player";
-			default: return false;
+			default: if (typeof value === "number") {
+						return "monster";
+					} else {break;}
 		}
 	},
 
@@ -784,5 +798,4 @@ window.onload = function() {
 			}
 		}
 	}
-
 };
