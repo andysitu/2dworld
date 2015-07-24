@@ -30,6 +30,17 @@ var world = {
 				tr.appendChild(th);
 			}
 		}
+
+		map = null;
+	},
+	dispMap(maps) {
+		for (var i = 0; i < maps.length; i++) {
+
+			for (var j = 0; j < maps[i].length; j++) {
+				var elem = document.getElementById(i + " " + j);
+				elem.className = this.classTranslator(maps[i][j], i, j, false);
+			}
+		}
 	},
 
 	classTranslator(value, i, j, status) { // set status to true only for translateMap, to create monsters,etc, to populate world
@@ -684,6 +695,7 @@ const controller = { // for now, controller just handles the key presses and key
 			}
 
 		}
+		mapID = null;
 
 	},
 
@@ -798,4 +810,6 @@ window.onload = function() {
 			}
 		}
 	}
+
+	table = null;
 };
