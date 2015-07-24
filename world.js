@@ -34,6 +34,39 @@ var world = {
 		}
 	},
 
+	centerPlayer() { // calculates the width and height of map from center of player
+		var arr = [0, 0, 0, 0]; // y1, y2, x1, x2
+		var height = 10; // this is double the distance of this plus player (2 * height + 1 for actual height)
+		var width = 10;
+		var pLoc = this.playerLoc;
+
+		arr[0] = pLoc[0] - 10;
+		arr[1] = pLoc[0] + 10;
+
+		if (arr[0] < 0) {
+			arr[0] = 0;
+			arr[1] = height * 2;
+
+		} else if (arr[1] > map.length - 1) {
+			arr[1] = map.length - 1; 
+			arr[0] = arr[1] - height * 2;
+		}
+
+		arr[2] = pLoc[1] - 10;
+		arr[3] = pLoc[1] + 10;
+
+		if (arr[2] < 0) {
+			arr[2] = 0;
+			arr[3] = width * 2;
+
+		} else if (arr[3] > map[pLoc[0]].length - 1) {
+			arr[3] = map[pLoc[0]].length - 1; 
+			arr[2] = map[pLoc[0]].length - 1 - height * 2;
+		}
+
+		return arr;
+	},
+
 	classTranslator(value, i, j, status) { // set status to true only for translateMap, to create monsters,etc, to populate world
 		switch(value) {
 			case "W": return "wall";
