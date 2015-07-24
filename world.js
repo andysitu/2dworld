@@ -17,7 +17,7 @@ var world = {
 				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
 					maps[i][j] = "W"; // sets edges of the map into maps
 				} else if (map[i][j] === "M") {
-					monster.make(i, j);
+					map[i][j] = monster.make(i, j); // makes monster, which returns the ID number for it and map is set to that
 				} else if (map[i][j] === "P") {
 					this.playerLoc = [i, j];
 				}
@@ -138,12 +138,12 @@ var world = {
 
 			if (map[y1][x1] === "P") {
 				this.playerLoc = [y1, x1]; // change the player coordinates record
+				this.dispMap(map);
 			} else if (typeof map[y1][x1] === "number") {
 				monster["list"][map[y1][x1]]["yCoord"] = y1;
 				monster["list"][map[y1][x1]]["xCoord"] = x1;
 			}
 
-			this.dispMap(map);
 			return true;
 		}
 
@@ -619,7 +619,7 @@ var monster = {
 			var dir = Math.floor(Math.random() * 4);
 			dirCount[dir]++;
 			if (world.move(loc[0], loc[1], dir)) { // this will return true if move was successful (into space)
-				return false;
+				return true;
 			} // math.random gives 0-3 for the direction of moving)
 		}	
 	},
@@ -651,7 +651,6 @@ var monster = {
 		if (map[y][x] === " " && !world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 32)) {
 			var monstID = this.make(y, x);
 			map.changeValue(y, x, monstID);
-			world.dispMap(map);
 
 			display("Monster spawned");
 			return true;
@@ -681,6 +680,7 @@ var monster = {
 
 			displayStatus();
 			this.spawner(); // runs a chance of generating a monster after all the monsters had moved
+			world.dispMap(map);
 		} else {
 
 		}
