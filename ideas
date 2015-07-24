@@ -1,5 +1,9 @@
 npc: have different kinds of sellers
 
+
+* weight affects dodge chance + block change
+* ability to dodge
+* ability to block
 * calculate defense
 * player can delete item
 * player can use skills
