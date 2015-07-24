@@ -211,9 +211,11 @@ var player = {
 	},
 	addItem(value) {
 		this.items[value] = (this.items[value] || 0) + 1;
+		this.weight += items[value]["weight"];
 	},
 	removeItem(value) {
 		this.items[value] = (this.items[value] || 1) - 1;
+		this.weight -= items[value]["weight"];
 		if (this.items[value] <= 0) {
 			delete this.items[value];
 		}
@@ -383,8 +385,8 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 }
 
 var items = { // desc, price, range, slot, damage, forSale, weight
-	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 50),
-	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 65)
+	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10),
+	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15)
 };
 
 var npc = {
