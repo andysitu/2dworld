@@ -1,31 +1,22 @@
 var world = {
 	playerLoc: [0,0],
 	translateMap(maps) {
+		var map = document.getElementById("map");
+
 		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
 		for (var i = 0; i < maps.length; i++) {
+			var tr = document.createElement("tr");
+			map.appendChild(tr);
 
 			for (var j = 0; j < maps[i].length; j++) {
 				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
 					maps[i][j] = "W"; // sets edges of the map into maps
 				}
 
-				this.classTranslator(maps[i][j], i, j, true); // classTranslator runs any necessary functions and returns the correct class name
-			}
-		}
 
-		this.displayMap(map);
-	},
-	displayMap(maps) {
-		var map = document.getElementById("map");
-		
-		for (var i = 0; i < maps.length; i++) {
-			var tr = document.createElement("tr");
-			map.appendChild(tr);
-
-			for (var j = 0; j < maps[i].length; j++) {
 				var th = document.createElement("th");
 
-				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, false)) // classTranslator runs any necessary functions and returns the correct class name
+				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, true)) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
