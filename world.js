@@ -94,9 +94,9 @@ var world = {
 			map[y][x] = " "; // set area where player was to "space"
 			this.changeClass(class2, y, x);
 
-			if (class1 === "player") {
+			if (map[y1][x1] === "P") {
 				this.playerLoc = [y1, x1]; // change the player coordinates record
-			} else if (class1 === "monster") {
+			} else if (typeof map[y1][x1] === "number") {
 				monster["list"][map[y1][x1]]["yCoord"] = y1;
 				monster["list"][map[y1][x1]]["xCoord"] = x1;
 			}
@@ -352,7 +352,7 @@ var player = {
 		if (this.hp <= 0) {
 			this.dead();
 		} else {
-			display("You were hit with " + value + " damage.");
+			display("You were hit with " + -value + " damage.");
 		}
 	},
 
@@ -514,7 +514,7 @@ var monster = {
 	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
-		var level = Math.ceil(Math.random() * (player.level + 10));
+		var level = Math.floor(Math.random() * 5 + player.level * 1.2 );
 		monster["list"][this.counter] = {
 			level: level,
 			hp: Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level),
@@ -597,7 +597,7 @@ var monster = {
 		if (map[y][x] === " " && !world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 32)) {
 			var monstID = this.make(y, x);
 			map.changeValue(y, x, monstID);
-			world.changeClass("monster", y, x);
+			world.dispMap(map);
 
 			display("Monster spawned");
 			return true;
