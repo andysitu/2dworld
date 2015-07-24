@@ -305,16 +305,12 @@ var player = {
 	get exp () {
 		return this._exp;
 	},
-	set exp (value) {
+	set exp (value) { 
 		this._exp += value;
-		var goldAmount = Math.ceil(Math.random() * value / 2);
-		this.gold = goldAmount;
 		if (this._exp >= this.level * this.level * 5) {
 			this._exp -= this.level * this.level * 5;
 			this.levelUp();
-			display("You gained " + goldAmount + " gold and leveled to level " + this.level + ".");
-		} else {
-			display("You gained " + goldAmount + " gold and " + value + " exp.");
+			display("You leveled to level " + this.level + ".");
 		}
 	},
 	damage() { // calculates damage by player (adaptable for later when there are more factors besides weapon)
@@ -508,9 +504,11 @@ var monster = {
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
 		var level = Math.floor(Math.random() * 5 + player.level * 1.2 );
+		var hpValue = Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level)
 		monster["list"][this.counter] = {
 			level: level,
-			hp: Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level),
+			hp: hpValue,
+			maxHP: hpValue,
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 			yCoord: i,
 			xCoord: j,
@@ -530,12 +528,24 @@ var monster = {
 		display(dmg + " damage was done to the monster.");
 
 		if (this["list"][num]["hp"] <= 0) { // monster dead
-			player.exp = this["list"][num]["level"];
+			this.reward(num);			
 			this.rem(num);
 		} else if (this["list"][num]["status"] === "passive") {
 			this["list"][num]["status"] = "aggressive";
 		}
 	},
+	reward(num) {
+		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .2 + this["list"][num]["maxHP"] * .1);
+		var exp = this["list"][num]["level"];
+
+		player.gold = goldAmount;
+
+		display("You gained " + goldAmount + " gold and " + exp + " exp.");
+		
+		player.exp = exp;
+
+	},
+
 	inRange(monstID) { 
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
@@ -785,6 +795,8 @@ window.onload = function() {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
 			table.rows[i].cells[j].onclick = function(e) {
+				world.dispMap(map);
+
 				if (this.className === "monster") {
 					var str = /(\d*) (\d*)/.exec(this.id);
 					var monstID = map[str[1]][str[2]];
