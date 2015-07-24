@@ -60,11 +60,6 @@ var world = {
 		}
 	},
 
-	changeClass(class1, y1, x1) {
-		var loc = document.getElementById(y1 + " " + x1);
-		loc.setAttribute("class", class1);
-	},
-
 	move(y, x, dir) { // 1 for left, 2 for up, 3 for right, 4 for down
 		var y1, x1; // new coordinate where character will move to
 
@@ -85,14 +80,10 @@ var world = {
 		}
 
 		if (map[y1][x1] === " ") {
-			var class1 = document.getElementById(y + " " + x).className;
-			var class2 = document.getElementById(y1 + " " + x1).className;
 
 			map[y1][x1] = map[y][x]; // set new location of player
-			this.changeClass(class1, y1, x1);
 
 			map[y][x] = " "; // set area where player was to "space"
-			this.changeClass(class2, y, x);
 
 			if (map[y1][x1] === "P") {
 				this.playerLoc = [y1, x1]; // change the player coordinates record
@@ -100,21 +91,23 @@ var world = {
 				monster["list"][map[y1][x1]]["yCoord"] = y1;
 				monster["list"][map[y1][x1]]["xCoord"] = x1;
 			}
+
+			this.dispMap(map);
 			return true;
 		}
 
 		return false;
 	},
-	rem(value, newClass) { // removes monster with value and replaes it with either a newClass (ex: "W", " ") if defiend, if not, then space
+	rem(value, newValue) { // removes monster with value and replaes it with either a newClass (ex: "W", " ") if defiend, if not, then space
 		var loc = [monster["list"][value]["yCoord"], monster["list"][value]["xCoord"]];
 		var i = loc[0], j = loc[1];
-		if (newClass) {
-			map[i][j] = newClass;
-			this.changeClass(this.classTranslator(newClass, i, j), i, j);
+		if (newValue) {
+			map[i][j] = newValue;
 		} else {
 			map[i][j] = " ";
-			this.changeClass("space", i, j); 
 		}
+
+		this.dispMap(map);
 	},
 
 	findIt(value) {
