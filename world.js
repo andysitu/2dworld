@@ -1,7 +1,15 @@
 var world = {
 	playerLoc: [0,0],
+	height: 10,
+	width: 10,
 	translateMap(maps) {
-		var map = document.getElementById("map");
+		var mapElem = document.getElementById("map");
+		var height = this.height * 2 + 1;
+		var width = this.width * 2 + 1;
+		if ( height > map.length || width > map[0].length) {
+			height = map.length;
+			width = map[0].length
+		}
 
 		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
 		for (var i = 0; i < map.length; i++ ) {
@@ -16,31 +24,46 @@ var world = {
 			}
 		}
 
+		for (var i = 0; i < height; i++) {
+			var tr = document.createElement("tr");
+			mapElem.appendChild(tr);
+
+			for (var j = 0; j < width; j++) {
 
 				var th = document.createElement("th");
 
-				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, true)) // classTranslator runs any necessary functions and returns the correct class name
+				th.setAttribute("class", this.classTranslator(maps[i][j], i, j)) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
 		}
 
-		map = null;
+
+		this.dispMap(map);
+		mapElem = null;
 	},
 	dispMap(maps) {
-		for (var i = 0; i < maps.length; i++) {
+		var coord = this.centerPlayer();
+		var height = this.height * 2 + 1;
+		var width = this.width * 2 + 1;
+		if ( height > map.length || width > map[0].length) {
+			height = map.length;
+			width = map[0].length
+		}
 
-			for (var j = 0; j < maps[i].length; j++) {
+		for (var i = 0; i < height; i++) {
+
+			for (var j = 0; j < width; j++) {
 				var elem = document.getElementById(i + " " + j);
-				elem.className = this.classTranslator(maps[i][j], i, j, false);
+				elem.className = this.classTranslator(maps[ coord[0] + i][ coord[2] + j], i, j);
 			}
 		}
 	},
 
 	centerPlayer() { // calculates the width and height of map from center of player
 		var arr = [0, 0, 0, 0]; // y1, y2, x1, x2
-		var height = 10; // this is double the distance of this plus player (2 * height + 1 for actual height)
-		var width = 10;
+		var height = this.height; // this is double the distance of this plus player (2 * height + 1 for actual height)
+		var width = this.width;
 		var pLoc = this.playerLoc;
 
 		arr[0] = pLoc[0] - 10;
@@ -60,7 +83,9 @@ var world = {
 		arr[2] = pLoc[1] - 10;
 		arr[3] = pLoc[1] + 10;
 
-		if (arr[2] < 0) {
+		if ( this.width * 2 > map[pLoc[0]].length - 1) {
+			arr[2] = 0;
+		} else if (arr[2] < 0) {
 			arr[2] = 0;
 			arr[3] = width * 2;
 
