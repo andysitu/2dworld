@@ -1,5 +1,6 @@
 var world = {
-	playerLoc: [0,0],
+	playerLoc: [0, 0],
+	corner: [0, 0],
 	height: 10,
 	width: 10,
 	translateMap(maps) {
@@ -56,6 +57,9 @@ var world = {
 			for (var j = 0; j < width; j++) {
 				var elem = document.getElementById(i + " " + j);
 				elem.className = this.classTranslator(maps[ coord[0] + i][ coord[2] + j], i, j);
+				if (i === 0 && j === 0) {
+					this.corner = [coord[0], coord[2]];
+				}
 			}
 		}
 	},
@@ -846,22 +850,19 @@ window.onload = function() {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
 			table.rows[i].cells[j].onclick = function(e) {
-				world.dispMap(map);
+				var str = /(\d*) (\d*)/.exec(this.id);
+				var y = Number(str[1]) + world.corner[0]; 
+				var x = Number(str[2]) + world.corner[1];
 
 				if (this.className === "monster") {
-					var str = /(\d*) (\d*)/.exec(this.id);
-					var monstID = map[str[1]][str[2]];
+					var monstID = map[y][x];
 					var monst = monster.list[monstID];
 
-					if (world.inRange(monst["yCoord"], monst["xCoord"], world.playerLoc[0], world.playerLoc[1], 30)) {
-						display(false);
-						display("That's a monster!");
-						display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
-					} else {
-						display("That's a monster!");
-					}
+					display(false);
+					display("That's a monster!");
+					display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
 				} else {
-					display(this.id + " " + this.className);
+					display(y + " " + x + " " + this.className);
 				}
 			}
 		}
