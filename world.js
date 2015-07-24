@@ -60,11 +60,6 @@ var world = {
 		}
 	},
 
-	changeClass(class1, y1, x1) {
-		var loc = document.getElementById(y1 + " " + x1);
-		loc.setAttribute("class", class1);
-	},
-
 	move(y, x, dir) { // 1 for left, 2 for up, 3 for right, 4 for down
 		var y1, x1; // new coordinate where character will move to
 
@@ -85,36 +80,34 @@ var world = {
 		}
 
 		if (map[y1][x1] === " ") {
-			var class1 = document.getElementById(y + " " + x).className;
-			var class2 = document.getElementById(y1 + " " + x1).className;
 
 			map[y1][x1] = map[y][x]; // set new location of player
-			this.changeClass(class1, y1, x1);
 
 			map[y][x] = " "; // set area where player was to "space"
-			this.changeClass(class2, y, x);
 
-			if (class1 === "player") {
+			if (map[y1][x1] === "P") {
 				this.playerLoc = [y1, x1]; // change the player coordinates record
-			} else if (class1 === "monster") {
+			} else if (typeof map[y1][x1] === "number") {
 				monster["list"][map[y1][x1]]["yCoord"] = y1;
 				monster["list"][map[y1][x1]]["xCoord"] = x1;
 			}
+
+			this.dispMap(map);
 			return true;
 		}
 
 		return false;
 	},
-	rem(value, newClass) { // removes monster with value and replaes it with either a newClass (ex: "W", " ") if defiend, if not, then space
+	rem(value, newValue) { // removes monster with value and replaes it with either a newClass (ex: "W", " ") if defiend, if not, then space
 		var loc = [monster["list"][value]["yCoord"], monster["list"][value]["xCoord"]];
 		var i = loc[0], j = loc[1];
-		if (newClass) {
-			map[i][j] = newClass;
-			this.changeClass(this.classTranslator(newClass, i, j), i, j);
+		if (newValue) {
+			map[i][j] = newValue;
 		} else {
 			map[i][j] = " ";
-			this.changeClass("space", i, j); 
 		}
+
+		this.dispMap(map);
 	},
 
 	findIt(value) {
@@ -312,16 +305,12 @@ var player = {
 	get exp () {
 		return this._exp;
 	},
-	set exp (value) {
+	set exp (value) { 
 		this._exp += value;
-		var goldAmount = Math.ceil(Math.random() * value / 2);
-		this.gold = goldAmount;
 		if (this._exp >= this.level * this.level * 5) {
 			this._exp -= this.level * this.level * 5;
 			this.levelUp();
-			display("You gained " + goldAmount + " gold and leveled to level " + this.level + ".");
-		} else {
-			display("You gained " + goldAmount + " gold and " + value + " exp.");
+			display("You leveled to level " + this.level + ".");
 		}
 	},
 	damage() { // calculates damage by player (adaptable for later when there are more factors besides weapon)
@@ -352,7 +341,7 @@ var player = {
 		if (this.hp <= 0) {
 			this.dead();
 		} else {
-			display("You were hit with " + value + " damage.");
+			display("You were hit with " + -value + " damage.");
 		}
 	},
 
@@ -514,10 +503,12 @@ var monster = {
 	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
-		var level = Math.ceil(Math.random() * (player.level + 10));
+		var level = Math.floor(Math.random() * 5 + player.level * 1.2 );
+		var hpValue = Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level)
 		monster["list"][this.counter] = {
 			level: level,
-			hp: Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level),
+			hp: hpValue,
+			maxHP: hpValue,
 			status: this.statuses[Math.floor(Math.random() * this.statuses.length)],
 			yCoord: i,
 			xCoord: j,
@@ -537,12 +528,24 @@ var monster = {
 		display(dmg + " damage was done to the monster.");
 
 		if (this["list"][num]["hp"] <= 0) { // monster dead
-			player.exp = this["list"][num]["level"];
+			this.reward(num);			
 			this.rem(num);
 		} else if (this["list"][num]["status"] === "passive") {
 			this["list"][num]["status"] = "aggressive";
 		}
 	},
+	reward(num) {
+		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .2 + this["list"][num]["maxHP"] * .1);
+		var exp = this["list"][num]["level"];
+
+		player.gold = goldAmount;
+
+		display("You gained " + goldAmount + " gold and " + exp + " exp.");
+		
+		player.exp = exp;
+
+	},
+
 	inRange(monstID) { 
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
@@ -597,7 +600,7 @@ var monster = {
 		if (map[y][x] === " " && !world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 32)) {
 			var monstID = this.make(y, x);
 			map.changeValue(y, x, monstID);
-			world.changeClass("monster", y, x);
+			world.dispMap(map);
 
 			display("Monster spawned");
 			return true;
@@ -792,6 +795,8 @@ window.onload = function() {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
 			table.rows[i].cells[j].onclick = function(e) {
+				world.dispMap(map);
+
 				if (this.className === "monster") {
 					var str = /(\d*) (\d*)/.exec(this.id);
 					var monstID = map[str[1]][str[2]];
