@@ -31,16 +31,6 @@ var world = {
 			}
 		}
 	},
-	dispMap(maps) {
-		for (var i = 0; i < maps.length; i++) {
-
-			for (var j = 0; j < maps[i].length; j++) {
-				var elem = document.getElementById(i + " " + j);
-				elem.className = this.classTranslator(maps[i][j], i, j, false);
-
-			}
-		}
-	},
 
 	classTranslator(value, i, j, status) { // set status to true only for translateMap, to create monsters,etc, to populate world
 		switch(value) {
@@ -57,6 +47,11 @@ var world = {
 						return "monster";
 					} else {break;}
 		}
+	},
+
+	changeClass(class1, y1, x1) {
+		var loc = document.getElementById(y1 + " " + x1);
+		loc.setAttribute("class", class1);
 	},
 
 	move(y, x, dir) { // 1 for left, 2 for up, 3 for right, 4 for down
@@ -83,17 +78,17 @@ var world = {
 			var class2 = document.getElementById(y1 + " " + x1).className;
 
 			map[y1][x1] = map[y][x]; // set new location of player
+			this.changeClass(class1, y1, x1);
 
 			map[y][x] = " "; // set area where player was to "space"
+			this.changeClass(class2, y, x);
 
-			if (typeof monster["list"][map[y1][x1]] === "number") {
+			if (class1 === "player") {
+				this.playerLoc = [y1, x1]; // change the player coordinates record
+			} else if (class1 === "monster") {
 				monster["list"][map[y1][x1]]["yCoord"] = y1;
 				monster["list"][map[y1][x1]]["xCoord"] = x1;
-			} else if (map[y1][x1] === "P") {
-				this.playerLoc = [y1, x1];
 			}
-
-			this.dispMap(map);
 			return true;
 		}
 
@@ -104,8 +99,10 @@ var world = {
 		var i = loc[0], j = loc[1];
 		if (newClass) {
 			map[i][j] = newClass;
+			this.changeClass(this.classTranslator(newClass, i, j), i, j);
 		} else {
 			map[i][j] = " ";
+			this.changeClass("space", i, j); 
 		}
 	},
 
@@ -589,7 +586,7 @@ var monster = {
 		if (map[y][x] === " " && !world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 32)) {
 			var monstID = this.make(y, x);
 			map.changeValue(y, x, monstID);
-			world.dispMap(map);
+			world.changeClass("monster", y, x);
 
 			display("Monster spawned");
 			return true;
