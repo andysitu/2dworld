@@ -177,6 +177,7 @@ var world = {
 var player = {
 	hp: 50,
 	weight: 0,
+	moves: 1,
 	"max hp": 50,
 	level: 1,
 	levelUp() {
@@ -579,21 +580,31 @@ var monster = {
 	},
 
 	controller() { // controls whether monster should move, attack, etc.
-		for (var key in this.list) {
-			if ( this["list"][key]["status"] === "aggressive" || this["list"][key]["status"] === "superaggressive") {
-				if (this.inRange(key)) {
-					this.moveTowards(key);
+		if (this.movesCounter <= 0) {
+			this.movesCounter = player.moves;
+		}
+		this.movesCounter--;
+
+		if (this.movesCounter === 0) {
+			for (var key in this.list) {
+				if ( this["list"][key]["status"] === "aggressive" || this["list"][key]["status"] === "superaggressive") {
+					if (this.inRange(key)) {
+						this.moveTowards(key);
+					} else {
+						this.moveNormally(key);
+					}
 				} else {
 					this.moveNormally(key);
 				}
-			} else {
-				this.moveNormally(key);
 			}
-		}
 
-		displayStatus();
-		this.spawner(); // runs a chance of generating a monster after all the monsters had moved
-	}
+			displayStatus();
+			this.spawner(); // runs a chance of generating a monster after all the monsters had moved
+		} else {
+
+		}
+	},
+	movesCounter: 0 // to count how many moves player can make before monsters
 };
 
 const controller = { // for now, controller just handles the key presses and key combinations

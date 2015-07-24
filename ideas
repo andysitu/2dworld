@@ -1,7 +1,6 @@
 npc: have different kinds of sellers
 
-
-* player can use weapons
+* calculate defense
 * player can delete item
 * player can use skills
 * player has ability points
@@ -9,10 +8,7 @@ npc: have different kinds of sellers
 * possiblity of dropping items
 * coward will run away
 * items add weight
-* add items
+* add more items
 * add item types + slots
-
-* created restricted area where only player cna travel there
-	Note: now when player moves into an area, it exchanges class so this won't work with restricted area.
 
 * change monsters spawn into monster constructors so that you can give them special abilities by setting prototypes, etc.
