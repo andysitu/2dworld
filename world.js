@@ -1,15 +1,17 @@
 var world = {
 	playerLoc: [0, 0],
 	corner: [0, 0],
-	height: 10,
-	width: 10,
+	height: 40,
+	width: 40,
 	translateMap(maps) {
 		var mapElem = document.getElementById("map");
-		var height = this.height * 2 + 1;
-		var width = this.width * 2 + 1;
+		var height = this.height;
+		var width = this.width;
 		if ( height > map.length || width > map[0].length) {
-			height = map.length;
-			width = map[0].length
+			this.height = map.length - 1;
+			this.width = map[0].length - 1;
+			height = map.length - 1;
+			width = map[0].length - 1;
 		}
 
 		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
@@ -25,15 +27,15 @@ var world = {
 			}
 		}
 
-		for (var i = 0; i < height; i++) {
+		for (var i = 0; i <= height; i++) {
 			var tr = document.createElement("tr");
 			mapElem.appendChild(tr);
 
-			for (var j = 0; j < width; j++) {
+			for (var j = 0; j <= width; j++) {
 
 				var th = document.createElement("th");
 
-				th.setAttribute("class", this.classTranslator(maps[i][j], i, j)) // classTranslator runs any necessary functions and returns the correct class name
+				th.setAttribute("class", this.classTranslator(maps[i][j])) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
@@ -45,63 +47,51 @@ var world = {
 	},
 	dispMap(maps) {
 		var coord = this.centerPlayer();
-		var height = this.height * 2 + 1;
-		var width = this.width * 2 + 1;
-		if ( height > map.length || width > map[0].length) {
-			height = map.length;
-			width = map[0].length
-		}
+		var height = this.height;
+		var width = this.width;
 
-		for (var i = 0; i < height; i++) {
+		for (var i = 0; i <= height; i++) {
 
-			for (var j = 0; j < width; j++) {
+			for (var j = 0; j <= width; j++) {
 				var elem = document.getElementById(i + " " + j);
-				elem.className = this.classTranslator(maps[ coord[0] + i][ coord[2] + j], i, j);
+				elem.className = this.classTranslator(maps[ coord[0] + i][ coord[1] + j]);
 				if (i === 0 && j === 0) {
-					this.corner = [coord[0], coord[2]];
+					this.corner = [coord[0], coord[1]];
 				}
 			}
 		}
 	},
 
 	centerPlayer() { // calculates the width and height of map from center of player
-		var arr = [0, 0, 0, 0]; // y1, y2, x1, x2
+		var arr = [0, 0]; // y1, x1
 		var height = this.height; // this is double the distance of this plus player (2 * height + 1 for actual height)
 		var width = this.width;
-		var pLoc = this.playerLoc;
+		// width & height are for the actual last coordinates of the cells (not like map.length)
 
-		arr[0] = pLoc[0] - 10;
-		arr[1] = pLoc[0] + 10;
+		arr[0] = this.playerLoc[0] - height / 2;
 
-		if ( this.height * 2 > map.length) {
+		if ( height > map.length) {
 			arr[0] = 0;
 		} else if (arr[0] < 0) {
 			arr[0] = 0;
-			arr[1] = height * 2;
-
-		} else if (arr[1] > map.length - 1) {
-			arr[1] = map.length - 1; 
-			arr[0] = arr[1] - height * 2;
+		} else if (arr[0] + height > map.length - 1) {
+			arr[0] = map.length - 1 - height;
 		}
 
-		arr[2] = pLoc[1] - 10;
-		arr[3] = pLoc[1] + 10;
+		arr[1] = this.playerLoc[1] - width / 2;
 
-		if ( this.width * 2 > map[pLoc[0]].length - 1) {
-			arr[2] = 0;
-		} else if (arr[2] < 0) {
-			arr[2] = 0;
-			arr[3] = width * 2;
-
-		} else if (arr[3] > map[pLoc[0]].length - 1) {
-			arr[3] = map[pLoc[0]].length - 1; 
-			arr[2] = map[pLoc[0]].length - 1 - height * 2;
+		if ( width > map[0].length - 1) {
+			arr[1] = 0;
+		} else if (arr[1] < 0) {
+			arr[1] = 0;
+		} else if (arr[1] + width > map[0].length - 1) {
+			arr[1] = map[0].length - 1 - width;
 		}
 
 		return arr;
 	},
 
-	classTranslator(value, i, j) { // set status to true only for translateMap, to create monsters,etc, to populate world
+	classTranslator(value) { // set status to true only for translateMap, to create monsters,etc, to populate world
 		switch(value) {
 			case "W": return "wall";
 			case " ": return "space";
