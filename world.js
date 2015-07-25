@@ -1,62 +1,107 @@
 var world = {
-	playerLoc: [0,0],
+	playerLoc: [0, 0],
+	corner: [0, 0],
+	height: 40,
+	width: 40,
 	translateMap(maps) {
-		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
-		for (var i = 0; i < maps.length; i++) {
+		var mapElem = document.getElementById("map");
+		var height = this.height;
+		var width = this.width;
+		if ( height > map.length || width > map[0].length) {
+			this.height = map.length - 1;
+			this.width = map[0].length - 1;
+			height = map.length - 1;
+			width = map[0].length - 1;
+		}
 
-			for (var j = 0; j < maps[i].length; j++) {
+		// edges, TM makes arr area into w, everyone else it reads from array maps and sets the class
+		for (var i = 0; i < map.length; i++ ) {
+			for (var j = 0; j < map[i].length; j++) {
 				if (i === 0 || j === 0 || i === maps.length - 1 || j === maps[i].length - 1) {
 					maps[i][j] = "W"; // sets edges of the map into maps
+				} else if (map[i][j] === "M") {
+					map[i][j] = monster.make(i, j); // makes monster, which returns the ID number for it and map is set to that
+				} else if (map[i][j] === "P") {
+					this.playerLoc = [i, j];
 				}
-
-				this.classTranslator(maps[i][j], i, j, true); // classTranslator runs any necessary functions and returns the correct class name
 			}
 		}
 
-		this.displayMap(map);
-	},
-	displayMap(maps) {
-		var map = document.getElementById("map");
-		
-		for (var i = 0; i < maps.length; i++) {
+		for (var i = 0; i <= height; i++) {
 			var tr = document.createElement("tr");
-			map.appendChild(tr);
+			mapElem.appendChild(tr);
 
-			for (var j = 0; j < maps[i].length; j++) {
+			for (var j = 0; j <= width; j++) {
+
 				var th = document.createElement("th");
 
-				th.setAttribute("class", this.classTranslator(maps[i][j], i, j, false)) // classTranslator runs any necessary functions and returns the correct class name
+				th.setAttribute("class", this.classTranslator(maps[i][j])) // classTranslator runs any necessary functions and returns the correct class name
 				th.setAttribute("id", i + " " + j);
 				tr.appendChild(th);
 			}
 		}
 
-		map = null;
+
+		this.dispMap(map);
+		mapElem = null;
 	},
 	dispMap(maps) {
-		for (var i = 0; i < maps.length; i++) {
+		var coord = this.centerPlayer();
+		var height = this.height;
+		var width = this.width;
 
-			for (var j = 0; j < maps[i].length; j++) {
+		for (var i = 0; i <= height; i++) {
+
+			for (var j = 0; j <= width; j++) {
 				var elem = document.getElementById(i + " " + j);
-				elem.className = this.classTranslator(maps[i][j], i, j, false);
+				elem.className = this.classTranslator(maps[ coord[0] + i][ coord[1] + j]);
+				if (i === 0 && j === 0) {
+					this.corner = [coord[0], coord[1]];
+				}
 			}
 		}
 	},
 
-	classTranslator(value, i, j, status) { // set status to true only for translateMap, to create monsters,etc, to populate world
+	centerPlayer() { // calculates the width and height of map from center of player
+		var arr = [0, 0]; // y1, x1
+		var height = this.height; // this is double the distance of this plus player (2 * height + 1 for actual height)
+		var width = this.width;
+		// width & height are for the actual last coordinates of the cells (not like map.length)
+
+		arr[0] = this.playerLoc[0] - height / 2;
+
+		if ( height > map.length) {
+			arr[0] = 0;
+		} else if (arr[0] < 0) {
+			arr[0] = 0;
+		} else if (arr[0] + height > map.length - 1) {
+			arr[0] = map.length - 1 - height;
+		}
+
+		arr[1] = this.playerLoc[1] - width / 2;
+
+		if ( width > map[0].length - 1) {
+			arr[1] = 0;
+		} else if (arr[1] < 0) {
+			arr[1] = 0;
+		} else if (arr[1] + width > map[0].length - 1) {
+			arr[1] = map[0].length - 1 - width;
+		}
+
+		return arr;
+	},
+
+	classTranslator(value) { // set status to true only for translateMap, to create monsters,etc, to populate world
 		switch(value) {
 			case "W": return "wall";
 			case " ": return "space";
-			case "M": if (status === true) {
-						map[i][j] = monster.make(i, j);
-						}
-						return "monster";
+			case "M": return "monster";
 			case "S": return "seller";
-			case "P": if (status === true) {this.playerLoc = [i, j];}
-						return "player";
+			case "P": return "player";
 			default: if (typeof value === "number") {
 						return "monster";
-					} else {break;}
+					} else {
+						break;}
 		}
 	},
 
@@ -87,12 +132,12 @@ var world = {
 
 			if (map[y1][x1] === "P") {
 				this.playerLoc = [y1, x1]; // change the player coordinates record
+				this.dispMap(map);
 			} else if (typeof map[y1][x1] === "number") {
 				monster["list"][map[y1][x1]]["yCoord"] = y1;
 				monster["list"][map[y1][x1]]["xCoord"] = x1;
 			}
 
-			this.dispMap(map);
 			return true;
 		}
 
@@ -568,7 +613,7 @@ var monster = {
 			var dir = Math.floor(Math.random() * 4);
 			dirCount[dir]++;
 			if (world.move(loc[0], loc[1], dir)) { // this will return true if move was successful (into space)
-				return false;
+				return true;
 			} // math.random gives 0-3 for the direction of moving)
 		}	
 	},
@@ -600,7 +645,6 @@ var monster = {
 		if (map[y][x] === " " && !world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 32)) {
 			var monstID = this.make(y, x);
 			map.changeValue(y, x, monstID);
-			world.dispMap(map);
 
 			display("Monster spawned");
 			return true;
@@ -630,6 +674,7 @@ var monster = {
 
 			displayStatus();
 			this.spawner(); // runs a chance of generating a monster after all the monsters had moved
+			world.dispMap(map);
 		} else {
 
 		}
@@ -795,22 +840,19 @@ window.onload = function() {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
 			table.rows[i].cells[j].onclick = function(e) {
-				world.dispMap(map);
+				var str = /(\d*) (\d*)/.exec(this.id);
+				var y = Number(str[1]) + world.corner[0]; 
+				var x = Number(str[2]) + world.corner[1];
 
 				if (this.className === "monster") {
-					var str = /(\d*) (\d*)/.exec(this.id);
-					var monstID = map[str[1]][str[2]];
+					var monstID = map[y][x];
 					var monst = monster.list[monstID];
 
-					if (world.inRange(monst["yCoord"], monst["xCoord"], world.playerLoc[0], world.playerLoc[1], 30)) {
-						display(false);
-						display("That's a monster!");
-						display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
-					} else {
-						display("That's a monster!");
-					}
+					display(false);
+					display("That's a monster!");
+					display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
 				} else {
-					display(this.id + " " + this.className);
+					display(y + " " + x + " " + this.className);
 				}
 			}
 		}
