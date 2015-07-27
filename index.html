@@ -18,19 +18,39 @@
 		#map {
 			margin-left: 3%;
 			margin-top: 15px;
+			border: 1px solid blue;
 		}
-		#status {
+
+		.side {
+			width: 300px;
+			float: left;
 			margin-left: 20px;
 			margin-top: 20px;
+		}
+		#hp-container {
+			margin-left: 15px;
+			width:300px;
+			height:15px;
+			border: 1px solid black;
+		}
+		#hp-bar {
+			width: 300px;
+			height: 15px; 
+			background-color: red;
+		}
+		#status {
+			margin-left: 15px;
+			margin-top: 10px;
 			width: 300px;
 			height: 100px;
 		}
 		#message {
-			margin-left: 20px;
+			margin-left: 15px;
 			margin-top: 10px;
 			width: 300px;
-			height: 400px;
+			height: 350px;
 		}
+
 		#help {
 			position: absolute;
 			left: 2%;
@@ -40,10 +60,6 @@
 		#container {
 		}
 		.map {
-			float: left;
-		}
-		.side {
-			width: 300px;
 			float: left;
 		}
 
@@ -80,6 +96,10 @@
 		</div>
 
 		<div class="side">
+			<div id="hp-container">
+				<div id="hp-bar">
+				</div>
+			</div>
 			<textarea id="status"></textarea>
 			<textarea id="message"></textarea>
 		</div>
