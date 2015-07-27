@@ -13,6 +13,8 @@ function displayStatus() {
 
 	status.value = "hp: " + player.hp + "\nlevel: " + player.level + "\nexp: " + player.exp + "\ngold: " + player.gold;
 
+	hpBar(player["hp"] / player["max hp"]);
+
 }
 
 function check(dir, range) { // checks if there is a monster within a certain range if it is, then it'll return the monster #
@@ -43,4 +45,20 @@ function check(dir, range) { // checks if there is a monster within a certain ra
 	}
 
 	return false;
+}
+
+function hpBar(percent) {
+	var bar = document.getElementById("hp-bar");
+
+	if (percent > 0) {
+		var max = document.getElementById("hp-container").clientWidth; // div container of the bar. This is to get the max width
+		max = /\d+/.exec(max);
+
+		bar.style.width = percent * Number(max) + "px";
+	} else {
+		bar.style.width = "0px";
+	}
+
+	
+
 }
