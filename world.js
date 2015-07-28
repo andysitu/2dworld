@@ -636,7 +636,7 @@ var monster = {
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
 
-		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 3)) { // monster runs away from player if close
+		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 5)) { // monster runs away from player if close
 			var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], true); // calculate direction for farthest dir
 			world.move(loc["yCoord"], loc["xCoord"], dir);
 		} else {
