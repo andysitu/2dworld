@@ -865,9 +865,14 @@ window.onload = function() {
 					var monstID = map[y][x];
 					var monst = monster.list[monstID];
 
-					display(false);
-					display("That's a monster!");
-					display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
+					if (world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 90)) {
+						display(false);
+						display("That's a monster!");
+						display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
+					} else {
+						display(false);	
+						display("That's a monster!");
+					}
 				} else {
 					display(y + " " + x + " " + this.className);
 				}
