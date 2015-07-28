@@ -18,6 +18,7 @@ function displayStatus() {
 }
 
 function check(dir, range) { // checks if there is a monster within a certain range if it is, then it'll return the monster #
+							 // only works for calculating linearly from player
 	if (dir === 0) { // left
 		for (var i = 1; i <= range; i++) {
 			if (typeof map[world.playerLoc[0]][world.playerLoc[1] - i] == "number") {
@@ -49,14 +50,18 @@ function check(dir, range) { // checks if there is a monster within a certain ra
 
 function hpBar(percent) {
 	var bar = document.getElementById("hp-bar");
+	var msg = document.getElementById("hp-msg");
 
 	if (percent > 0) {
 		var max = document.getElementById("hp-container").clientWidth; // div container of the bar. This is to get the max width
 		max = /\d+/.exec(max);
 
 		bar.style.width = percent * Number(max) + "px";
+
+		msg.innerHTML = "&nbsphp: " + player.hp + "/" + player["max hp"];
 	} else {
 		bar.style.width = "0px";
+		msg.innerHTML = "&nbsphp: 0/" + player["max hp"];
 	}
 
 	
