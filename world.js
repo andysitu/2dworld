@@ -23,6 +23,8 @@ var world = {
 					map[i][j] = monster.make(i, j); // makes monster, which returns the ID number for it and map is set to that
 				} else if (map[i][j] === "P") {
 					this.playerLoc = [i, j];
+				} else if (map[i][j] === "S") {
+					maps[i][j] = npc.make();
 				}
 			}
 		}
@@ -101,7 +103,7 @@ var world = {
 			default: if (typeof value === "number") {
 						return "monster";
 					} else {
-						break;}
+						return value;}
 		}
 	},
 
@@ -478,12 +480,18 @@ var npc = {
 		this._status = value;
 	},
 
-	types: ["weapon"],
+	types: {"weaponNPC": ["weapon"]
+	
+	},
+
+	makeItemlist(npcValue) { // makes of list of items that NPC can sell
+
+	},
 
 	make() {
-		var randomIndex = Math.floor(Math.random() * this.types.length); 
-
-		return this.types[randomIndex] + "NPC";
+		var arr = Object.keys(this.types);
+		var randomIndex = Math.floor(Math.random() * arr.length); 
+		return arr[randomIndex];
 	},
 
 	controller(character, e, key) { 
