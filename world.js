@@ -478,6 +478,14 @@ var npc = {
 		this._status = value;
 	},
 
+	types: ["weapon"],
+
+	make() {
+		var randomIndex = Math.floor(Math.random() * this.types.length); 
+
+		return this.types[randomIndex] + "NPC";
+	},
+
 	controller(character, e, key) { 
 		function dispMsg(msg, itemMsg) {
 			display(false);
