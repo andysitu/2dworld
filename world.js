@@ -536,13 +536,11 @@ var npc = {
 		for (var i = 0; i < 4; i++) {
 			coord = world.calculateFromI(i, y, x);
 			var value = map[coord[0]][coord[1]];
-			if (value === "S") {
-				return value;
-			} else if (this.types[value]) {
+			if (this.types[value]) {
 				if (this.types[value] instanceof Array) {
-					return "seller";
+					return ["seller", coord[0], coord[1]];
 				} else {
-					return value;
+					return [value, coord[0], coord[1]];
 				}
 			}
 		}
@@ -742,6 +740,7 @@ var controller = { // for now, controller just handles the key presses and key c
 	selectionList: {},
 	selectionKeys: [],
 	npc: false,
+	npcCoord: [0, 0],
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
@@ -811,9 +810,11 @@ var controller = { // for now, controller just handles the key presses and key c
 	interact() { // finds an NPC and if it does, then it'll set the status and run the menu method of the npc
 		var pLoc = world.playerLoc;
 		var findNPC = npc.findNPC(pLoc[0], pLoc[1]);
-		if (findNPC) {
-			this.npc = findNPC;
-			npc[findNPC]["menu"]();
+		if (findNPC[0] !== false) {
+			this.npc = findNPC[0];
+			npc[findNPC[0]]["menu"]();
+
+			this.npcCoord = [findNPC[1], findNPC[2]];
 		}
 	},
 
