@@ -455,6 +455,19 @@ var items = { // desc, price, range, slot, damage, forSale, weight
 	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15)
 };
 
+Object.defineProperty(items, "itemMsgMaker", {
+	value: function(item) {
+		var msg = item + "\nDescription: " + items[item]["desc"] + "\nprice: " + items[item]["price"] + "\nweight: " + items[item]["weight"];
+
+		if (items[item]["slot"] === "weapon") { // when item is a weapons
+			msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
+		}
+
+		return msg;
+	},
+	enumerable: false
+});
+
 var npc = {
 	_status: false,
 	get status() {
