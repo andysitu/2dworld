@@ -165,8 +165,8 @@ var world = {
 		}
 		return false; // if it can't find it.
 	},
-	calculate(y1, x1, y2, x2) { // calculates the direction to move for closest distance to player,
-		var move = [0, 0, 0, 0];		// returns array(s) of best coordinate dependng on status
+	calculate(y1, x1, y2, x2, status) { // calculates the direction to move for closest distance to player
+		var move = [0, 0, 0, 0];		// unless the status is true, then it'll give farthest
 		var dir = [];
 		
 		move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
@@ -174,7 +174,11 @@ var world = {
 		move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
 		move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
 
-		var min = Math.min.apply(null, move);
+		if (!status) {
+			var min = Math.min.apply(null, move);
+		} else {
+			var min = Math.max.apply(null, move);
+		}
 
 		for (var i = 0; i < move.length; i++) {
 			if (move[i] === min && min !== 999999) {
