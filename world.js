@@ -448,7 +448,10 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 }
 
 var items = { // desc, price, range, slot, damage, forSale, weight
+	reliable: makeWeapon("Great sword", 10, 1, "weapon", 3, true, 5),
 	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10),
+	spear: makeWeapon("A great spear", 200, 3, "weapon", 7, true, 20),
+	gun: makeWeapon("A straight shooter", 400, 10, "weapon", 5, true, 6),
 	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15)
 };
 
