@@ -695,7 +695,7 @@ var monster = {
 };
 
 const controller = { // for now, controller just handles the key presses and key combinations
-	keyMap: {'a': false},
+	keyMap: {'a': false, 'd': false},
 	status: {freeze: false, status: false},
 	selectionI: 0,
 	selectionList: {},
@@ -710,6 +710,10 @@ const controller = { // for now, controller just handles the key presses and key
 
 				this.keyMap['a'] = true;
 
+			} else if (e.keyCode === 68) { // 'd' key
+
+				this.keyMap['d'] = true; 
+
 			} else if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
 
 				var dir = this.dir(e);
@@ -717,6 +721,8 @@ const controller = { // for now, controller just handles the key presses and key
 				if (this.keyMap['a'] === true) { // if 'a' key is being held while pressing arrow keys
 					display(false);
 					player.attack(dir);
+				} else if (this.keyMap['d'] === true) {
+					
 				} else { 						// just arrows keys
 					display(false);
 					world.move(world.playerLoc[0], world.playerLoc[1], dir);
@@ -844,7 +850,9 @@ window.onload = function() {
 	document.onkeyup = function(e) {
 		if (e.keyCode === 65) {
 			controller.keyMap['a'] = false;
-		} 
+		} else if (e.keyCode === 68) {
+			controller.keyMap['d'] = false;
+		}
 	}
 
 	var table = document.getElementById("map");
