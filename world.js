@@ -584,7 +584,7 @@ var monster = {
 		}
 	},
 	reward(num) {
-		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .2 + this["list"][num]["maxHP"] * .1);
+		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .5 + this["list"][num]["level"]);
 		var exp = this["list"][num]["level"];
 
 		player.gold = goldAmount;
