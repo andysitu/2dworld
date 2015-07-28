@@ -382,6 +382,19 @@ var player = {
 		}
 	},
 
+	dodgeChance: 0.6,
+	dodge(dir) {
+		if (Math.random() <= this.dodgeChance) {
+			display(false);
+			display("You successfully dodged!");
+			world.move(world.playerLoc[0], world.playerLoc[1], dir);
+			world.move(world.playerLoc[0], world.playerLoc[1], dir);
+		} else {
+			display(false);
+			display("Dodge didn't work!");
+		}
+	},
+
 	dead() {
 		document.onkeydown = null;
 		document.onkeyup = null;
@@ -694,7 +707,7 @@ var monster = {
 	movesCounter: 0 // to count how many moves player can make before monsters
 };
 
-const controller = { // for now, controller just handles the key presses and key combinations
+var controller = { // for now, controller just handles the key presses and key combinations
 	keyMap: {'a': false, 'd': false},
 	status: {freeze: false, status: false},
 	selectionI: 0,
@@ -721,8 +734,8 @@ const controller = { // for now, controller just handles the key presses and key
 				if (this.keyMap['a'] === true) { // if 'a' key is being held while pressing arrow keys
 					display(false);
 					player.attack(dir);
-				} else if (this.keyMap['d'] === true) {
-					
+				} else if (this.keyMap['d'] === true) { // 'd' key + arrow for dodging
+					player.dodge(dir)
 				} else { 						// just arrows keys
 					display(false);
 					world.move(world.playerLoc[0], world.playerLoc[1], dir);
