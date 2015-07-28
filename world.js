@@ -625,11 +625,22 @@ var monster = {
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
 
-		var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
 		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 1)) { // if monster is next to player
 			this.attack(monstID);
 		} else {
+			var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
 			world.move(loc["yCoord"], loc["xCoord"], dir);
+		}
+	},
+	moveAway(monstID) {
+		var loc = this["list"][monstID];
+		var pLoc = world.playerLoc;
+
+		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 3)) { // monster runs away from player if close
+			var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], true); // calculate direction for farthest dir
+			world.move(loc["yCoord"], loc["xCoord"], dir);
+		} else {
+			this.moveNormally(monstID);
 		}
 	},
 
@@ -671,6 +682,8 @@ var monster = {
 					} else {
 						this.moveNormally(key);
 					}
+				} else if (this["list"][key]["status"] === "coward") {
+					this.moveAway(key);
 				} else {
 					this.moveNormally(key);
 				}
