@@ -11,7 +11,7 @@ function display(msg) {
 function displayStatus() {
 	var status = document.getElementById("status");
 
-	status.value = "hp: " + player.hp + "\nlevel: " + player.level + "\nexp: " + player.exp + "\ngold: " + player.gold;
+	status.value = "level: " + player.level + "\nexp: " + player.exp + "\ngold: " + player.gold + "\nweight: " + player.weight;
 
 	hpBar(player["hp"] / player["max hp"]);
 
