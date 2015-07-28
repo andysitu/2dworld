@@ -261,14 +261,8 @@ var player = {
 			display(false);
 			display("Your inventory is empty. You don't have any items.");
 		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
-			var msg = item + "\nDescription: " + items[item]["desc"] + "\nQuantity: " + this.items[item] + "\nprice: " + items[item]["price"];
-
-				if (items[item]["slot"] === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
-				}
-
 			display(false);
-			display(msg);
+			display( items.itemMsgMaker(item) );
 		} else if (e.keyCode === 13) { // enter key
 			this.equip(item);
 			display(false);
@@ -317,14 +311,8 @@ var player = {
 				display(false);
 				display("You don't have any item equipped in your " + slot + " slot.");
 			} else {
-				var msg = item + "\nDescription: " + items[item]["desc"] + "\nslot: " + slot + "\nprice: " + items[item]["price"];
-
-				if (slot === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
-				}
-
 				display(false);
-				display(msg);
+				display( items.itemMsgMaker(item) );
 			}
 
 
@@ -491,12 +479,8 @@ var npc = {
 		else if (character === "seller" && this.status === "sell") { // player is buying item
 
 			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
-				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
-
-				if (items[key]["slot"] === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
-				}
-				dispMsg("Here's what's for sale:", msg)
+				
+				dispMsg("Here's what's for sale:", items.itemMsgMaker(key) )
 			} else if (e.keyCode === 13) { // enter key
 				this.seller.sell(key);
 			}
@@ -506,12 +490,7 @@ var npc = {
 			if (Object.keys(player.items).length <= 0) {
 				dispMsg("You don't have anything! Please leave!", "");
 			} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
-				var msg = key + "\nDescription: " + items[key]["desc"] + "\nQuantity: " + player.items[key] + "\nprice: " + items[key]["price"];
-
-				if (items[key]["slot"] === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
-				}
-				dispMsg("Which item do you want to sell?", msg)
+				dispMsg("Which item do you want to sell?", items.itemMsgMaker(key) )
 			} else if (e.keyCode === 13) { // enters
 				this.seller.buy(key);
 			}
