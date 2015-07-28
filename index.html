@@ -33,6 +33,9 @@
 			height: 20px;
 			border: 1px solid red;
 		}
+		#hp-msg {
+			position: absolute;
+		}
 		#hp-bar {
 			width: 304px;
 			height: 20px; 
@@ -45,6 +48,7 @@
 			height: 100px;
 		}
 		#message {
+			position: relative;
 			margin-left: 15px;
 			margin-top: 10px;
 			width: 300px;
@@ -97,8 +101,8 @@
 
 		<div class="side">
 			<div id="hp-container">
-				<div id="hp-bar">
-				</div>
+				<div id="hp-msg">&nbsphp</div>
+				<div id="hp-bar"></div>
 			</div>
 			<textarea id="status"></textarea>
 			<textarea id="message"></textarea>
