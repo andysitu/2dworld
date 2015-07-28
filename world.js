@@ -24,7 +24,7 @@ var world = {
 				} else if (map[i][j] === "P") {
 					this.playerLoc = [i, j];
 				} else if (map[i][j] === "S") {
-					maps[i][j] = npc.make();
+					maps[i][j] = npc.randomNPC();
 				}
 			}
 		}
@@ -480,15 +480,21 @@ var npc = {
 		this._status = value;
 	},
 
-	types: {"weaponNPC": ["weapon"]
+	types: {"weaponNPC": ["weapon"] // for now, if types[key] returns array, then this.findNPC will return "seller" since they are the only ones weith arrays
 	
 	},
 
 	makeItemlist(npcValue) { // makes of list of items that NPC can sell
+		var list = {};
 
+		for (var i = 0; i < this[npcValue].length; i++) {
+			for (var keys in items) {
+
+			}
+		}
 	},
 
-	make() {
+	randomNPC() {
 		var arr = Object.keys(this.types);
 		var randomIndex = Math.floor(Math.random() * arr.length); 
 		return arr[randomIndex];
@@ -529,9 +535,15 @@ var npc = {
 		var coord = [];
 		for (var i = 0; i < 4; i++) {
 			coord = world.calculateFromI(i, y, x);
-			var value = world.classTranslator(map[coord[0]][coord[1]]);
-			if (npc[value]) {
+			var value = map[coord[0]][coord[1]];
+			if (value === "S") {
 				return value;
+			} else if (this.types[value]) {
+				if (this.types[value] instanceof Array) {
+					return "seller";
+				} else {
+					return value;
+				}
 			}
 		}
 
@@ -767,12 +779,14 @@ var controller = { // for now, controller just handles the key presses and key c
 
 				this.interact();
 
-			} else if (e.keyCode === 66 && this.npc === "seller") { // 'b'
+			} else if (e.keyCode === 66 && this.npc !== false) { // 'b'
 				this.menuListing(items);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
 				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
-			} else if (e.keyCode === 83 && this.npc === "seller") { // 's'
+			} else if (e.keyCode === 83 && this.npc !== false) { // 's'
+				var itemList = npc.makeItemlist(this.npc);
+
 				this.menuListing(player.items);
 				npc.status = "buy";
 				this["status"]["freeze"] = true;
@@ -794,12 +808,11 @@ var controller = { // for now, controller just handles the key presses and key c
 
 	},
 
-	interact() {
+	interact() { // finds an NPC and if it does, then it'll set the status and run the menu method of the npc
 		var pLoc = world.playerLoc;
 		var findNPC = npc.findNPC(pLoc[0], pLoc[1]);
 		if (findNPC) {
 			this.npc = findNPC;
-			this["status"][findNPC] = true;
 			npc[findNPC]["menu"]();
 		}
 	},
