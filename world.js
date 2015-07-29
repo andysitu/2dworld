@@ -276,9 +276,11 @@ var player = {
 		this.items[value] = (this.items[value] || 0) + 1;
 		this.weight += items[value]["weight"];
 	},
-	removeItem(value) {
+	removeItem(value, removeWeight) {
 		this.items[value] = (this.items[value] || 1) - 1;
-		this.weight -= items[value]["weight"];
+		if (removeWeight === true) { // so that equip method won't subtract weight
+			this.weight -= items[value]["weight"];
+		}
 		if (this.items[value] <= 0) {
 			delete this.items[value];
 		}
@@ -462,12 +464,13 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight, sound) {
 	})
 }
 
-var items = { // desc, price, range, slot, damage, forSale, weight
-	reliable: makeWeapon("Great sword", 10, 1, "weapon", 3, true, 5, false),
-	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10, "ping", false),
-	spear: makeWeapon("A great spear", 200, 3, "weapon", 7, true, 20, false),
-	gun: makeWeapon("A straight shooter", 400, 10, "weapon", 5, true, 6, "Bang!"),
-	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15, false)
+var items = { // desc, price, range, slot, damage, forSale, weight, sound
+	reliable: makeWeapon("Great sword", 				10, 1, "weapon", 3, true, 5, false),
+	sword: makeWeapon("A sword", 						140, 1, "weapon", 10, true, 10, false),
+	spear: makeWeapon("A great spear", 					200, 3, "weapon", 7, true, 20, false),
+	pistol: makeWeapon("A straight shooter", 			250, 5, "weapon", 5, true, 6, "Pop!"),
+	rifle: makeWeapon("A very powerful gun", 			400, 10, "weapon", 15, true, 15, "Bang!"),
+	"super sword": makeWeapon("A super strong sword", 	1500, 2, "weapon", 40, true, 25, false)
 };
 
 Object.defineProperty(items, "itemMsgMaker", {
