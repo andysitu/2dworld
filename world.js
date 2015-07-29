@@ -334,7 +334,6 @@ var player = {
 		}
 	},
 
-	range: 1,
 	_gold: 0,
 	get gold() {
 		return this._gold;
@@ -370,17 +369,21 @@ var player = {
 	},
 
 	attack(dir) {
-		var weap = this.equipped.weapon;
+		if (this.equipped["weapon"] !== false) {
+			var weap = this.equipped.weapon;
 
-		var checkit = check(dir, items[weap]["range"]); // check checks if there is a monster within that range and returns the monster number if so
+			var checkit = check(dir, items[weap]["range"]); // check checks if there is a monster within that range and returns the monster number if so
+		} else {
+			var checkit = check(dir, 1);
+		}
 		if (typeof checkit === "number") {
-
-			if (items[weap]["sound"]) { // if weapon makes a sound
-				display(items[weap]["sound"]);
-				monster.attacked(checkit, this.damage());
-			} else {
-				monster.attacked(checkit, this.damage());
+			if (this.equipped["weapon"] !== false) {
+				if (items[weap]["sound"]) { // if weapon makes a sound
+					display(items[weap]["sound"]);
+				} 
 			}
+
+			monster.attacked(checkit, this.damage());
 		} else {
 			display("There is no monster there!");
 		}
