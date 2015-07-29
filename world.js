@@ -786,13 +786,13 @@ var controller = { // for now, controller just handles the key presses and key c
 				this.interact();
 
 			} else if (e.keyCode === 66 && this.npc !== false) { // 'b'
-				this.menuListing(items);
+				var itemList = npc.makeItemlist(this.npcCoord[0], this.npcCoord[1]);
+
+				this.menuListing(itemList);
 				npc.status = "sell";
 				this["status"]["freeze"] = true;
 				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			} else if (e.keyCode === 83 && this.npc !== false) { // 's'
-				var itemList = npc.makeItemlist(this.npc);
-
 				this.menuListing(player.items);
 				npc.status = "buy";
 				this["status"]["freeze"] = true;
