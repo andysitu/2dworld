@@ -715,7 +715,7 @@ var monster = {
 	},
 
 	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
-		if ( Math.random() * 100 <= 10) { // Chance of monster spawning
+		if ( Math.random() * 100 <= 15) { // Chance of monster spawning
 			for ( ; ; ) {
 				var yValue = Math.floor(Math.random() * map.length);
 				var xValue = Math.floor(Math.random() * map[yValue].length);
