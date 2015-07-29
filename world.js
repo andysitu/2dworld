@@ -484,14 +484,21 @@ var npc = {
 	
 	},
 
-	makeItemlist(npcValue) { // makes of list of items that NPC can sell
+	makeItemlist(y, x) { // makes of list of items that NPC can sell
+		var npc = map[y][x];
+
 		var list = {};
 
-		for (var i = 0; i < this[npcValue].length; i++) {
+		for (var i = 0; i < this.types[npc].length; i++) {
+			var slot = this.types[npc][i];
 			for (var keys in items) {
-
+				if (items[keys]["slot"] === slot) {
+					list[keys] = items[keys];
+				}
 			}
 		}
+
+		return list;
 	},
 
 	randomNPC() {
