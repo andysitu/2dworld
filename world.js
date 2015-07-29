@@ -121,7 +121,6 @@ var world = {
 		} else {
 			display("Error with move function");
 			console.log("Error Here:" + x, y, dir);
-			throw "Error";
 			x1 = x;
 			y1 = y;
 		}
@@ -171,27 +170,32 @@ var world = {
 		var move = [0, 0, 0, 0];		// unless the status is true, then it'll give farthest
 		var dir = [];
 		
-		move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
-		move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
-		move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
-		move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
-
 		if (!status) {
+			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
+			move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
+			move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
+			move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
+
 			var min = Math.min.apply(null, move);
 		} else {
+			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2, true); // left
+			move[1] = this.calculateDistance(y1 - 1, x1, y2, x2, true); // up
+			move[2] = this.calculateDistance(y1, x1 + 1, y2, x2, true);; // right
+			move[3] = this.calculateDistance(y1 + 1, x1, y2, x2, true); // down
+
 			var min = Math.max.apply(null, move);
 		}
 
 		for (var i = 0; i < move.length; i++) {
-			if (move[i] === min && min !== 999999) {
+			if (move[i] === min) {
 				dir.push(i);
 			}
 		}
 
 		return dir[Math.floor( Math.random() * dir.length)];
 	},
-	calculateDistance(y1, x1, y2, x2) { // calculate distance from two points
-		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
+	calculateDistance(y1, x1, y2, x2, status) { // calculate distance from two points
+		if (!status) { // else clause for calculating max distance to get away from player
 			if (map[y1][x1] === 'P') { // this is when player is right next to character
 				return 0;
 			} else if (map[y1][x1] === " ") {
@@ -200,8 +204,15 @@ var world = {
 				return 999999;
 			}
 		} else {
-			return 999999;
+			if (map[y1][x1] === 'P') {
+				return 0;
+			} else if (map[y1][x1] === " ") {
+				return Math.abs(y2 - y1) + Math.abs(x2 - x1);
+			} else {
+				return 0;
+			}
 		}
+		
 	},
 	calculateFromI(i, y1, x1) {
 		switch(i) {
