@@ -368,9 +368,10 @@ var player = {
 	},
 
 	attack(dir) {
-		var checkit = check(dir, this.range); // check checks if there is a monster within that range and returns the monster number if so
+		var weap = this.equipped.weapon;
+
+		var checkit = check(dir, items[weap]["range"]); // check checks if there is a monster within that range and returns the monster number if so
 		if (typeof checkit === "number") {
-			var weap = this.equipped.weapon
 
 			if (items[weap]["sound"]) { // if weapon makes a sound
 				display(items[weap]["sound"]);
@@ -465,7 +466,7 @@ var items = { // desc, price, range, slot, damage, forSale, weight
 	reliable: makeWeapon("Great sword", 10, 1, "weapon", 3, true, 5, false),
 	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10, "ping", false),
 	spear: makeWeapon("A great spear", 200, 3, "weapon", 7, true, 20, false),
-	gun: makeWeapon("A straight shooter", 400, 10, "weapon", 5, true, 6, "bang"),
+	gun: makeWeapon("A straight shooter", 400, 10, "weapon", 5, true, 6, "Bang!"),
 	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15, false)
 };
 
