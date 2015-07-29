@@ -370,7 +370,14 @@ var player = {
 	attack(dir) {
 		var checkit = check(dir, this.range); // check checks if there is a monster within that range and returns the monster number if so
 		if (typeof checkit === "number") {
-			monster.attacked(checkit, this.damage());
+			var weap = this.equipped.weapon
+
+			if (items[weap]["sound"]) { // if weapon makes a sound
+				display(items[weap]["sound"]);
+				monster.attacked(checkit, this.damage());
+			} else {
+				monster.attacked(checkit, this.damage());
+			}
 		} else {
 			display("There is no monster there!");
 		}
@@ -411,7 +418,7 @@ var item = {
 	}
 }
 
-function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
+function makeWeapon(desc, price, range, slot, damage, forSale, weight, sound) {
 	return Object.create(item, {
 		'desc': {
 			value: desc,
@@ -446,16 +453,20 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 		'weight': {
 			value: weight,
 			enumerable: true
+		},
+		'sound': {
+			value: sound,
+			enumerable: true
 		}
 	})
 }
 
 var items = { // desc, price, range, slot, damage, forSale, weight
-	reliable: makeWeapon("Great sword", 10, 1, "weapon", 3, true, 5),
-	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10),
-	spear: makeWeapon("A great spear", 200, 3, "weapon", 7, true, 20),
-	gun: makeWeapon("A straight shooter", 400, 10, "weapon", 5, true, 6),
-	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15)
+	reliable: makeWeapon("Great sword", 10, 1, "weapon", 3, true, 5, false),
+	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10, "ping", false),
+	spear: makeWeapon("A great spear", 200, 3, "weapon", 7, true, 20, false),
+	gun: makeWeapon("A straight shooter", 400, 10, "weapon", 5, true, 6, "bang"),
+	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15, false)
 };
 
 Object.defineProperty(items, "itemMsgMaker", {
@@ -498,7 +509,7 @@ var npc = {
 			}
 		}
 
-		return list;
+			return list;
 	},
 
 	randomNPC() {
