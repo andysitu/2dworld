@@ -35,11 +35,11 @@ var world = {
 
 			for (var j = 0; j <= width; j++) {
 
-				var th = document.createElement("th");
+				var td = document.createElement("td");
 
-				th.setAttribute("class", this.classTranslator(maps[i][j])) // classTranslator runs any necessary functions and returns the correct class name
-				th.setAttribute("id", i + " " + j);
-				tr.appendChild(th);
+				td.setAttribute("class", this.classTranslator(maps[i][j])) // classTranslator runs any necessary functions and returns the correct class name
+				td.setAttribute("id", i + " " + j);
+				tr.appendChild(td);
 			}
 		}
 
