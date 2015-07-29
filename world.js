@@ -471,8 +471,8 @@ var items = { // desc, price, range, slot, damage, forSale, weight, sound
 	reliable: makeWeapon("Great sword", 				10, 1, "weapon", 3, true, 5, false),
 	sword: makeWeapon("A sword", 						140, 1, "weapon", 10, true, 10, false),
 	spear: makeWeapon("A great spear", 					200, 3, "weapon", 7, true, 20, false),
-	pistol: makeWeapon("A straight shooter", 			250, 5, "weapon", 5, true, 6, "Pop!"),
-	rifle: makeWeapon("A very powerful gun", 			400, 10, "weapon", 15, true, 15, "Bang!"),
+	pistol: makeWeapon("A straight shooter", 			250, 4, "weapon", 5, true, 6, "Pop!"),
+	rifle: makeWeapon("A very powerful gun", 			800, 8, "weapon", 15, true, 15, "Bang!"),
 	"super sword": makeWeapon("A super strong sword", 	1500, 2, "weapon", 40, true, 25, false)
 };
 
@@ -704,7 +704,7 @@ var monster = {
 	},
 
 	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
-		if ( Math.random() * 100 <= 5) { // 5% chance of spawning mmonster
+		if ( Math.random() * 100 <= 10) { // Chance of monster spawning
 			for ( ; ; ) {
 				var yValue = Math.floor(Math.random() * map.length);
 				var xValue = Math.floor(Math.random() * map[yValue].length);
