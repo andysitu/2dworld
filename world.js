@@ -264,6 +264,7 @@ var player = {
 		if (this._hp > this["max hp"]) {
 			this._hp = this["max hp"];
 		}
+		displayStatus();
 	},
 	weight: 0,
 	moves: 1,
@@ -361,6 +362,7 @@ var player = {
 	set gold(value) {
 		this._gold += value;
 	},
+
 	_exp: 0,
 	get exp () {
 		return this._exp;
@@ -431,7 +433,7 @@ var player = {
 	},
 
 	heal() {
-		var amount = Math.ceil(0.05* this.hp);
+		var amount = Math.ceil(0.05 * this["max hp"]);
 		this.hp += amount;
 	},
 
