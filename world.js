@@ -730,16 +730,28 @@ var monster = {
 		}
 	},
 
-	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
-		if ( Math.random()  <= 0.11) { // Chance of monster spawning
-			for ( ; ; ) {
-				var yValue = Math.floor(Math.random() * map.length);
-				var xValue = Math.floor(Math.random() * map[yValue].length);
+	spawner(status) { // decides chance of spawning monster. spawn is the actual method that does spawning
+		// if status is undefined or false, then spawner spawns possibly. If true, it'll run until it spawns a monster somewhere.
+		if (!status) {
+			if ( Math.random()  <= 0.11) { // Chance of monster spawning
+				for ( ; ; ) {
+					var yValue = Math.floor(Math.random() * map.length);
+					var xValue = Math.floor(Math.random() * map[yValue].length);
 
-				if (this.spawn(yValue, xValue)) {
-					break;
+					if (this.spawn(yValue, xValue)) {
+						break;
+					}
 				}
 			}
+		} else {
+			for ( ; ; ) {
+					var yValue = Math.floor(Math.random() * map.length);
+					var xValue = Math.floor(Math.random() * map[yValue].length);
+
+					if (this.spawn(yValue, xValue)) {
+						break;
+					}
+				}
 		}
 	},
 	spawn(y, x) {
