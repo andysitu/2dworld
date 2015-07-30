@@ -260,7 +260,7 @@ var player = {
 		return this._hp;
 	},
 	set hp(value) {
-		this._hp += value;
+		this._hp = value;
 		if (this._hp > this["max hp"]) {
 			this._hp = this["max hp"];
 		}
@@ -428,6 +428,11 @@ var player = {
 			display(false);
 			display("Dodge didn't work!");
 		}
+	},
+
+	heal() {
+		var amount = Math.ceil(0.05* this.hp);
+		this.hp += amount;
 	},
 
 	dead() {
