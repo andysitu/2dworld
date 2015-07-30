@@ -368,12 +368,12 @@ var player = {
 		var damage = 0;
 
 		if (this.equipped["weapon"] === false) {
-			damage = Math.ceil(Math.random() * (3 + player.level));
+			damage = Math.ceil(Math.random() * 0.2 * (3 + player.level) + 0.8 * (3 + player.level));
 		} else {
 			var item = this.equipped["weapon"];
 			var dam = items[item]["damage"];
 
-			damage = Math.floor(.8 * dam + .1 * player.level + Math.random() * (.40 * dam + .1 * player.level));
+			damage = Math.floor(0.6 * ( dam + player.level) + Math.random() * 0.4 * ( dam + player.level) );
 		}
 		
 		return damage;
@@ -479,7 +479,7 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight, sound) {
 }
 
 var items = { // desc, price, range, slot, damage, forSale, weight, sound
-	reliable: makeWeapon("Great sword", 				10, 1, "weapon", 3, true, 5, false),
+	reliable: makeWeapon("Great sword", 				10, 1, "weapon", 4, true, 5, false),
 	sword: makeWeapon("A sword", 						140, 1, "weapon", 10, true, 10, false),
 	spear: makeWeapon("A great spear", 					200, 3, "weapon", 7, true, 20, false),
 	pistol: makeWeapon("A straight shooter", 			250, 4, "weapon", 5, true, 6, "Pop!"),
@@ -606,7 +606,7 @@ var npc = {
 			if (player.items[key]) {
 				display(false);
 				display("You sold " + key + " for " + items[key]["price"]);
-				player.gold = items[key]["price"];
+				player.gold = Math.floor(items[key]["price"] * 0.6);
 				displayStatus();
 				player.removeItem(key);
 			} else {
@@ -622,7 +622,7 @@ var monster = {
 	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
-		var level = Math.floor(Math.random() * 5 + player.level * 1.2 );
+		var level = Math.ceil(Math.random() * ( 5 + player.level ) );
 		var hpValue = Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level)
 		monster["list"][this.counter] = {
 			level: level,
@@ -639,7 +639,7 @@ var monster = {
 		delete this["list"][num];
 	},
 	attack(num) {
-		var dmg = Math.ceil(this["list"][num]["level"] * .5 * Math.random() + this["list"][num]["level"]);
+		var dmg = Math.ceil(this["list"][num]["level"] * 0.5 * Math.random() + 0.5 * this["list"][num]["level"]);
 		player.attacked(-dmg);
 	},
 	attacked(num, dmg) {
@@ -655,7 +655,7 @@ var monster = {
 	},
 	reward(num) {
 		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .5 + this["list"][num]["level"]);
-		var exp = this["list"][num]["level"];
+		var exp = Math.floor(this["list"][num]["level"] * Math.random()) + this["list"][num]["level"];
 
 		player.gold = goldAmount;
 
@@ -715,7 +715,7 @@ var monster = {
 	},
 
 	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
-		if ( Math.random() * 100 <= 15) { // Chance of monster spawning
+		if ( Math.random()  <= 0.11) { // Chance of monster spawning
 			for ( ; ; ) {
 				var yValue = Math.floor(Math.random() * map.length);
 				var xValue = Math.floor(Math.random() * map[yValue].length);
