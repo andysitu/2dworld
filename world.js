@@ -830,14 +830,17 @@ var controller = { // for now, controller just handles the key presses and key c
 					this.npc = false;
 				}
 
-			} else if (e.keyCode === 65) { // 'a' key
+			} else if (e.keyCode === 65) { // 'a' key - to set attack status
 
 				this.keyMap['a'] = true;
 
-			} else if (e.keyCode === 68) { // 'd' key
+			} else if (e.keyCode === 68) { // 'd' key - to set dodge status
 
 				this.keyMap['d'] = true; 
 
+			} else if (e.keyCode === 72) { // 'h' key for heal
+				player.heal();
+				monster.spawner(true);
 			} else if (e.keyCode === 73) { // 'i' for item screen/ menu
 				this.status.freeze = true;
 				this.status.status = "item";
