@@ -4,7 +4,7 @@ var world = {
 	height: 40,
 	width: 40,
 	translateMap(maps) {
-		var mapElem = document.getElementById("map");
+		var mapElem = document.querySelector("#map");
 		var height = this.height;
 		var width = this.width;
 		if ( height > map.length || width > map[0].length) {
@@ -796,15 +796,7 @@ var controller = { // for now, controller just handles the key presses and key c
 		if (this["status"]["freeze"] === true) {
 			this.menuSelector(e);
 		} else {
-			if (e.keyCode === 65) { // 'a' key
-
-				this.keyMap['a'] = true;
-
-			} else if (e.keyCode === 68) { // 'd' key
-
-				this.keyMap['d'] = true; 
-
-			} else if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
+			if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
 
 				var dir = this.dir(e);
 
@@ -824,22 +816,14 @@ var controller = { // for now, controller just handles the key presses and key c
 					this.npc = false;
 				}
 
-			} else if (e.keyCode === 13) { // enter
+			} else if (e.keyCode === 65) { // 'a' key
 
-				this.interact();
+				this.keyMap['a'] = true;
 
-			} else if (e.keyCode === 66 && this.npc !== false) { // 'b'
-				var itemList = npc.makeItemlist(this.npcCoord[0], this.npcCoord[1]);
+			} else if (e.keyCode === 68) { // 'd' key
 
-				this.menuListing(itemList);
-				npc.status = "sell";
-				this["status"]["freeze"] = true;
-				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
-			} else if (e.keyCode === 83 && this.npc !== false) { // 's'
-				this.menuListing(player.items);
-				npc.status = "buy";
-				this["status"]["freeze"] = true;
-				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
+				this.keyMap['d'] = true; 
+
 			} else if (e.keyCode === 73) { // 'i' for item screen/ menu
 				this.status.freeze = true;
 				this.status.status = "item";
@@ -850,6 +834,22 @@ var controller = { // for now, controller just handles the key presses and key c
 				this.status.status = "equip";
 				this.menuListing(player.equipped);
 				player.equipMenu("menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 13) { // enter
+
+				this.interact();
+
+			} else if (e.keyCode === 66 && this.npc !== false) { // 'b' - buying from seller
+				var itemList = npc.makeItemlist(this.npcCoord[0], this.npcCoord[1]);
+
+				this.menuListing(itemList);
+				npc.status = "sell";
+				this["status"]["freeze"] = true;
+				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 83 && this.npc !== false) { // 's' - selling from seller
+				this.menuListing(player.items);
+				npc.status = "buy";
+				this["status"]["freeze"] = true;
+				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			}
 
 		}
