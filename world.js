@@ -255,7 +255,16 @@ var world = {
 };
 
 var player = {
-	hp: 50,
+	_hp: 50,
+	get hp() {
+		return this._hp;
+	},
+	set hp(value) {
+		this._hp += value;
+		if (this._hp > this["max hp"]) {
+			this._hp = this["max hp"];
+		}
+	},
 	weight: 0,
 	moves: 1,
 	"max hp": 50,
