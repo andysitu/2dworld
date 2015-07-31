@@ -655,7 +655,7 @@ var monster = {
 		delete this["list"][num];
 	},
 	attack(num) {
-		var dmg = Math.ceil(this["list"][num]["level"] * 0.5 * Math.random() + 0.5 * this["list"][num]["level"]);
+		var dmg = Math.ceil(this["list"][num]["level"] * 0.5 * Math.random() + 0.75 * this["list"][num]["level"]);
 		player.attacked(-dmg);
 	},
 	attacked(num, dmg) {
@@ -684,7 +684,7 @@ var monster = {
 	inRange(monstID) { 
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
-		var range = (loc["status"] === "aggressive") ? 10 : 15;
+		var range = (loc["status"] === "aggressive") ? 15 : 31;
 
 		return world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], range);
 	},
@@ -978,7 +978,7 @@ window.onload = function() {
 					var monstID = map[y][x];
 					var monst = monster.list[monstID];
 
-					if (world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 90)) {
+					if (world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 95)) {
 						display(false);
 						display("That's a monster!");
 						display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
