@@ -4,7 +4,7 @@ var world = {
 	height: 40,
 	width: 40,
 	translateMap(maps) {
-		var mapElem = document.getElementById("map");
+		var mapElem = document.querySelector("#map");
 		var height = this.height;
 		var width = this.width;
 		if ( height > map.length || width > map[0].length) {
@@ -23,6 +23,8 @@ var world = {
 					map[i][j] = monster.make(i, j); // makes monster, which returns the ID number for it and map is set to that
 				} else if (map[i][j] === "P") {
 					this.playerLoc = [i, j];
+				} else if (map[i][j] === "S") {
+					maps[i][j] = npc.randomNPC();
 				}
 			}
 		}
@@ -33,11 +35,11 @@ var world = {
 
 			for (var j = 0; j <= width; j++) {
 
-				var th = document.createElement("th");
+				var td = document.createElement("td");
 
-				th.setAttribute("class", this.classTranslator(maps[i][j])) // classTranslator runs any necessary functions and returns the correct class name
-				th.setAttribute("id", i + " " + j);
-				tr.appendChild(th);
+				td.setAttribute("class", this.classTranslator(maps[i][j])) // classTranslator runs any necessary functions and returns the correct class name
+				td.setAttribute("id", i + " " + j);
+				tr.appendChild(td);
 			}
 		}
 
@@ -101,7 +103,7 @@ var world = {
 			default: if (typeof value === "number") {
 						return "monster";
 					} else {
-						break;}
+						return value;}
 		}
 	},
 
@@ -119,7 +121,6 @@ var world = {
 		} else {
 			display("Error with move function");
 			console.log("Error Here:" + x, y, dir);
-			throw "Error";
 			x1 = x;
 			y1 = y;
 		}
@@ -165,27 +166,36 @@ var world = {
 		}
 		return false; // if it can't find it.
 	},
-	calculate(y1, x1, y2, x2) { // calculates the direction to move for closest distance to player,
-		var move = [0, 0, 0, 0];		// returns array(s) of best coordinate dependng on status
+	calculate(y1, x1, y2, x2, status) { // calculates the direction to move for closest distance to player
+		var move = [0, 0, 0, 0];		// unless the status is true, then it'll give farthest
 		var dir = [];
 		
-		move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
-		move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
-		move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
-		move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
+		if (!status) {
+			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2); // left
+			move[1] = this.calculateDistance(y1 - 1, x1, y2, x2); // up
+			move[2] = this.calculateDistance(y1, x1 + 1, y2, x2);; // right
+			move[3] = this.calculateDistance(y1 + 1, x1, y2, x2); // down
 
-		var min = Math.min.apply(null, move);
+			var min = Math.min.apply(null, move);
+		} else {
+			move[0] = this.calculateDistance(y1, x1 - 1, y2, x2, true); // left
+			move[1] = this.calculateDistance(y1 - 1, x1, y2, x2, true); // up
+			move[2] = this.calculateDistance(y1, x1 + 1, y2, x2, true);; // right
+			move[3] = this.calculateDistance(y1 + 1, x1, y2, x2, true); // down
+
+			var min = Math.max.apply(null, move);
+		}
 
 		for (var i = 0; i < move.length; i++) {
-			if (move[i] === min && min !== 999999) {
+			if (move[i] === min) {
 				dir.push(i);
 			}
 		}
 
 		return dir[Math.floor( Math.random() * dir.length)];
 	},
-	calculateDistance(y1, x1, y2, x2) { // calculate distance from two points
-		if (map[y1][x1]) { // in case, there are no walls along the edges of the map
+	calculateDistance(y1, x1, y2, x2, status) { // calculate distance from two points
+		if (!status) { // else clause for calculating max distance to get away from player
 			if (map[y1][x1] === 'P') { // this is when player is right next to character
 				return 0;
 			} else if (map[y1][x1] === " ") {
@@ -194,8 +204,15 @@ var world = {
 				return 999999;
 			}
 		} else {
-			return 999999;
+			if (map[y1][x1] === 'P') {
+				return 0;
+			} else if (map[y1][x1] === " ") {
+				return Math.abs(y2 - y1) + Math.abs(x2 - x1);
+			} else {
+				return 0;
+			}
 		}
+		
 	},
 	calculateFromI(i, y1, x1) {
 		switch(i) {
@@ -238,7 +255,17 @@ var world = {
 };
 
 var player = {
-	hp: 50,
+	_hp: 50,
+	get hp() {
+		return this._hp;
+	},
+	set hp(value) {
+		this._hp = value;
+		if (this._hp > this["max hp"]) {
+			this._hp = this["max hp"];
+		}
+		displayStatus();
+	},
 	weight: 0,
 	moves: 1,
 	"max hp": 50,
@@ -257,14 +284,8 @@ var player = {
 			display(false);
 			display("Your inventory is empty. You don't have any items.");
 		} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") {
-			var msg = item + "\nDescription: " + items[item]["desc"] + "\nQuantity: " + this.items[item] + "\nprice: " + items[item]["price"];
-
-				if (items[item]["slot"] === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
-				}
-
 			display(false);
-			display(msg);
+			display( items.itemMsgMaker(item) );
 		} else if (e.keyCode === 13) { // enter key
 			this.equip(item);
 			display(false);
@@ -276,9 +297,11 @@ var player = {
 		this.items[value] = (this.items[value] || 0) + 1;
 		this.weight += items[value]["weight"];
 	},
-	removeItem(value) {
+	removeItem(value, removeWeight) {
 		this.items[value] = (this.items[value] || 1) - 1;
-		this.weight -= items[value]["weight"];
+		if (removeWeight === true) { // so that equip method won't subtract weight
+			this.weight -= items[value]["weight"];
+		}
 		if (this.items[value] <= 0) {
 			delete this.items[value];
 		}
@@ -313,14 +336,8 @@ var player = {
 				display(false);
 				display("You don't have any item equipped in your " + slot + " slot.");
 			} else {
-				var msg = item + "\nDescription: " + items[item]["desc"] + "\nslot: " + slot + "\nprice: " + items[item]["price"];
-
-				if (slot === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
-				}
-
 				display(false);
-				display(msg);
+				display( items.itemMsgMaker(item) );
 			}
 
 
@@ -338,7 +355,6 @@ var player = {
 		}
 	},
 
-	range: 1,
 	_gold: 0,
 	get gold() {
 		return this._gold;
@@ -346,6 +362,7 @@ var player = {
 	set gold(value) {
 		this._gold += value;
 	},
+
 	_exp: 0,
 	get exp () {
 		return this._exp;
@@ -362,20 +379,32 @@ var player = {
 		var damage = 0;
 
 		if (this.equipped["weapon"] === false) {
-			damage = Math.ceil(Math.random() * (3 + player.level));
+			damage = Math.ceil(Math.random() * 0.2 * (3 + player.level) + 0.8 * (3 + player.level));
 		} else {
 			var item = this.equipped["weapon"];
 			var dam = items[item]["damage"];
 
-			damage = Math.floor(.8 * dam + .1 * player.level + Math.random() * (.40 * dam + .1 * player.level));
+			damage = Math.floor(0.6 * ( dam + player.level) + Math.random() * 0.4 * ( dam + player.level) );
 		}
 		
 		return damage;
 	},
 
 	attack(dir) {
-		var checkit = check(dir, this.range); // check checks if there is a monster within that range and returns the monster number if so
+		if (this.equipped["weapon"] !== false) {
+			var weap = this.equipped.weapon;
+
+			var checkit = check(dir, items[weap]["range"]); // check checks if there is a monster within that range and returns the monster number if so
+		} else {
+			var checkit = check(dir, 1);
+		}
 		if (typeof checkit === "number") {
+			if (this.equipped["weapon"] !== false) {
+				if (items[weap]["sound"]) { // if weapon makes a sound
+					display(items[weap]["sound"]);
+				} 
+			}
+
 			monster.attacked(checkit, this.damage());
 		} else {
 			display("There is no monster there!");
@@ -388,6 +417,24 @@ var player = {
 		} else {
 			display("You were hit with " + -value + " damage.");
 		}
+	},
+
+	dodgeChance: 0.6,
+	dodge(dir) {
+		if (Math.random() <= this.dodgeChance) {
+			display(false);
+			display("You successfully dodged!");
+			world.move(world.playerLoc[0], world.playerLoc[1], dir);
+			world.move(world.playerLoc[0], world.playerLoc[1], dir);
+		} else {
+			display(false);
+			display("Dodge didn't work!");
+		}
+	},
+
+	heal() {
+		var amount = Math.ceil(0.05 * this["max hp"]);
+		this.hp += amount;
 	},
 
 	dead() {
@@ -404,7 +451,7 @@ var item = {
 	}
 }
 
-function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
+function makeWeapon(desc, price, range, slot, damage, forSale, weight, sound) {
 	return Object.create(item, {
 		'desc': {
 			value: desc,
@@ -439,14 +486,35 @@ function makeWeapon(desc, price, range, slot, damage, forSale, weight) {
 		'weight': {
 			value: weight,
 			enumerable: true
+		},
+		'sound': {
+			value: sound,
+			enumerable: true
 		}
 	})
 }
 
-var items = { // desc, price, range, slot, damage, forSale, weight
-	sword: makeWeapon("A sword", 140, 1, "weapon", 10, true, 10),
-	"super sword": makeWeapon("A super strong sword", 1500, 2, "weapon", 40, true, 15)
+var items = { // desc, price, range, slot, damage, forSale, weight, sound
+	reliable: makeWeapon("Great sword", 				10, 1, "weapon", 4, true, 5, false),
+	sword: makeWeapon("A sword", 						140, 1, "weapon", 10, true, 10, false),
+	spear: makeWeapon("A great spear", 					200, 3, "weapon", 7, true, 20, false),
+	pistol: makeWeapon("A straight shooter", 			250, 4, "weapon", 5, true, 6, "Pop!"),
+	rifle: makeWeapon("A very powerful gun", 			800, 8, "weapon", 15, true, 15, "Bang!"),
+	"super sword": makeWeapon("A super strong sword", 	1500, 2, "weapon", 40, true, 25, false)
 };
+
+Object.defineProperty(items, "itemMsgMaker", {
+	value: function(item) {
+		var msg = item + "\nDescription: " + items[item]["desc"] + "\nprice: " + items[item]["price"] + "\nweight: " + items[item]["weight"];
+
+		if (items[item]["slot"] === "weapon") { // when item is a weapons
+			msg += "\ndamage: " + items[item]["damage"] + "\nrange: " + items[item]["range"];
+		}
+
+		return msg;
+	},
+	enumerable: false
+});
 
 var npc = {
 	_status: false,
@@ -455,6 +523,33 @@ var npc = {
 	},
 	set status(value) {
 		this._status = value;
+	},
+
+	types: {"weaponNPC": ["weapon"] // for now, if types[key] returns array, then this.findNPC will return "seller" since they are the only ones weith arrays
+	
+	},
+
+	makeItemlist(y, x) { // makes of list of items that NPC can sell
+		var npc = map[y][x];
+
+		var list = {};
+
+		for (var i = 0; i < this.types[npc].length; i++) {
+			var slot = this.types[npc][i];
+			for (var keys in items) {
+				if (items[keys]["slot"] === slot) {
+					list[keys] = items[keys];
+				}
+			}
+		}
+
+			return list;
+	},
+
+	randomNPC() {
+		var arr = Object.keys(this.types);
+		var randomIndex = Math.floor(Math.random() * arr.length); 
+		return arr[randomIndex];
 	},
 
 	controller(character, e, key) { 
@@ -471,12 +566,8 @@ var npc = {
 		else if (character === "seller" && this.status === "sell") { // player is buying item
 
 			if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
-				var msg = key + "\nDescription: " + items[key]["desc"] + "\nprice: " + items[key]["price"];
-
-				if (items[key]["slot"] === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
-				}
-				dispMsg("Here's what's for sale:", msg)
+				
+				dispMsg("Here's what's for sale:", items.itemMsgMaker(key) )
 			} else if (e.keyCode === 13) { // enter key
 				this.seller.sell(key);
 			}
@@ -486,12 +577,7 @@ var npc = {
 			if (Object.keys(player.items).length <= 0) {
 				dispMsg("You don't have anything! Please leave!", "");
 			} else if (e.keyCode ===37 || e.keyCode === 39 || e === "menu") { //left key
-				var msg = key + "\nDescription: " + items[key]["desc"] + "\nQuantity: " + player.items[key] + "\nprice: " + items[key]["price"];
-
-				if (items[key]["slot"] === "weapon") { // when item is a weapons
-					msg += "\ndamage: " + items[key]["damage"] + "\nrange: " + items[key]["range"];
-				}
-				dispMsg("Which item do you want to sell?", msg)
+				dispMsg("Which item do you want to sell?", items.itemMsgMaker(key) )
 			} else if (e.keyCode === 13) { // enters
 				this.seller.buy(key);
 			}
@@ -501,9 +587,13 @@ var npc = {
 		var coord = [];
 		for (var i = 0; i < 4; i++) {
 			coord = world.calculateFromI(i, y, x);
-			var value = world.classTranslator(map[coord[0]][coord[1]]);
-			if (npc[value]) {
-				return value;
+			var value = map[coord[0]][coord[1]];
+			if (this.types[value]) {
+				if (this.types[value] instanceof Array) {
+					return ["seller", coord[0], coord[1]];
+				} else {
+					return [value, coord[0], coord[1]];
+				}
 			}
 		}
 
@@ -532,7 +622,7 @@ var npc = {
 			if (player.items[key]) {
 				display(false);
 				display("You sold " + key + " for " + items[key]["price"]);
-				player.gold = items[key]["price"];
+				player.gold = Math.floor(items[key]["price"] * 0.6);
 				displayStatus();
 				player.removeItem(key);
 			} else {
@@ -548,7 +638,7 @@ var monster = {
 	statuses: ["aggressive", "aggressive", "passive", "coward", "superaggressive", "passive"],
 	make(i, j) { // makes a new new monster obj in list and gives it a number as the obj name (based on this.counter)
 		this.counter++;
-		var level = Math.floor(Math.random() * 5 + player.level * 1.2 );
+		var level = Math.ceil(Math.random() * ( 5 + player.level ) );
 		var hpValue = Math.ceil(Math.random() * level * level * 0.2 + 0.8 * level * level)
 		monster["list"][this.counter] = {
 			level: level,
@@ -565,7 +655,7 @@ var monster = {
 		delete this["list"][num];
 	},
 	attack(num) {
-		var dmg = Math.ceil(this["list"][num]["level"] * .5 * Math.random() + this["list"][num]["level"]);
+		var dmg = Math.ceil(this["list"][num]["level"] * 0.5 * Math.random() + 0.75 * this["list"][num]["level"]);
 		player.attacked(-dmg);
 	},
 	attacked(num, dmg) {
@@ -580,8 +670,8 @@ var monster = {
 		}
 	},
 	reward(num) {
-		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .2 + this["list"][num]["maxHP"] * .1);
-		var exp = this["list"][num]["level"];
+		var goldAmount = Math.ceil(Math.random() * this["list"][num]["maxHP"] * .5 + this["list"][num]["level"]);
+		var exp = Math.floor(this["list"][num]["level"] * Math.random()) + this["list"][num]["level"];
 
 		player.gold = goldAmount;
 
@@ -594,7 +684,7 @@ var monster = {
 	inRange(monstID) { 
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
-		var range = (loc["status"] === "aggressive") ? 10 : 15;
+		var range = (loc["status"] === "aggressive") ? 15 : 31;
 
 		return world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], range);
 	},
@@ -621,24 +711,47 @@ var monster = {
 		var loc = this["list"][monstID];
 		var pLoc = world.playerLoc;
 
-		var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
 		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 1)) { // if monster is next to player
 			this.attack(monstID);
 		} else {
+			var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1]);
 			world.move(loc["yCoord"], loc["xCoord"], dir);
 		}
 	},
+	moveAway(monstID) {
+		var loc = this["list"][monstID];
+		var pLoc = world.playerLoc;
 
-	spawner() { // decides chance of spawning monster. spawn is the actual method that does spawning
-		if ( Math.random() * 100 <= 5) { // 5% chance of spawning mmonster
-			for ( ; ; ) {
-				var yValue = Math.floor(Math.random() * map.length);
-				var xValue = Math.floor(Math.random() * map[yValue].length);
+		if (world.inRange(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], 5)) { // monster runs away from player if close
+			var dir = world.calculate(loc["yCoord"], loc["xCoord"], pLoc[0], pLoc[1], true); // calculate direction for farthest dir
+			world.move(loc["yCoord"], loc["xCoord"], dir);
+		} else {
+			this.moveNormally(monstID);
+		}
+	},
 
-				if (this.spawn(yValue, xValue)) {
-					break;
+	spawner(status) { // decides chance of spawning monster. spawn is the actual method that does spawning
+		// if status is undefined or false, then spawner spawns possibly. If true, it'll run until it spawns a monster somewhere.
+		if (!status) {
+			if ( Math.random()  <= 0.11) { // Chance of monster spawning
+				for ( ; ; ) {
+					var yValue = Math.floor(Math.random() * map.length);
+					var xValue = Math.floor(Math.random() * map[yValue].length);
+
+					if (this.spawn(yValue, xValue)) {
+						break;
+					}
 				}
 			}
+		} else {
+			for ( ; ; ) {
+					var yValue = Math.floor(Math.random() * map.length);
+					var xValue = Math.floor(Math.random() * map[yValue].length);
+
+					if (this.spawn(yValue, xValue)) {
+						break;
+					}
+				}
 		}
 	},
 	spawn(y, x) {
@@ -667,6 +780,8 @@ var monster = {
 					} else {
 						this.moveNormally(key);
 					}
+				} else if (this["list"][key]["status"] === "coward") {
+					this.moveAway(key);
 				} else {
 					this.moveNormally(key);
 				}
@@ -682,29 +797,28 @@ var monster = {
 	movesCounter: 0 // to count how many moves player can make before monsters
 };
 
-const controller = { // for now, controller just handles the key presses and key combinations
-	keyMap: {'a': false},
+var controller = { // for now, controller just handles the key presses and key combinations
+	keyMap: {'a': false, 'd': false},
 	status: {freeze: false, status: false},
 	selectionI: 0,
 	selectionList: {},
 	selectionKeys: [],
 	npc: false,
+	npcCoord: [0, 0],
 	keypress(e) {
 		var mapID = document.getElementById("map");
 		if (this["status"]["freeze"] === true) {
 			this.menuSelector(e);
 		} else {
-			if (e.keyCode === 65) { // 'a' key
-
-				this.keyMap['a'] = true;
-
-			} else if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
+			if (e.keyCode >= 37 && e.keyCode <= 40) { // arrow keys
 
 				var dir = this.dir(e);
 
 				if (this.keyMap['a'] === true) { // if 'a' key is being held while pressing arrow keys
 					display(false);
 					player.attack(dir);
+				} else if (this.keyMap['d'] === true) { // 'd' key + arrow for dodging
+					player.dodge(dir)
 				} else { 						// just arrows keys
 					display(false);
 					world.move(world.playerLoc[0], world.playerLoc[1], dir);
@@ -716,20 +830,17 @@ const controller = { // for now, controller just handles the key presses and key
 					this.npc = false;
 				}
 
-			} else if (e.keyCode === 13) { // enter
+			} else if (e.keyCode === 65) { // 'a' key - to set attack status
 
-				this.interact();
+				this.keyMap['a'] = true;
 
-			} else if (e.keyCode === 66 && this.npc === "seller") { // 'b'
-				this.menuListing(items);
-				npc.status = "sell";
-				this["status"]["freeze"] = true;
-				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
-			} else if (e.keyCode === 83 && this.npc === "seller") { // 's'
-				this.menuListing(player.items);
-				npc.status = "buy";
-				this["status"]["freeze"] = true;
-				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 68) { // 'd' key - to set dodge status
+
+				this.keyMap['d'] = true; 
+
+			} else if (e.keyCode === 72) { // 'h' key for heal
+				player.heal();
+				monster.spawner(true);
 			} else if (e.keyCode === 73) { // 'i' for item screen/ menu
 				this.status.freeze = true;
 				this.status.status = "item";
@@ -740,6 +851,22 @@ const controller = { // for now, controller just handles the key presses and key
 				this.status.status = "equip";
 				this.menuListing(player.equipped);
 				player.equipMenu("menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 13) { // enter
+
+				this.interact();
+
+			} else if (e.keyCode === 66 && this.npc !== false) { // 'b' - buying from seller
+				var itemList = npc.makeItemlist(this.npcCoord[0], this.npcCoord[1]);
+
+				this.menuListing(itemList);
+				npc.status = "sell";
+				this["status"]["freeze"] = true;
+				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
+			} else if (e.keyCode === 83 && this.npc !== false) { // 's' - selling from seller
+				this.menuListing(player.items);
+				npc.status = "buy";
+				this["status"]["freeze"] = true;
+				npc.controller(this.npc, "menu", this.selectionKeys[this.selectionI]);
 			}
 
 		}
@@ -747,13 +874,14 @@ const controller = { // for now, controller just handles the key presses and key
 
 	},
 
-	interact() {
+	interact() { // finds an NPC and if it does, then it'll set the status and run the menu method of the npc
 		var pLoc = world.playerLoc;
 		var findNPC = npc.findNPC(pLoc[0], pLoc[1]);
-		if (findNPC) {
-			this.npc = findNPC;
-			this["status"][findNPC] = true;
-			npc[findNPC]["menu"]();
+		if (findNPC[0] !== false) {
+			this.npc = findNPC[0];
+			npc[findNPC[0]]["menu"]();
+
+			this.npcCoord = [findNPC[1], findNPC[2]];
 		}
 	},
 
@@ -832,7 +960,9 @@ window.onload = function() {
 	document.onkeyup = function(e) {
 		if (e.keyCode === 65) {
 			controller.keyMap['a'] = false;
-		} 
+		} else if (e.keyCode === 68) {
+			controller.keyMap['d'] = false;
+		}
 	}
 
 	var table = document.getElementById("map");
@@ -844,6 +974,7 @@ window.onload = function() {
 		var y = Number(str[1]) + world.corner[0]; 
 		var x = Number(str[2]) + world.corner[1];
 
+<<<<<<< HEAD
 		if (target.className === "monster") {
 			var monstID = map[y][x];
 			var monst = monster.list[monstID];
@@ -854,6 +985,20 @@ window.onload = function() {
 		} else {
 			display(false);
 			display(y + " " + x + " " + target.className);
+=======
+					if (world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 95)) {
+						display(false);
+						display("That's a monster!");
+						display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
+					} else {
+						display(false);	
+						display("That's a monster!");
+					}
+				} else {
+					display(y + " " + x + " " + this.className);
+				}
+			}
+>>>>>>> master
 		}
 	}
 

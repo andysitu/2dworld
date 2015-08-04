@@ -1,6 +1,8 @@
-npc: have different kinds of sellers
+add skills
+	make skills
+	menulist
 
-
+* add ammo to bullets
 * weight affects dodge chance + block change
 * ability to dodge
 * ability to block
@@ -9,10 +11,10 @@ npc: have different kinds of sellers
 * player can use skills
 * player has ability points
 * monster gives  rewards
-* possiblity of dropping items
-* coward will run away
-* items add weight
 * add more items
 * add item types + slots
 
 * change monsters spawn into monster constructors so that you can give them special abilities by setting prototypes, etc.
+
+
+weapons degrade over use; weapon upgrade

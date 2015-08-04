@@ -11,26 +11,47 @@
 			border: none;
 			border-spacing: 0px;
 		}
-		th {
+		td {
 			width: 14px;
 			height: 14px;
 		}
 		#map {
-			margin-left: 3%;
-			margin-top: 15px;
+			margin-left: 30px;
+			margin-top: 25px;
+			border: 1px solid blue;
+		}
+
+		.side {
+			width: 300px;
+			float: left;
+			margin-left: 20px;
+			margin-top: 35px;
+		}
+		#hp-container {
+			width: 304px;
+			height: 20px;
+			border: 1px solid red;
+		}
+		#hp-msg {
+			position: absolute;
+		}
+		#hp-bar {
+			width: 304px;
+			height: 20px; 
+			background-color: red;
 		}
 		#status {
-			margin-left: 20px;
-			margin-top: 20px;
+			margin-top: 5px;
 			width: 300px;
-			height: 100px;
+			height: 80px;
 		}
 		#message {
-			margin-left: 20px;
+			position: relative;
 			margin-top: 10px;
 			width: 300px;
-			height: 400px;
+			height: 250px;
 		}
+
 		#help {
 			position: absolute;
 			left: 2%;
@@ -39,11 +60,8 @@
 
 		#container {
 		}
+		
 		.map {
-			float: left;
-		}
-		.side {
-			width: 300px;
 			float: left;
 		}
 
@@ -59,7 +77,7 @@
 		.monster {
 			background: url("images/monst1.png") no-repeat center center;
 		}
-		.seller {
+		.seller, .weaponNPC {
 			background: url("images/seller.png") no-repeat center center;
 		}
 
@@ -70,9 +88,9 @@
 </head>
 
 <body>
-	<script src="functions.js"></script>
-	<script src="map.js"></script>
-	<script src="world.js"></script>
+	<script src="functions.js" type='text/javascript'></script>
+	<script src="map.js" type='text/javascript'></script>
+	<script src="world.js" type='text/javascript'></script>
 
 	<div id="container">
 		<div class="map">
@@ -80,6 +98,10 @@
 		</div>
 
 		<div class="side">
+			<div id="hp-container">
+				<div id="hp-msg">&nbsphp</div>
+				<div id="hp-bar"></div>
+			</div>
 			<textarea id="status"></textarea>
 			<textarea id="message"></textarea>
 		</div>
