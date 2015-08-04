@@ -966,18 +966,26 @@ window.onload = function() {
 	}
 
 	var table = document.getElementById("map");
-	for (var i = 0; i < table.rows.length; i++) {
-		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
-			table.rows[i].cells[j].onclick = function(e) {
-				var str = /(\d*) (\d*)/.exec(this.id);
-				var y = Number(str[1]) + world.corner[0]; 
-				var x = Number(str[2]) + world.corner[1];
+	function clicky(event) {
+		var target = event.target;
 
-				if (this.className === "monster") {
-					var monstID = map[y][x];
-					var monst = monster.list[monstID];
+		var str = /(\d*) (\d*)/.exec(target.id);
+		var y = Number(str[1]) + world.corner[0]; 
+		var x = Number(str[2]) + world.corner[1];
 
+<<<<<<< HEAD
+		if (target.className === "monster") {
+			var monstID = map[y][x];
+			var monst = monster.list[monstID];
+
+			display(false);
+			display("That's a monster!");
+			display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
+		} else {
+			display(false);
+			display(y + " " + x + " " + target.className);
+=======
 					if (world.inRange(y, x, world.playerLoc[0], world.playerLoc[1], 95)) {
 						display(false);
 						display("That's a monster!");
@@ -990,8 +998,11 @@ window.onload = function() {
 					display(y + " " + x + " " + this.className);
 				}
 			}
+>>>>>>> master
 		}
 	}
+
+	table.addEventListener("click", clicky, false);
 
 	table = null;
 };
