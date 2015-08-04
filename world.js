@@ -840,33 +840,24 @@ window.onload = function() {
 	function clicky(event) {
 		var target = event.target;
 
-		console.log(target);
+		var str = /(\d*) (\d*)/.exec(target.id);
+		var y = Number(str[1]) + world.corner[0]; 
+		var x = Number(str[2]) + world.corner[1];
+
+		if (target.className === "monster") {
+			var monstID = map[y][x];
+			var monst = monster.list[monstID];
+
+			display(false);
+			display("That's a monster!");
+			display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
+		} else {
+			display(false);
+			display(y + " " + x + " " + target.className);
+		}
 	}
 
 	table.addEventListener("click", clicky, false);
 
-/*
-	for (var i = 0; i < table.rows.length; i++) {
-		for (var j = 0; j < table.rows[i].cells.length; j++) {
-
-			table.rows[i].cells[j].onclick = function(e) {
-				var str = /(\d*) (\d*)/.exec(this.id);
-				var y = Number(str[1]) + world.corner[0]; 
-				var x = Number(str[2]) + world.corner[1];
-
-				if (this.className === "monster") {
-					var monstID = map[y][x];
-					var monst = monster.list[monstID];
-
-					display(false);
-					display("That's a monster!");
-					display("hp: " + monst.hp + "\nlevel: " + monst.level + "\nstatus: " + monst.status);
-				} else {
-					display(y + " " + x + " " + this.className);
-				}
-			}
-		}
-	}
-*/
 	table = null;
 };
