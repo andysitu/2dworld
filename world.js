@@ -836,6 +836,16 @@ window.onload = function() {
 	}
 
 	var table = document.getElementById("map");
+
+	function clicky(event) {
+		var target = event.target;
+
+		console.log(target);
+	}
+
+	table.addEventListener("click", clicky, false);
+
+/*
 	for (var i = 0; i < table.rows.length; i++) {
 		for (var j = 0; j < table.rows[i].cells.length; j++) {
 
@@ -857,6 +867,6 @@ window.onload = function() {
 			}
 		}
 	}
-
+*/
 	table = null;
 };
