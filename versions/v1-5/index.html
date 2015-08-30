@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+
+<head>
+	<meta charset='utf-8'>
+	<title>A 2D World</title>
+
+	<style>
+
+		table {
+			border: none;
+			border-spacing: 0px;
+		}
+		td {
+			width: 14px;
+			height: 14px;
+		}
+		#map {
+			margin-left: 30px;
+			margin-top: 25px;
+			border: 1px solid blue;
+		}
+
+		.side {
+			width: 300px;
+			float: left;
+			margin-left: 20px;
+			margin-top: 35px;
+		}
+		#hp-container {
+			width: 304px;
+			height: 20px;
+			border: 1px solid red;
+		}
+		#hp-msg {
+			position: absolute;
+		}
+		#hp-bar {
+			width: 304px;
+			height: 20px; 
+			background-color: red;
+		}
+		#status {
+			margin-top: 5px;
+			width: 300px;
+			height: 80px;
+		}
+		#message {
+			position: relative;
+			margin-top: 10px;
+			width: 300px;
+			height: 250px;
+		}
+
+		#help {
+			position: absolute;
+			left: 2%;
+			bottom: 2%;
+		}
+
+		#container {
+		}
+		
+		.map {
+			float: left;
+		}
+
+		.wall {
+			background: url("images/wall.png") no-repeat center center;
+		}
+		.space {
+			background: url("images/empty-space.png") no-repeat center center;
+		}
+		.player {
+			background: url("images/player.png") no-repeat center center;
+		}
+		.monster {
+			background: url("images/monst1.png") no-repeat center center;
+		}
+		.seller, .weaponNPC {
+			background: url("images/seller.png") no-repeat center center;
+		}
+
+	</style>
+
+	<script>
+	</script>
+</head>
+
+<body>
+	<script src="functions.js"></script>
+	<script src="map.js"></script>
+	<script src="world.js"></script>
+
+	<div id="container">
+		<div class="map">
+			<table id="map" cellspacing="0" cellpadding="0"></table>
+		</div>
+
+		<div class="side">
+			<div id="hp-container">
+				<div id="hp-msg">&nbsphp</div>
+				<div id="hp-bar"></div>
+			</div>
+			<textarea id="status"></textarea>
+			<textarea id="message"></textarea>
+		</div>
+	</div>
+
+	<a href="help.html" id="help" target="_blank">Help Page</a>
+</body>
+
+</html>

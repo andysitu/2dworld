@@ -1,0 +1,18 @@
+npc: have different kinds of sellers
+
+
+* weight affects dodge chance + block change
+* ability to dodge
+* ability to block
+* calculate defense
+* player can delete item
+* player can use skills
+* player has ability points
+* monster gives  rewards
+* possiblity of dropping items
+* coward will run away
+* items add weight
+* add more items
+* add item types + slots
+
+* change monsters spawn into monster constructors so that you can give them special abilities by setting prototypes, etc.
