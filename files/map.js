@@ -7,7 +7,7 @@ var map = {
 	makeMap() {
 		var width = 40,
 			length = 40,
-			emptySpace = "s",
+			emptySpace = translator("space"),
 			map = [];
 
 		for (var i = 0; i < width; i++) {
