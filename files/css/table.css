@@ -1,0 +1,12 @@
+.space {
+	background: url("files/images/empty-space.png") no-repeat center center;
+}
+
+table {
+	border: none;
+	border-spacing: 0px;
+}
+td {
+	width: 14px;
+	height: 14px;
+}
