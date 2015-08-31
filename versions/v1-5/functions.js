@@ -63,7 +63,4 @@ function hpBar(percent) {
 		bar.style.width = "0px";
 		msg.innerHTML = "&nbsphp: 0/" + player["max hp"];
 	}
-
-	
-
 }
