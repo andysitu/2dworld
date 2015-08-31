@@ -1,12 +1,14 @@
 var map = {
 	map: null,
+	width: 40,
+	length: 40,
 	start() {
 		this.map = this.makeMap();
 	},
 
 	makeMap() {
-		var width = 40,
-			length = 40,
+		var width = this.width,
+			length = this.length,
 			emptySpace = translator("space"),
 			map = [];
 
