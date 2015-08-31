@@ -1,12 +1,14 @@
-.space {
-	background: url("files/images/empty-space.png") no-repeat center center;
-}
-
 table {
 	border: none;
 	border-spacing: 0px;
+	border: 1px solid blue;
 }
+
 td {
 	width: 14px;
 	height: 14px;
 }
+
+.space {
+	background: url("images/empty-space.png") no-repeat center center;
+	background-color: red;}
