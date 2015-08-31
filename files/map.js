@@ -12,12 +12,15 @@ var map = {
 			emptySpace = translator("space"),
 			map = [];
 
-		for (var i = 0; i < width; i++) {
+		function f1(i) {
 			map.push([]);
-			for (var j = 0; j < length; j++) {
-				map[i][j] = emptySpace;
-			}
 		}
+
+		function f2(j, i) {
+			map[i][j] = emptySpace;
+		}
+
+		forfor(width, length, f1, f2, this);
 
 		return map;
 	}
