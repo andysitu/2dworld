@@ -40,5 +40,6 @@ view = {
 		forfor(width, length, f1, f2, this);
 */
 		table_container.appendChild(docFrag);
-	}
+	},
+
 }
