@@ -24,4 +24,11 @@ window.addEventListener("load", function() {
 
 	var past = Date.now();
 	main();
+
+	window.addEventListener("keydown", function(e) {
+		player.keysDown[e.keyCode] = true;
+	}, false);
+	window.addEventListener("keyup", function(e) {
+		player.keysDown[e.keyCode] = false;
+	}, false);
 })
