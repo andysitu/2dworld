@@ -13,14 +13,17 @@ view = {
 		table.cellspacing = 0;
 		table.cellpadding = 0;
 
+
 		for (var i = 0; i < width; i++) {
 			var tr = document.createElement("tr");
-			table.appendChild(tr);
+			
 			for (var j = 0; j < length; j++) {
 				var td = document.createElement("td");
 				td.setAttribute("class", "space");
 				tr.appendChild(td);
 			}
+
+			table.appendChild(tr);
 		}
 /*
 		function f1(i) {
