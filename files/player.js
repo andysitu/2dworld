@@ -6,18 +6,26 @@ var player = {
 	xRadius: 10,
 	getXRadius() { return this.xRadius; },
 	yRadius: 10,
-	getYRadius() { return this.yRadius; }
+	getYRadius() { return this.yRadius; },
 	speed: 100,
 
-	moveX = 0,
-	moveY = 0,
+	moveX: 0,
+	moveY: 0,
+
+	keysDown: {},
 
 	update(modifier) {
-		if (this.moveX != 0) {
-			this.x += this.speed * modifier * this.moveX;
+		if (38 in this.keysDown) { //  up
+			this.y -= this.speed * modifier;
 		}
-		if (this.moveY != 0) {
-			this.y += this.speed * modifier * this.moveY;
+		if (40 in this.keysDown) { //  down
+			this.y += this.speed * modifier;
 		}
-	} 
+		if (37 in this.keysDown) { //  left
+			this.x -= this.speed * modifier;
+		}
+		if (39 in this.keysDown) { //  right
+			this.x += this.speed * modifier;
+		}
+	},
 };
