@@ -28,4 +28,9 @@ var player = {
 			this.x += this.speed * modifier;
 		}
 	},
+
+	draw(ctx) {
+		ctx.fillStyle = "red";
+		ctx.fillRect(this.x, this.y, this.xRadius, this.yRadius);
+	}
 };
